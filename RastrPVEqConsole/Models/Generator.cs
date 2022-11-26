@@ -1,4 +1,4 @@
-﻿using RastrPVEqConsole.Validation;
+﻿using RastrPVEqConsole.Infrastructure;
 
 namespace RastrPVEqConsole.Models
 {
@@ -7,6 +7,24 @@ namespace RastrPVEqConsole.Models
     /// </summary>
     public class Generator : ElementBase
     {
+        /// <summary>
+        /// Generator's index field
+        /// </summary>
+        private int _index;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public override int Index
+        {
+            get => _index;
+            set
+            {
+                ValueValidation.CheckPositive(value);
+                _index = value;
+            }
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -56,19 +74,19 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Generator's maximum active power field
         /// </summary>
-        private double _maxP;
+        private double _maxActivePower;
 
         /// <summary>
         /// Generator's maximum active power property
         /// </summary>
-        public double MaxP 
+        public double MaxActivePower 
         { 
-            get => _maxP;
+            get => _maxActivePower;
             set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckPositive(value);
-                _maxP = value;
+                _maxActivePower = value;
             } 
         }
 
@@ -80,25 +98,28 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Generator class instance constructor
         /// </summary>
-        /// <param name="elementStatus"></param>
-        /// <param name="generatorNumber"></param>
-        /// <param name="name"></param>
-        /// <param name="node"></param>
-        /// <param name="maxP"></param>
-        /// <param name="pQDiagram"></param>
-        public Generator(ElementStatus elementStatus, 
-                        int generatorNumber, 
-                        string name, 
-                        Node node, 
-                        double maxP, 
-                        PQDiagram pQDiagram)
+        /// <param name="index">Generator index</param>
+        /// <param name="elementStatus">Generator status</param>
+        /// <param name="generatorNumber">Generator number</param>
+        /// <param name="name">Generator name</param>
+        /// <param name="node">Generator node</param>
+        /// <param name="maxActivePower">Generator max active power</param>
+        /// <param name="pqDiagram">Generator PQ diagram</param>
+        public Generator(int index,
+                         ElementStatus elementStatus, 
+                         int generatorNumber, 
+                         string name, 
+                         Node node, 
+                         double maxActivePower, 
+                         PQDiagram pqDiagram)
         {
+            Index = index;
             ElementStatus = elementStatus;
             GeneratorNumber = generatorNumber;
             Name = name;
             Node = node;
-            MaxP = maxP;
-            PQDiagram = pQDiagram;
+            MaxActivePower = maxActivePower;
+            PQDiagram = pqDiagram;
         }
     }
 }

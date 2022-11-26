@@ -1,4 +1,4 @@
-﻿namespace RastrPVEqConsole.Validation
+﻿namespace RastrPVEqConsole.Infrastructure
 {
     /// <summary>
     /// ValueValidation class

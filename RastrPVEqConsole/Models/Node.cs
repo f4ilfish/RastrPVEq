@@ -1,4 +1,4 @@
-﻿using RastrPVEqConsole.Validation;
+﻿using RastrPVEqConsole.Infrastructure;
 
 namespace RastrPVEqConsole.Models
 {
@@ -7,6 +7,24 @@ namespace RastrPVEqConsole.Models
     /// </summary>
     public class Node : ElementBase
     {
+        /// <summary>
+        /// Node's index field
+        /// </summary>
+        private int _index;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public override int Index
+        {
+            get => _index;
+            set
+            {
+                ValueValidation.CheckPositive(value);
+                _index = value;
+            }
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -75,13 +93,20 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Node's class instance constructor
         /// </summary>
-        /// <param name="elementStatus">Element status</param>
+        /// <param name="index">Node index</param>
+        /// <param name="elementStatus">Node status</param>
         /// <param name="nodeType">Node type</param>
         /// <param name="nodeNumber">Node number</param>
-        /// <param name="name">Name</param>
-        /// <param name="ratedVoltage">Rated voltage</param>
-        public Node(ElementStatus elementStatus, NodeType nodeType, int nodeNumber, string name, double ratedVoltage)
+        /// <param name="name">Node name</param>
+        /// <param name="ratedVoltage">Node rated voltage</param>
+        public Node(int index, 
+                    ElementStatus elementStatus, 
+                    NodeType nodeType, 
+                    int nodeNumber, 
+                    string name, 
+                    double ratedVoltage)
         {
+            Index = index;
             ElementStatus = elementStatus;
             NodeType = nodeType;
             NodeNumber = nodeNumber;

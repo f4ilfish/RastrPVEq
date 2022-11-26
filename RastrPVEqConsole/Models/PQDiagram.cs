@@ -1,4 +1,4 @@
-﻿using RastrPVEqConsole.Validation;
+﻿using RastrPVEqConsole.Infrastructure;
 
 namespace RastrPVEqConsole.Models
 {
@@ -10,18 +10,18 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Diagram's number field
         /// </summary>
-        private int _digramNumber;
+        private int _diagramNumber;
 
         /// <summary>
         /// Diagram's number property
         /// </summary>
-        public int DigramNumber 
+        public int DiagramNumber 
         { 
-            get => _digramNumber;
+            get => _diagramNumber;
             set 
             {
                 ValueValidation.CheckPositive(value);
-                _digramNumber = value;
+                _diagramNumber = value;
             } 
         }
         
@@ -37,7 +37,7 @@ namespace RastrPVEqConsole.Models
         /// <param name="adjustmentRanges">Adjustment ranges</param>
         public PQDiagram(int diagramNumber, List<AdjustmentRange> adjustmentRanges)
         {
-            DigramNumber = diagramNumber;
+            DiagramNumber = diagramNumber;
             AdjustmentRanges = adjustmentRanges;
         }
     }

@@ -6,6 +6,11 @@
     public abstract class ElementBase
     {
         /// <summary>
+        /// Element's index property
+        /// </summary>
+        public abstract int Index { get; set; }
+
+        /// <summary>
         /// Element's status property
         /// </summary>
         public abstract ElementStatus ElementStatus { get; set; }

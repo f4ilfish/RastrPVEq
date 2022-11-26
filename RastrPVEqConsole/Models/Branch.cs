@@ -1,4 +1,4 @@
-﻿using RastrPVEqConsole.Validation;
+﻿using RastrPVEqConsole.Infrastructure;
 
 namespace RastrPVEqConsole.Models
 {
@@ -7,6 +7,24 @@ namespace RastrPVEqConsole.Models
     /// </summary>
     public class Branch : ElementBase
     {
+        /// <summary>
+        /// Branch's index field
+        /// </summary>
+        private int _index;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public override int Index
+        {
+            get => _index;
+            set
+            {
+                ValueValidation.CheckPositive(value);
+                _index = value;
+            }
+        }
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -138,17 +156,19 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Branch class instance constructor
         /// </summary>
-        /// <param name="elementStatus">Element status</param>
+        /// <param name="index">Branch index</param>
+        /// <param name="elementStatus">Branch status</param>
         /// <param name="branchType">Branch type</param>
-        /// <param name="startNode">Start node</param>
-        /// <param name="endNode">End node</param>
+        /// <param name="startNode">Branch start node</param>
+        /// <param name="endNode">Branch dnd node</param>
         /// <param name="parallelBranchNumber">Branch number</param>
-        /// <param name="name">Name</param>
-        /// <param name="resistance">Resistance</param>
-        /// <param name="inductance">Inductance</param>
-        /// <param name="capacitance">Capacitance</param>
+        /// <param name="name">Branch name</param>
+        /// <param name="resistance">Branch resistance</param>
+        /// <param name="inductance">Branch inductance</param>
+        /// <param name="capacitance">Branch capacitance</param>
         /// <param name="tranformerRatio">Transformer ratio</param>
-        public Branch(ElementStatus elementStatus, 
+        public Branch(int index,
+                      ElementStatus elementStatus, 
                       BranchType branchType, 
                       Node startNode, 
                       Node endNode, 
@@ -159,6 +179,7 @@ namespace RastrPVEqConsole.Models
                       double capacitance,
                       double tranformerRatio)
         {
+            Index = index;
             ElementStatus = elementStatus;
             BranchType = branchType;
             StartNode = startNode;
