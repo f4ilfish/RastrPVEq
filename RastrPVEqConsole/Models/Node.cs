@@ -20,7 +20,7 @@ namespace RastrPVEqConsole.Models
             get => _index;
             set
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNegative(value);
                 _index = value;
             }
         }
@@ -30,11 +30,6 @@ namespace RastrPVEqConsole.Models
         /// </summary>
         public override ElementStatus ElementStatus { get; set; }
         
-        /// <summary>
-        /// Node's type property
-        /// </summary>
-        public NodeType NodeType { get; set; }
-
         /// <summary>
         /// Node's number field
         /// </summary>
@@ -48,7 +43,7 @@ namespace RastrPVEqConsole.Models
             get => _nodeNumber;
             set
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNotPositive(value);
                 _nodeNumber = value;
             }
         }
@@ -85,7 +80,7 @@ namespace RastrPVEqConsole.Models
             set 
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNotPositive(value);
                 _ratedVoltage = value;
             } 
         }
@@ -101,14 +96,12 @@ namespace RastrPVEqConsole.Models
         /// <param name="ratedVoltage">Node rated voltage</param>
         public Node(int index, 
                     ElementStatus elementStatus, 
-                    NodeType nodeType, 
                     int nodeNumber, 
                     string name, 
                     double ratedVoltage)
         {
             Index = index;
             ElementStatus = elementStatus;
-            NodeType = nodeType;
             NodeNumber = nodeNumber;
             Name = name;
             RatedVoltage = ratedVoltage;

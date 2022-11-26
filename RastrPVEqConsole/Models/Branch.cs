@@ -20,7 +20,7 @@ namespace RastrPVEqConsole.Models
             get => _index;
             set
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNegative(value);
                 _index = value;
             }
         }
@@ -44,21 +44,6 @@ namespace RastrPVEqConsole.Models
         /// Branch end node's property
         /// </summary>
         public Node EndNode { get; set; }
-
-        private int _parellelBranchNumber;
-
-        /// <summary>
-        /// Parallel brnch number's property
-        /// </summary>
-        public int ParallelBranchNumber 
-        { 
-            get => _parellelBranchNumber;
-            set
-            {
-                ValueValidation.CheckPositiveOrZero(value);
-                _parellelBranchNumber = value;
-            } 
-        }
 
         /// <summary>
         /// Branch name's field
@@ -92,7 +77,7 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckPositiveOrZero(value);
+                ValueValidation.CheckIsNegative(value);
                 _resistance = value;
             }
         }
@@ -147,8 +132,8 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckPositiveOrZero(value);
-                ValueValidation.CheckOneOrLess(value);
+                ValueValidation.CheckIsNegative(value);
+                ValueValidation.CheckIsBiggerThanOne(value);
                 _transformerRatio = value;
             }
         }
@@ -159,9 +144,38 @@ namespace RastrPVEqConsole.Models
         /// <param name="index">Branch index</param>
         /// <param name="elementStatus">Branch status</param>
         /// <param name="branchType">Branch type</param>
+        /// <param name="name">Branch name</param>
+        /// <param name="resistance">Branch resistance</param>
+        /// <param name="inductance">Branch inductance</param>
+        /// <param name="capacitance">Branch capacitance</param>
+        /// <param name="tranformerRatio">Transformer ratio</param>
+        public Branch(int index,
+                      ElementStatus elementStatus,
+                      BranchType branchType,
+                      string name,
+                      double resistance,
+                      double inductance,
+                      double capacitance,
+                      double tranformerRatio)
+        {
+            Index = index;
+            ElementStatus = elementStatus;
+            BranchType = branchType;
+            Name = name;
+            Resistance = resistance;
+            Inductance = inductance;
+            Capacitance = capacitance;
+            TransformerRatio = tranformerRatio;
+        }
+
+        /// <summary>
+        /// Branch class instance constructor
+        /// </summary>
+        /// <param name="index">Branch index</param>
+        /// <param name="elementStatus">Branch status</param>
+        /// <param name="branchType">Branch type</param>
         /// <param name="startNode">Branch start node</param>
         /// <param name="endNode">Branch dnd node</param>
-        /// <param name="parallelBranchNumber">Branch number</param>
         /// <param name="name">Branch name</param>
         /// <param name="resistance">Branch resistance</param>
         /// <param name="inductance">Branch inductance</param>
@@ -172,7 +186,6 @@ namespace RastrPVEqConsole.Models
                       BranchType branchType, 
                       Node startNode, 
                       Node endNode, 
-                      int parallelBranchNumber, 
                       string name,
                       double resistance,
                       double inductance,
@@ -184,7 +197,6 @@ namespace RastrPVEqConsole.Models
             BranchType = branchType;
             StartNode = startNode;
             EndNode = endNode;
-            ParallelBranchNumber = parallelBranchNumber;
             Name = name;
             Resistance = resistance;
             Inductance = inductance;

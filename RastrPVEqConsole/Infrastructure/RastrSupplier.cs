@@ -62,58 +62,6 @@ namespace RastrPVEqConsole.Infrastructure
             }
         }
 
-        public static Node GetNode(int elementIndex)
-        {
-            var nodeTable = "node";
-            
-            var elementStatusColumn = "sta";
-            var nodeTypeColumn = "tip";
-            var nodeNumberColumn = "ny";
-            var nodeNameColumn = "name";
-            var nodeRatedVoltageColumn = "uhom";
-
-            var elementStatusValue = (bool)GetElementParameterValue(nodeTable, elementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
-            var nodeTypeValue = GetElementParameterValue(nodeTable, nodeTypeColumn, elementIndex);
-            var nodeNumberValue = GetElementParameterValue(nodeTable, nodeNumberColumn, elementIndex);
-            var nodeNameValue = GetElementParameterValue(nodeTable, nodeNameColumn, elementIndex);
-            var nodeRatedVoltageValue = GetElementParameterValue(nodeTable, nodeRatedVoltageColumn, elementIndex);
-
-
-
-
-            return null;
-            //var node = new Node(elementIndex, )
-        }
-
-        /// <summary>
-        /// Get element parameter's value
-        /// </summary>
-        /// <param name="tableName">Rastr file's table name</param>
-        /// <param name="columnName">Table column's name corresponds element's parameter</param>
-        /// <param name="elementIndex">Element's index in table</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static object GetElementParameterValue(string tableName, string columnName, int elementIndex)
-        {
-            if (Rastr.Tables.Find[tableName] == -1) 
-                throw new ArgumentException($"Rastr loaded files doesn't contain {tableName}");
-
-            ITable table = Rastr.Tables.Item(tableName);
-
-            if (table.Cols.Find[columnName] == -1) 
-                throw new ArgumentException($"Table {tableName} doesn't contain {columnName}");
-
-            ICol elementParameter = table.Cols.Item(columnName);
-
-            var numberOfElements = table.Count;
-
-            if (elementIndex >= numberOfElements)
-                throw new ArgumentException($"Table {tableName} doesn't contain element with index {elementIndex}. " +
-                    $"Table contain {numberOfElements} elements. Max index of element {numberOfElements - 1}");
-
-            return elementParameter.get_ZN(elementIndex);
-        }
-
         /// <summary>
         /// Check file existance from path
         /// </summary>
@@ -140,6 +88,122 @@ namespace RastrPVEqConsole.Infrastructure
         {
             if (Path.GetExtension(filePath) != fileFormat)
                 throw new FileLoadException($"File on {filePath} must be in *{fileFormat} format");
+        }
+
+        /// <summary>
+        /// Get element parameter's value
+        /// </summary>
+        /// <param name="tableName">Rastr file's table name</param>
+        /// <param name="columnName">Table column's name corresponds element's parameter</param>
+        /// <param name="elementIndex">Element's index in table</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static object GetElementParameterValue(string tableName, string columnName, int elementIndex)
+        {
+            if (Rastr.Tables.Find[tableName] == -1)
+                throw new ArgumentException($"Rastr loaded files doesn't contain {tableName}");
+
+            ITable table = Rastr.Tables.Item(tableName);
+
+            if (table.Cols.Find[columnName] == -1)
+                throw new ArgumentException($"Table {tableName} doesn't contain {columnName}");
+
+            ICol elementParameter = table.Cols.Item(columnName);
+
+            var numberOfElements = table.Count;
+
+            if (elementIndex >= numberOfElements)
+                throw new ArgumentException($"Table {tableName} doesn't contain element with index {elementIndex}. " +
+                    $"Table contain {numberOfElements} elements. Max index of element {numberOfElements - 1}");
+
+            return elementParameter.get_ZN(elementIndex);
+        }
+
+        private const string nodeTable = "node";
+        private const string branchTable = "vetv";
+        private const string adjustmentRangeTable = "graphik2";
+
+        private const string elementStatusColumn = "sta";
+        private const string elementNameColumn = "name";
+
+        private const string nodeNumberColumn = "ny";
+        private const string nodeRatedVoltageColumn = "uhom";
+
+        private const string branchTypeColumn = "tip";
+        private const string branchResistanceColumn = "r";
+        private const string branchInductanceColumn = "x";
+        private const string branchCapacitanceColumn = "b";
+        private const string branchTranformerRatioColumn = "ktr";
+
+        private const string adjustmentRangeNumberColumn = "Num";
+        private const string adjustmentRangeActivePowerColumn = "P";
+        private const string adjustmentRangeMinimumReactivePowerColumn = "Qmin";
+        private const string adjustmentRangeMaximumReactivePowerColumn = "Qmax";
+
+        /// <summary>
+        /// Get node
+        /// </summary>
+        /// <param name="elementIndex">Index of element in table</param>
+        /// <returns></returns>
+        public static Node GetNodeByIndex(int elementIndex)
+        {
+            var elementStatusValue = !(bool)GetElementParameterValue(nodeTable, elementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
+            var nodeNumberValue = (int)GetElementParameterValue(nodeTable, nodeNumberColumn, elementIndex);
+            var nodeNameValue = (string)GetElementParameterValue(nodeTable, elementNameColumn, elementIndex);
+            var nodeRatedVoltageValue = (double)GetElementParameterValue(nodeTable, nodeRatedVoltageColumn, elementIndex);
+
+            return new Node(elementIndex, elementStatusValue, nodeNumberValue, nodeNameValue, nodeRatedVoltageValue);
+        }
+
+        /// <summary>
+        /// Get branch
+        /// </summary>
+        /// <param name="elementIndex"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Branch GetBranchByIndex(int elementIndex)
+        {
+            var elementStatusValue = (int)GetElementParameterValue(branchTable, elementStatusColumn, elementIndex) == 0 ? ElementStatus.Enable : ElementStatus.Disable;
+            var branchTypeValue = (int)GetElementParameterValue(branchTable, branchTypeColumn, elementIndex) switch
+            {
+                0 => BranchType.Line,
+                1 => BranchType.Transformer,
+                2 => BranchType.Switch,
+                _ => throw new ArgumentException("Unknown int branch type"),
+            };
+            var branchNameValue = (string)GetElementParameterValue(branchTable, elementNameColumn, elementIndex);
+            var branchResistanceValue = (double)GetElementParameterValue(branchTable, branchResistanceColumn, elementIndex);
+            var branchInductanceValue = (double)GetElementParameterValue(branchTable, branchInductanceColumn, elementIndex);
+            var branchCapacitanceValue = (double)GetElementParameterValue(branchTable, branchCapacitanceColumn, elementIndex);
+            var branchTranformerRatioValue = (double)GetElementParameterValue(branchTable, branchTranformerRatioColumn, elementIndex);
+
+            return new Branch(elementIndex, 
+                              elementStatusValue, 
+                              branchTypeValue, 
+                              branchNameValue, 
+                              branchResistanceValue, 
+                              branchInductanceValue, 
+                              branchCapacitanceValue, 
+                              branchTranformerRatioValue);
+        }
+
+        /// <summary>
+        /// Get adjustment range
+        /// </summary>
+        /// <param name="elementIndex"></param>
+        /// <returns></returns>
+        private static AdjustmentRange GetAdjustmentRangeByIndex(int elementIndex)
+        {
+            var adjustmentRangeNumberValue = (int)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeNumberColumn, elementIndex);
+            var adjustmentRangeActivePowerValue = (double)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeActivePowerColumn, elementIndex);
+            var adjustmentRangeMinimumReactivePowerValue = (double)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeMinimumReactivePowerColumn, elementIndex);
+            var adjustmentRangeMaximumReactivePowerValue = (double)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeMaximumReactivePowerColumn, elementIndex);
+
+            return new AdjustmentRange(elementIndex, 
+                                       adjustmentRangeNumberValue, 
+                                       adjustmentRangeActivePowerValue, 
+                                       adjustmentRangeMinimumReactivePowerValue, 
+                                       adjustmentRangeMaximumReactivePowerValue);
         }
     }
 }

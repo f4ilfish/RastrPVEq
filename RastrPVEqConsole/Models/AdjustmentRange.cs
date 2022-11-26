@@ -20,8 +20,26 @@ namespace RastrPVEqConsole.Models
             get => _index;
             set
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNegative(value);
                 _index = value;
+            }
+        }
+
+        /// <summary>
+        /// AdjustmentRange's diagram number field
+        /// </summary>
+        private int _diagramNumber;
+
+        /// <summary>
+        /// AdjustmentRange's diagram number property
+        /// </summary>
+        public int DiagramNumber
+        {
+            get => _diagramNumber;
+            set
+            {
+                ValueValidation.CheckIsNotPositive(value);
+                _diagramNumber = value;
             }
         }
 
@@ -39,7 +57,7 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckPositiveOrZero(value);
+                ValueValidation.CheckIsNegative(value);
                 _activePower = value;
             } 
         }
@@ -58,7 +76,7 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckNegativeOrZero(value);
+                ValueValidation.CheckIsPositive(value);
                 _minReactivePower = value;
             } 
         }
@@ -77,7 +95,7 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckPositiveOrZero(value);
+                ValueValidation.CheckIsNegative(value);
                 _maxReactivePower = value;
             } 
         }
@@ -86,14 +104,17 @@ namespace RastrPVEqConsole.Models
         /// AdjustmentRange's class instance constructor
         /// </summary>
         /// <param name="activePower">Active power</param>
+        /// <param name="diagramNumber">AdjustmentRange's diagram number</param>
         /// <param name="minReactivePower">Minimum reactive power</param>
         /// <param name="maxReactivePower">Maximum reactive power</param>
-        public AdjustmentRange(int index, 
+        public AdjustmentRange(int index,
+                               int diagramNumber,
                                double activePower,
                                double minReactivePower,
                                double maxReactivePower)
         {
             Index = index;
+            DiagramNumber = diagramNumber;
             ActivePower = activePower;
             MinReactivePower = minReactivePower; 
             MaxReactivePower = maxReactivePower; 

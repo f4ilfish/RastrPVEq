@@ -16,42 +16,46 @@
         }
 
         /// <summary>
-        /// Check positive double constraint
+        /// Check is not positive constraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckPositive(double value)
+        public static void CheckIsNotPositive(double value)
         {
-            if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value), "Expected positive double");
+            if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value),
+                                                                  "Value is not positive. Expected positive");
         }
 
         /// <summary>
-        /// Check positive int constraint
+        /// Check is not positive constraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckPositive(int value)
+        public static void CheckIsNotPositive(int value)
         {
-            if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value), "Expected positive int");
+            if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value), 
+                                                                  "Value is not positive. Expected positive");
         }
 
         /// <summary>
-        /// Check positive or zero double constraint
+        /// Check is negative
         /// </summary>
         /// <param name="value">Input value</param>
-        public static void CheckPositiveOrZero(double value)
+        public static void CheckIsNegative(double value)
         {
-            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Expected positive or zero double");
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), 
+                                                                 "Value is negative. Expected not negative");
         }
 
         /// <summary>
-        /// Check negative or zero double constraint
+        /// Check is positive
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckNegativeOrZero(double value)
+        public static void CheckIsPositive(double value)
         {
-            if (value > 0) throw new ArgumentOutOfRangeException(nameof(value), "Expected negative or zero double");
+            if (value > 0) throw new ArgumentOutOfRangeException(nameof(value),
+                                                                 "Value is positive. Expected not positive");
         }
 
         /// <summary>
@@ -69,9 +73,10 @@
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckOneOrLess(double value)
+        public static void CheckIsBiggerThanOne(double value)
         {
-            if (value >= 1) throw new ArgumentOutOfRangeException(nameof(value), "Expected 1 or less double");
+            if (value > 1) throw new ArgumentOutOfRangeException(nameof(value), 
+                                                                 "Expected [0...1] value");
         }
 
         ///// <summary>

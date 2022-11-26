@@ -20,7 +20,7 @@ namespace RastrPVEqConsole.Models
             get => _index;
             set
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNegative(value);
                 _index = value;
             }
         }
@@ -43,7 +43,7 @@ namespace RastrPVEqConsole.Models
             get => _generatorNumber; 
             set
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNotPositive(value);
                 _generatorNumber = value;
             }
         }
@@ -85,7 +85,7 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNotPositive(value);
                 _maxActivePower = value;
             } 
         }

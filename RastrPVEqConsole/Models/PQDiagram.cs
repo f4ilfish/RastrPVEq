@@ -20,7 +20,7 @@ namespace RastrPVEqConsole.Models
             get => _diagramNumber;
             set 
             {
-                ValueValidation.CheckPositive(value);
+                ValueValidation.CheckIsNotPositive(value);
                 _diagramNumber = value;
             } 
         }
