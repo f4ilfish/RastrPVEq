@@ -145,7 +145,7 @@ namespace RastrPVEqConsole.Infrastructure
         /// </summary>
         /// <param name="elementIndex">Index of element in table</param>
         /// <returns></returns>
-        private static Node GetNodeByIndex(int elementIndex)
+        public static Node GetNodeByIndex(int elementIndex)
         {
             var elementStatusValue = !(bool)GetElementParameterValue(NodeTable, ElementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
             var nodeNumberValue = (int)GetElementParameterValue(NodeTable, NodeNumberColumn, elementIndex);
@@ -161,7 +161,7 @@ namespace RastrPVEqConsole.Infrastructure
         /// <param name="elementIndex"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        private static Branch GetBranchByIndex(int elementIndex)
+        public static Branch GetBranchByIndex(int elementIndex)
         {
             var elementStatusValue = (int)GetElementParameterValue(BranchTable, ElementStatusColumn, elementIndex) == 0 ? ElementStatus.Enable : ElementStatus.Disable;
             var branchTypeValue = (int)GetElementParameterValue(BranchTable, BranchTypeColumn, elementIndex) switch
@@ -192,7 +192,7 @@ namespace RastrPVEqConsole.Infrastructure
         /// </summary>
         /// <param name="elementIndex"></param>
         /// <returns></returns>
-        private static AdjustmentRange GetAdjustmentRangeByIndex(int elementIndex)
+        public static AdjustmentRange GetAdjustmentRangeByIndex(int elementIndex)
         {
             var adjustmentRangeNumberValue = (int)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeNumberColumn, elementIndex);
             var adjustmentRangeActivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeActivePowerColumn, elementIndex);
@@ -241,12 +241,5 @@ namespace RastrPVEqConsole.Infrastructure
 
             return adjustmentRanges;
         }
-
-        //public static List<PQDiagram> GetPQDiagrams(List<AdjustmentRange> adjustmentRanges)
-        //{
-        //    var pqDiagrams = new List<PQDiagram>();
-
-
-        //}
     }
 }

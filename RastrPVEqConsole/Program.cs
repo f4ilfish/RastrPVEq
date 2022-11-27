@@ -33,11 +33,11 @@ namespace RastrPVEqConsole
 
             Console.WriteLine(">>> List of adjustment ranges created");
 
-            var listPQDiagrams = from range in ranges
-                                 group range by range.DiagramNumber into groupRanges
-                                 select new { diagramNumber = groupRanges.Key, diagramRanges = groupRanges.Count() };
+            //var listPQDiagrams = from range in ranges
+            //                     group range by range.DiagramNumber into groupRanges
+            //                     select new { diagramNumber = groupRanges.Key, diagramRanges = groupRanges.Count() };
 
-            Console.WriteLine(">>> Adjustment ranges grouped");
+            //Console.WriteLine(">>> Adjustment ranges grouped");
 
             stopwatch.Stop();
 
