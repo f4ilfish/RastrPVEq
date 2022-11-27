@@ -76,7 +76,6 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsPositive(value);
                 _minReactivePower = value;
             } 
         }
@@ -95,7 +94,11 @@ namespace RastrPVEqConsole.Models
             set
             {
                 ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsNegative(value);
+                
+                if (value < MinReactivePower) throw new ArgumentException("Max reactive power " +
+                                                                            "must be greater " +
+                                                                            "than min reactive power");
+         
                 _maxReactivePower = value;
             } 
         }

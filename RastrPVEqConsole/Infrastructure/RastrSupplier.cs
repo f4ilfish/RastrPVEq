@@ -98,7 +98,7 @@ namespace RastrPVEqConsole.Infrastructure
         /// <param name="elementIndex">Element's index in table</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static object GetElementParameterValue(string tableName, string columnName, int elementIndex)
+        private static object GetElementParameterValue(string tableName, string columnName, int elementIndex)
         {
             if (Rastr.Tables.Find[tableName] == -1)
                 throw new ArgumentException($"Rastr loaded files doesn't contain {tableName}");
@@ -119,38 +119,38 @@ namespace RastrPVEqConsole.Infrastructure
             return elementParameter.get_ZN(elementIndex);
         }
 
-        private const string nodeTable = "node";
-        private const string branchTable = "vetv";
-        private const string adjustmentRangeTable = "graphik2";
+        private const string NodeTable = "node";
+        private const string BranchTable = "vetv";
+        private const string AdjustmentRangeTable = "graphik2";
 
-        private const string elementStatusColumn = "sta";
-        private const string elementNameColumn = "name";
+        private const string ElementStatusColumn = "sta";
+        private const string ElementNameColumn = "name";
 
-        private const string nodeNumberColumn = "ny";
-        private const string nodeRatedVoltageColumn = "uhom";
+        private const string NodeNumberColumn = "ny";
+        private const string NodeRatedVoltageColumn = "uhom";
 
-        private const string branchTypeColumn = "tip";
-        private const string branchResistanceColumn = "r";
-        private const string branchInductanceColumn = "x";
-        private const string branchCapacitanceColumn = "b";
-        private const string branchTranformerRatioColumn = "ktr";
+        private const string BranchTypeColumn = "tip";
+        private const string BranchResistanceColumn = "r";
+        private const string BranchInductanceColumn = "x";
+        private const string BranchCapacitanceColumn = "b";
+        private const string BranchTranformerRatioColumn = "ktr";
 
-        private const string adjustmentRangeNumberColumn = "Num";
-        private const string adjustmentRangeActivePowerColumn = "P";
-        private const string adjustmentRangeMinimumReactivePowerColumn = "Qmin";
-        private const string adjustmentRangeMaximumReactivePowerColumn = "Qmax";
+        private const string AdjustmentRangeNumberColumn = "Num";
+        private const string AdjustmentRangeActivePowerColumn = "P";
+        private const string AdjustmentRangeMinimumReactivePowerColumn = "Qmin";
+        private const string AdjustmentRangeMaximumReactivePowerColumn = "Qmax";
 
         /// <summary>
         /// Get node
         /// </summary>
         /// <param name="elementIndex">Index of element in table</param>
         /// <returns></returns>
-        public static Node GetNodeByIndex(int elementIndex)
+        private static Node GetNodeByIndex(int elementIndex)
         {
-            var elementStatusValue = !(bool)GetElementParameterValue(nodeTable, elementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
-            var nodeNumberValue = (int)GetElementParameterValue(nodeTable, nodeNumberColumn, elementIndex);
-            var nodeNameValue = (string)GetElementParameterValue(nodeTable, elementNameColumn, elementIndex);
-            var nodeRatedVoltageValue = (double)GetElementParameterValue(nodeTable, nodeRatedVoltageColumn, elementIndex);
+            var elementStatusValue = !(bool)GetElementParameterValue(NodeTable, ElementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
+            var nodeNumberValue = (int)GetElementParameterValue(NodeTable, NodeNumberColumn, elementIndex);
+            var nodeNameValue = (string)GetElementParameterValue(NodeTable, ElementNameColumn, elementIndex);
+            var nodeRatedVoltageValue = (double)GetElementParameterValue(NodeTable, NodeRatedVoltageColumn, elementIndex);
 
             return new Node(elementIndex, elementStatusValue, nodeNumberValue, nodeNameValue, nodeRatedVoltageValue);
         }
@@ -161,21 +161,21 @@ namespace RastrPVEqConsole.Infrastructure
         /// <param name="elementIndex"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Branch GetBranchByIndex(int elementIndex)
+        private static Branch GetBranchByIndex(int elementIndex)
         {
-            var elementStatusValue = (int)GetElementParameterValue(branchTable, elementStatusColumn, elementIndex) == 0 ? ElementStatus.Enable : ElementStatus.Disable;
-            var branchTypeValue = (int)GetElementParameterValue(branchTable, branchTypeColumn, elementIndex) switch
+            var elementStatusValue = (int)GetElementParameterValue(BranchTable, ElementStatusColumn, elementIndex) == 0 ? ElementStatus.Enable : ElementStatus.Disable;
+            var branchTypeValue = (int)GetElementParameterValue(BranchTable, BranchTypeColumn, elementIndex) switch
             {
                 0 => BranchType.Line,
                 1 => BranchType.Transformer,
                 2 => BranchType.Switch,
                 _ => throw new ArgumentException("Unknown int branch type"),
             };
-            var branchNameValue = (string)GetElementParameterValue(branchTable, elementNameColumn, elementIndex);
-            var branchResistanceValue = (double)GetElementParameterValue(branchTable, branchResistanceColumn, elementIndex);
-            var branchInductanceValue = (double)GetElementParameterValue(branchTable, branchInductanceColumn, elementIndex);
-            var branchCapacitanceValue = (double)GetElementParameterValue(branchTable, branchCapacitanceColumn, elementIndex);
-            var branchTranformerRatioValue = (double)GetElementParameterValue(branchTable, branchTranformerRatioColumn, elementIndex);
+            var branchNameValue = (string)GetElementParameterValue(BranchTable, ElementNameColumn, elementIndex);
+            var branchResistanceValue = (double)GetElementParameterValue(BranchTable, BranchResistanceColumn, elementIndex);
+            var branchInductanceValue = (double)GetElementParameterValue(BranchTable, BranchInductanceColumn, elementIndex);
+            var branchCapacitanceValue = (double)GetElementParameterValue(BranchTable, BranchCapacitanceColumn, elementIndex);
+            var branchTranformerRatioValue = (double)GetElementParameterValue(BranchTable, BranchTranformerRatioColumn, elementIndex);
 
             return new Branch(elementIndex, 
                               elementStatusValue, 
@@ -194,10 +194,10 @@ namespace RastrPVEqConsole.Infrastructure
         /// <returns></returns>
         private static AdjustmentRange GetAdjustmentRangeByIndex(int elementIndex)
         {
-            var adjustmentRangeNumberValue = (int)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeNumberColumn, elementIndex);
-            var adjustmentRangeActivePowerValue = (double)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeActivePowerColumn, elementIndex);
-            var adjustmentRangeMinimumReactivePowerValue = (double)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeMinimumReactivePowerColumn, elementIndex);
-            var adjustmentRangeMaximumReactivePowerValue = (double)GetElementParameterValue(adjustmentRangeTable, adjustmentRangeMaximumReactivePowerColumn, elementIndex);
+            var adjustmentRangeNumberValue = (int)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeNumberColumn, elementIndex);
+            var adjustmentRangeActivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeActivePowerColumn, elementIndex);
+            var adjustmentRangeMinimumReactivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeMinimumReactivePowerColumn, elementIndex);
+            var adjustmentRangeMaximumReactivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeMaximumReactivePowerColumn, elementIndex);
 
             return new AdjustmentRange(elementIndex, 
                                        adjustmentRangeNumberValue, 
@@ -205,5 +205,48 @@ namespace RastrPVEqConsole.Infrastructure
                                        adjustmentRangeMinimumReactivePowerValue, 
                                        adjustmentRangeMaximumReactivePowerValue);
         }
+
+        /// <summary>
+        /// Get nodes
+        /// </summary>
+        /// <returns></returns>
+        public static List<Node> GetNodes()
+        {
+            var nodes = new List<Node>();
+
+            var numberOfElements = Rastr.Tables.Item(NodeTable).Count;
+
+            for (int i = 0; i < numberOfElements; i++)
+            {
+                nodes.Add(GetNodeByIndex(i));
+            }
+
+            return nodes;
+        }
+
+        /// <summary>
+        /// Get adjustment ranges
+        /// </summary>
+        /// <returns></returns>
+        public static List<AdjustmentRange> GetAdjustmentRanges()
+        {
+            var adjustmentRanges = new List<AdjustmentRange>();
+
+            var numberOfElements = Rastr.Tables.Item(AdjustmentRangeTable).Count;
+
+            for (int i = 0; i < numberOfElements; i++)
+            {
+                adjustmentRanges.Add(GetAdjustmentRangeByIndex(i));
+            }
+
+            return adjustmentRanges;
+        }
+
+        //public static List<PQDiagram> GetPQDiagrams(List<AdjustmentRange> adjustmentRanges)
+        //{
+        //    var pqDiagrams = new List<PQDiagram>();
+
+
+        //}
     }
 }
