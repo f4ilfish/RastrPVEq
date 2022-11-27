@@ -100,21 +100,21 @@ namespace RastrPVEqConsole.Infrastructure
         /// <exception cref="ArgumentException"></exception>
         private static object GetElementParameterValue(string tableName, string columnName, int elementIndex)
         {
-            if (Rastr.Tables.Find[tableName] == -1)
-                throw new ArgumentException($"Rastr loaded files doesn't contain {tableName}");
+            //if (Rastr.Tables.Find[tableName] == -1)
+            //    throw new ArgumentException($"Rastr loaded files doesn't contain {tableName}");
 
             ITable table = Rastr.Tables.Item(tableName);
 
-            if (table.Cols.Find[columnName] == -1)
-                throw new ArgumentException($"Table {tableName} doesn't contain {columnName}");
+            //if (table.Cols.Find[columnName] == -1)
+            //    throw new ArgumentException($"Table {tableName} doesn't contain {columnName}");
 
             ICol elementParameter = table.Cols.Item(columnName);
 
-            var numberOfElements = table.Count;
+            //var numberOfElements = table.Count;
 
-            if (elementIndex >= numberOfElements)
-                throw new ArgumentException($"Table {tableName} doesn't contain element with index {elementIndex}. " +
-                    $"Table contain {numberOfElements} elements. Max index of element {numberOfElements - 1}");
+            //if (elementIndex >= numberOfElements)
+            //    throw new ArgumentException($"Table {tableName} doesn't contain element with index {elementIndex}. " +
+            //        $"Table contain {numberOfElements} elements. Max index of element {numberOfElements - 1}");
 
             return elementParameter.get_ZN(elementIndex);
         }

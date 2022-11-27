@@ -7,7 +7,7 @@ namespace RastrPVEqConsole
 {
     internal class Program
     {
-        static void Main()
+        static async Task Main()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -25,13 +25,13 @@ namespace RastrPVEqConsole
             //var tmpAdjustmentRange = RastrSupplier.GetAdjustmentRangeByIndex(0);
             //Console.WriteLine(">>> Sample adjustment range created");
 
-            var node = RastrSupplier.GetNodes();
+            //var node = RastrSupplier.GetNodes();
 
-            Console.WriteLine(">>> List of nodes created");
+            //Console.WriteLine(">>> List of nodes created");
 
-            var ranges = RastrSupplier.GetAdjustmentRanges();
+            //var ranges = RastrSupplier.GetAdjustmentRanges();
 
-            Console.WriteLine(">>> List of adjustment ranges created");
+            //Console.WriteLine(">>> List of adjustment ranges created");
 
             //var listPQDiagrams = from range in ranges
             //                     group range by range.DiagramNumber into groupRanges
@@ -39,14 +39,17 @@ namespace RastrPVEqConsole
 
             //Console.WriteLine(">>> Adjustment ranges grouped");
 
+            var nodes = RastrSupplierAsync.GetNodesAsync();
+
+            var adjustmentRanges = RastrSupplierAsync.GetAdjustmentRangesAsync();
+
+            await Task.WhenAll(nodes, adjustmentRanges);
+
             stopwatch.Stop();
 
             Console.WriteLine(stopwatch.Elapsed);
 
             Console.ReadKey();
         }
-
-
-       
     }
 }
