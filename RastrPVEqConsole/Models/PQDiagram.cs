@@ -8,36 +8,36 @@ namespace RastrPVEqConsole.Models
     public class PQDiagram
     {
         /// <summary>
-        /// Diagram's number field
+        /// Number
         /// </summary>
-        private int _diagramNumber;
+        private int _number;
 
         /// <summary>
-        /// Diagram's number property
+        /// Gets number
         /// </summary>
-        public int DiagramNumber 
+        public int Number 
         { 
-            get => _diagramNumber;
-            set 
+            get => _number;
+            private set 
             {
                 ValueValidation.CheckIsNotPositive(value);
-                _diagramNumber = value;
+                _number = value;
             } 
         }
         
         /// <summary>
-        /// Total adjustment ranges
+        /// Gets or sets list of adjustment ranges
         /// </summary>
-        public List<AdjustmentRange> AdjustmentRanges { get; set; }
+        public List<AdjustmentRange> AdjustmentRanges { get; private set; }
 
         /// <summary>
         /// PQ diagram class instance constructor
         /// </summary>
-        /// <param name="diagramNumber">Diagram number</param>
-        /// <param name="adjustmentRanges">Adjustment ranges</param>
-        public PQDiagram(int diagramNumber, List<AdjustmentRange> adjustmentRanges)
+        /// <param name="number">PQ diagram number</param>
+        /// <param name="adjustmentRanges">List of adjustment ranges</param>
+        public PQDiagram(int number, List<AdjustmentRange> adjustmentRanges)
         {
-            DiagramNumber = diagramNumber;
+            Number = number;
             AdjustmentRanges = adjustmentRanges;
         }
     }

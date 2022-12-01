@@ -25,17 +25,6 @@ namespace RastrPVEqConsole.Infrastructure
         }
 
         /// <summary>
-        /// Get adjustment range async
-        /// </summary>
-        /// <returns></returns>
-        public static async Task<List<AdjustmentRange>> GetAdjustmentRangesAsync()
-        {
-            var adjustmentRanges = await Task.Run(() => RastrSupplier.GetAdjustmentRanges());
-            Console.WriteLine(">>> Аdjustment ranges created");
-            return adjustmentRanges;
-        }
-
-        /// <summary>
         /// Get generators async
         /// </summary>
         /// <param name="nodes">List of nodes</param>
@@ -47,6 +36,18 @@ namespace RastrPVEqConsole.Infrastructure
             var generators = await Task.Run(() => RastrSupplier.GetGenerators(nodes, pqDiagrams));
             Console.WriteLine(">>> Generators created");
             return generators;
+        }
+
+        /// <summary>
+        /// Get PQ diagrams async
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<PQDiagram>> GetPQDiagramsAsync()
+        {
+            Console.WriteLine(">>> Start PQ diagrams creating");
+            var pqDiagrams = await Task.Run(() => RastrSupplier.GetPQDiagrams());
+            Console.WriteLine(">>> PQ diagrams created");
+            return pqDiagrams;
         }
 
         /// <summary>

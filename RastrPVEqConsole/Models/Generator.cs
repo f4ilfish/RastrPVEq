@@ -5,20 +5,20 @@ namespace RastrPVEqConsole.Models
     /// <summary>
     /// Generator class
     /// </summary>
-    public class Generator : ElementBase
+    public class Generator
     {
         /// <summary>
-        /// Generator's index field
+        /// Index field
         /// </summary>
         private int _index;
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Gets index
         /// </summary>
-        public override int Index
+        public int Index
         {
             get => _index;
-            set
+            private set
             {
                 ValueValidation.CheckIsNegative(value);
                 _index = value;
@@ -26,40 +26,40 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Gets generator status
         /// </summary>
-        public override ElementStatus ElementStatus { get; set; }
+        public ElementStatus GeneratorStatus { get; private set; }
 
         /// <summary>
-        /// Generator's number field
+        /// Number
         /// </summary>
-        private int _generatorNumber;
+        private int _number;
 
         /// <summary>
-        /// Generator's number property
+        /// Gets number
         /// </summary>
-        public int GeneratorNumber 
+        public int Number 
         { 
-            get => _generatorNumber; 
-            set
+            get => _number; 
+            private set
             {
                 ValueValidation.CheckIsNotPositive(value);
-                _generatorNumber = value;
+                _number = value;
             }
         }
 
         /// <summary>
-        /// Generator's name field
+        /// Name
         /// </summary>
         private string _name;
 
         /// <summary>
-        /// Generator's name property
+        /// Gets name
         /// </summary>
-        public override string Name 
+        public string Name 
         { 
             get => _name;
-            set
+            private set
             {
                 ValueValidation.CheckNotNullOrEmptyString(value);
                 _name = value;
@@ -67,22 +67,22 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Generator's node
+        /// Gets or sets generator node
         /// </summary>
-        public Node Node { get; set; }
+        public Node? GeneratorNode { get; set; }
 
         /// <summary>
-        /// Generator's maximum active power field
+        /// Adjusted maximum active power
         /// </summary>
         private double _maxActivePower;
 
         /// <summary>
-        /// Generator's maximum active power property
+        /// Gets adjusted maximum active power
         /// </summary>
         public double MaxActivePower 
         { 
             get => _maxActivePower;
-            set
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNotPositive(value);
@@ -91,56 +91,29 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Generator's PQ diagram
+        /// Gets or sets generator PQ diagram
         /// </summary>
-        public PQDiagram PQDiagram { get; set; }
+        public PQDiagram? GeneratorPQDiagram { get; set; }
 
         /// <summary>
         /// Generator class instance constructor
         /// </summary>
-        /// <param name="index">Generator index</param>
-        /// <param name="elementStatus">Generator status</param>
-        /// <param name="generatorNumber">Generator number</param>
-        /// <param name="name">Generator name</param>
-        /// <param name="maxActivePower">Generator max active power</param>
+        /// <param name="index">Index</param>
+        /// <param name="generatorStatus">Status</param>
+        /// <param name="number">Number</param>
+        /// <param name="name">Name</param>
+        /// <param name="maxActivePower">Adjusted max active power</param>
         public Generator(int index,
-                         ElementStatus elementStatus,
-                         int generatorNumber,
+                         ElementStatus generatorStatus,
+                         int number,
                          string name,
                          double maxActivePower)
         {
             Index = index;
-            ElementStatus = elementStatus;
-            GeneratorNumber = generatorNumber;
+            GeneratorStatus = generatorStatus;
+            Number = number;
             Name = name;
             MaxActivePower = maxActivePower;
-        }
-
-        /// <summary>
-        /// Generator class instance constructor
-        /// </summary>
-        /// <param name="index">Generator index</param>
-        /// <param name="elementStatus">Generator status</param>
-        /// <param name="generatorNumber">Generator number</param>
-        /// <param name="name">Generator name</param>
-        /// <param name="node">Generator node</param>
-        /// <param name="maxActivePower">Generator max active power</param>
-        /// <param name="pqDiagram">Generator PQ diagram</param>
-        public Generator(int index,
-                         ElementStatus elementStatus, 
-                         int generatorNumber, 
-                         string name, 
-                         Node node, 
-                         double maxActivePower, 
-                         PQDiagram pqDiagram)
-        {
-            Index = index;
-            ElementStatus = elementStatus;
-            GeneratorNumber = generatorNumber;
-            Name = name;
-            Node = node;
-            MaxActivePower = maxActivePower;
-            PQDiagram = pqDiagram;
         }
     }
 }

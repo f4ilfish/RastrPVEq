@@ -3,22 +3,22 @@
 namespace RastrPVEqConsole.Models
 {
     /// <summary>
-    /// Adjustment range
+    /// Adjustment range class
     /// </summary>
     public class AdjustmentRange
     {
         /// <summary>
-        /// Adjustment range's index field
+        /// Index
         /// </summary>
         private int _index;
 
         /// <summary>
-        /// Adjustment range's index property
+        /// Gets index
         /// </summary>
         public int Index
         {
             get => _index;
-            set
+            private set
             {
                 ValueValidation.CheckIsNegative(value);
                 _index = value;
@@ -26,35 +26,35 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// AdjustmentRange's diagram number field
+        /// PQ diagram number
         /// </summary>
-        private int _diagramNumber;
+        private int _pqDiagramNumber;
 
         /// <summary>
-        /// AdjustmentRange's diagram number property
+        /// Gets PQ diagram number
         /// </summary>
-        public int DiagramNumber
+        public int PQDiagramNumber
         {
-            get => _diagramNumber;
-            set
+            get => _pqDiagramNumber;
+            private set
             {
                 ValueValidation.CheckIsNotPositive(value);
-                _diagramNumber = value;
+                _pqDiagramNumber = value;
             }
         }
 
         /// <summary>
-        /// Active power's field
+        /// Active power
         /// </summary>
         private double _activePower;
 
         /// <summary>
-        /// Active power's property
+        /// Gets active power
         /// </summary>
         public double ActivePower 
         { 
             get => _activePower;
-            set
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNegative(value);
@@ -63,17 +63,17 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Adjusted minimum of reactive power for active power field
+        /// Adjusted minimum of reactive power
         /// </summary>
         private double _minReactivePower;
 
         /// <summary>
-        /// Adjusted minimum of reactive power for active power property
+        /// Gets adjusted minimum of reactive power
         /// </summary>
         public double MinReactivePower 
         { 
             get => _minReactivePower;
-            set
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 _minReactivePower = value;
@@ -81,43 +81,43 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Adjusted maximum of reactive power for active power field
+        /// Adjusted maximum of reactive power
         /// </summary>
         private double _maxReactivePower;
 
         /// <summary>
-        /// Adjusted maximum of reactive power for active power property
+        /// Gets adjusted maximum of reactive power
         /// </summary>
         public double MaxReactivePower 
         { 
             get => _maxReactivePower;
-            set
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
-                
-                if (value < MinReactivePower) throw new ArgumentException("Max reactive power " +
-                                                                            "must be greater " +
-                                                                            "than min reactive power");
-         
                 _maxReactivePower = value;
             } 
         }
 
         /// <summary>
-        /// AdjustmentRange's class instance constructor
+        /// Adjustment range class instance constructor
         /// </summary>
         /// <param name="activePower">Active power</param>
-        /// <param name="diagramNumber">AdjustmentRange's diagram number</param>
-        /// <param name="minReactivePower">Minimum reactive power</param>
-        /// <param name="maxReactivePower">Maximum reactive power</param>
+        /// <param name="pqDiagramNumber">PQ diagram number</param>
+        /// <param name="minReactivePower">Adjusted minimum reactive power</param>
+        /// <param name="maxReactivePower">Adjusted reactive power</param>
         public AdjustmentRange(int index,
-                               int diagramNumber,
+                               int pqDiagramNumber,
                                double activePower,
                                double minReactivePower,
                                double maxReactivePower)
         {
+            if (maxReactivePower < minReactivePower)
+                throw new ArgumentException("Max reactive power " +
+                                            "must be greater " +
+                                            "than min reactive power");
+
             Index = index;
-            DiagramNumber = diagramNumber;
+            PQDiagramNumber = pqDiagramNumber;
             ActivePower = activePower;
             MinReactivePower = minReactivePower; 
             MaxReactivePower = maxReactivePower; 

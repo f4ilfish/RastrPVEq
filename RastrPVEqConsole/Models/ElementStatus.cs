@@ -1,7 +1,7 @@
 ﻿namespace RastrPVEqConsole.Models
 {
     /// <summary>
-    /// Element status
+    /// Element statuses
     /// </summary>
     public enum ElementStatus
     {

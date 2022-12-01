@@ -5,20 +5,20 @@ namespace RastrPVEqConsole.Models
     /// <summary>
     /// Node class
     /// </summary>
-    public class Node : ElementBase
+    public class Node
     {
         /// <summary>
-        /// Node's index field
+        /// Index
         /// </summary>
         private int _index;
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Gets index
         /// </summary>
-        public override int Index
+        public int Index
         {
             get => _index;
-            set
+            private set
             {
                 ValueValidation.CheckIsNegative(value);
                 _index = value;
@@ -26,40 +26,40 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Gets node status
         /// </summary>
-        public override ElementStatus ElementStatus { get; set; }
+        public ElementStatus NodeStatus { get; private set; }
         
         /// <summary>
-        /// Node's number field
+        /// Number
         /// </summary>
-        private int _nodeNumber;
+        private int _number;
 
         /// <summary>
-        /// Node's number property
+        /// Gets number
         /// </summary>
-        public int NodeNumber 
+        public int Number 
         { 
-            get => _nodeNumber;
-            set
+            get => _number;
+            private set
             {
                 ValueValidation.CheckIsNotPositive(value);
-                _nodeNumber = value;
+                _number = value;
             }
         }
 
         /// <summary>
-        /// Node's name field
+        /// Name
         /// </summary>
         private string _name;
 
         /// <summary>
-        /// Node's name property
+        /// Gets name
         /// </summary>
-        public override string Name 
+        public string Name 
         { 
             get => _name;
-            set
+            private set
             {
                 ValueValidation.CheckNotNullOrEmptyString(value);
                 _name = value;
@@ -67,17 +67,17 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Node's rated voltage field
+        /// Rated voltage
         /// </summary>
         private double _ratedVoltage;
 
         /// <summary>
-        /// Node's rated voltage property
+        /// Gets rated voltage
         /// </summary>
         public double RatedVoltage 
         { 
             get => _ratedVoltage;
-            set 
+            private set 
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNotPositive(value);
@@ -86,23 +86,22 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Node's class instance constructor
+        /// Node class instance constructor
         /// </summary>
         /// <param name="index">Node index</param>
-        /// <param name="elementStatus">Node status</param>
-        /// <param name="nodeType">Node type</param>
-        /// <param name="nodeNumber">Node number</param>
+        /// <param name="nodeStatus">Node status</param>
+        /// <param name="number">Node number</param>
         /// <param name="name">Node name</param>
         /// <param name="ratedVoltage">Node rated voltage</param>
         public Node(int index, 
-                    ElementStatus elementStatus, 
-                    int nodeNumber, 
+                    ElementStatus nodeStatus, 
+                    int number, 
                     string name, 
                     double ratedVoltage)
         {
             Index = index;
-            ElementStatus = elementStatus;
-            NodeNumber = nodeNumber;
+            NodeStatus = nodeStatus;
+            Number = number;
             Name = name;
             RatedVoltage = ratedVoltage;
         }

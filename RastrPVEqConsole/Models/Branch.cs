@@ -5,20 +5,20 @@ namespace RastrPVEqConsole.Models
     /// <summary>
     /// Branch class
     /// </summary>
-    public class Branch : ElementBase
+    public class Branch
     {
         /// <summary>
-        /// Branch's index field
+        /// Index
         /// </summary>
         private int _index;
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Gets index
         /// </summary>
-        public override int Index
+        public int Index
         {
             get => _index;
-            set
+            private set
             {
                 ValueValidation.CheckIsNegative(value);
                 _index = value;
@@ -26,37 +26,37 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Gets branch status
         /// </summary>
-        public override ElementStatus ElementStatus { get; set; }
+        public ElementStatus BranchStatus { get; private set; }
 
         /// <summary>
-        /// Branch type's property
+        /// Gets branch type
         /// </summary>
-        public BranchType BranchType { get; set; }
+        public BranchType BranchType { get; private set; }
 
         /// <summary>
-        /// Branch start node's property
+        /// Gets or sets branch start node
         /// </summary>
-        public Node StartNode { get; set; }
+        public Node? BranchStartNode { get; set; }
 
         /// <summary>
-        /// Branch end node's property
+        /// Gets or sets branch end node
         /// </summary>
-        public Node EndNode { get; set; }
+        public Node? BranchEndNode { get; set; }
 
         /// <summary>
-        /// Branch name's field
+        /// Name
         /// </summary>
         private string _name;
 
         /// <summary>
-        /// Branch name's property
+        /// Gets name
         /// </summary>
-        public override string Name 
+        public string Name 
         { 
             get => _name; 
-            set
+            private set
             {
                 ValueValidation.CheckNotNullOrEmptyString(value);
                 _name = value;
@@ -64,17 +64,17 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Branch resistance's field
+        /// Resistance
         /// </summary>
         private double _resistance;
 
         /// <summary>
-        /// Branch resistance's property
+        /// Gets resistance
         /// </summary>
         public double Resistance
         {
             get => _resistance;
-            set
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNegative(value);
@@ -83,17 +83,17 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Branch inductance's field
+        /// Inductance
         /// </summary>
         private double _inductance;
 
         /// <summary>
-        /// Branch inductance's property
+        /// Gets inductance
         /// </summary>
         public double Inductance
         {
             get => _inductance;
-            set
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 _inductance = value;
@@ -101,40 +101,22 @@ namespace RastrPVEqConsole.Models
         }
 
         /// <summary>
-        /// Branch capacitance's field
+        /// Transformation ratio
         /// </summary>
-        private double _capacitance;
+        private double _transformationRatio;
 
         /// <summary>
-        /// Branch capacitance's property
+        /// Gets transformation ratio
         /// </summary>
-        public double Capacitance
+        public double TransformationRation
         {
-            get => _capacitance;
-            set
-            {
-                ValueValidation.CheckNotNaN(value);
-                _capacitance = value;
-            }
-        }
-
-        /// <summary>
-        /// Branch (transformer) ratio's field
-        /// </summary>
-        private double _transformerRatio;
-
-        /// <summary>
-        /// Branch (transformer) ratio's property
-        /// </summary>
-        public double TransformerRatio
-        {
-            get => _transformerRatio;
-            set
+            get => _transformationRatio;
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNegative(value);
                 ValueValidation.CheckIsBiggerThanOne(value);
-                _transformerRatio = value;
+                _transformationRatio = value;
             }
         }
 
@@ -142,66 +124,27 @@ namespace RastrPVEqConsole.Models
         /// Branch class instance constructor
         /// </summary>
         /// <param name="index">Branch index</param>
-        /// <param name="elementStatus">Branch status</param>
+        /// <param name="branchStatus">Branch status</param>
         /// <param name="branchType">Branch type</param>
         /// <param name="name">Branch name</param>
         /// <param name="resistance">Branch resistance</param>
         /// <param name="inductance">Branch inductance</param>
-        /// <param name="capacitance">Branch capacitance</param>
-        /// <param name="tranformerRatio">Transformer ratio</param>
+        /// <param name="tranformationRatio">Transformation ratio</param>
         public Branch(int index,
-                      ElementStatus elementStatus,
+                      ElementStatus branchStatus,
                       BranchType branchType,
                       string name,
                       double resistance,
                       double inductance,
-                      double capacitance,
-                      double tranformerRatio)
+                      double tranformationRatio)
         {
             Index = index;
-            ElementStatus = elementStatus;
+            BranchStatus = branchStatus;
             BranchType = branchType;
             Name = name;
             Resistance = resistance;
             Inductance = inductance;
-            Capacitance = capacitance;
-            TransformerRatio = tranformerRatio;
-        }
-
-        /// <summary>
-        /// Branch class instance constructor
-        /// </summary>
-        /// <param name="index">Branch index</param>
-        /// <param name="elementStatus">Branch status</param>
-        /// <param name="branchType">Branch type</param>
-        /// <param name="startNode">Branch start node</param>
-        /// <param name="endNode">Branch dnd node</param>
-        /// <param name="name">Branch name</param>
-        /// <param name="resistance">Branch resistance</param>
-        /// <param name="inductance">Branch inductance</param>
-        /// <param name="capacitance">Branch capacitance</param>
-        /// <param name="tranformerRatio">Transformer ratio</param>
-        public Branch(int index,
-                      ElementStatus elementStatus, 
-                      BranchType branchType, 
-                      Node startNode, 
-                      Node endNode, 
-                      string name,
-                      double resistance,
-                      double inductance,
-                      double capacitance,
-                      double tranformerRatio)
-        {
-            Index = index;
-            ElementStatus = elementStatus;
-            BranchType = branchType;
-            StartNode = startNode;
-            EndNode = endNode;
-            Name = name;
-            Resistance = resistance;
-            Inductance = inductance;
-            Capacitance = capacitance;
-            TransformerRatio = tranformerRatio;
+            TransformationRation = tranformationRatio;
         }
     }
 }
