@@ -102,6 +102,27 @@ namespace RastrPVEqConsole.Models
         /// <param name="elementStatus">Generator status</param>
         /// <param name="generatorNumber">Generator number</param>
         /// <param name="name">Generator name</param>
+        /// <param name="maxActivePower">Generator max active power</param>
+        public Generator(int index,
+                         ElementStatus elementStatus,
+                         int generatorNumber,
+                         string name,
+                         double maxActivePower)
+        {
+            Index = index;
+            ElementStatus = elementStatus;
+            GeneratorNumber = generatorNumber;
+            Name = name;
+            MaxActivePower = maxActivePower;
+        }
+
+        /// <summary>
+        /// Generator class instance constructor
+        /// </summary>
+        /// <param name="index">Generator index</param>
+        /// <param name="elementStatus">Generator status</param>
+        /// <param name="generatorNumber">Generator number</param>
+        /// <param name="name">Generator name</param>
         /// <param name="node">Generator node</param>
         /// <param name="maxActivePower">Generator max active power</param>
         /// <param name="pqDiagram">Generator PQ diagram</param>

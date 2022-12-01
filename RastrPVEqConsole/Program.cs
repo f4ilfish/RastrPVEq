@@ -16,37 +16,26 @@ namespace RastrPVEqConsole
                                              "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2");
             Console.WriteLine(">>> File downloaded without exceptions");
 
-            //var tmpNode = RastrSupplier.GetNodeByIndex(0);
-            //Console.WriteLine(">>> Sample node created");
+            var nodesTask = RastrSupplierAsync.GetNodesAsync();
+            await nodesTask;
 
-            //var tmpBranch = RastrSupplier.GetBranchByIndex(0);
-            //Console.WriteLine(">>> Sample branch created");
+            var nodes = nodesTask.Result;
+            
+            var branchesTask = RastrSupplierAsync.GetBranchesAsync(nodes);
+            var rangesTask = RastrSupplierAsync.GetAdjustmentRangesAsync();
+            await rangesTask;
+            
+            var ranges = rangesTask.Result;
+            var pqDiagrams = RastrSupplier.GetPQDiagrams(ranges);
+            Console.WriteLine(">>> PQ diagrams сreated");
 
-            //var tmpAdjustmentRange = RastrSupplier.GetAdjustmentRangeByIndex(0);
-            //Console.WriteLine(">>> Sample adjustment range created");
-
-            //var node = RastrSupplier.GetNodes();
-
-            //Console.WriteLine(">>> List of nodes created");
-
-            //var ranges = RastrSupplier.GetAdjustmentRanges();
-
-            //Console.WriteLine(">>> List of adjustment ranges created");
-
-            //var listPQDiagrams = from range in ranges
-            //                     group range by range.DiagramNumber into groupRanges
-            //                     select new { diagramNumber = groupRanges.Key, diagramRanges = groupRanges.Count() };
-
-            //Console.WriteLine(">>> Adjustment ranges grouped");
-
-            var nodes = RastrSupplierAsync.GetNodesAsync();
-
-            var adjustmentRanges = RastrSupplierAsync.GetAdjustmentRangesAsync();
-
-            await Task.WhenAll(nodes, adjustmentRanges);
+            var generatorsTask = RastrSupplierAsync.GetGeneratorsAsync(nodes, pqDiagrams);
+            await Task.WhenAll(branchesTask, generatorsTask);
+            
+            var branches = branchesTask.Result;
+            var generators = generatorsTask.Result;
 
             stopwatch.Stop();
-
             Console.WriteLine(stopwatch.Elapsed);
 
             Console.ReadKey();

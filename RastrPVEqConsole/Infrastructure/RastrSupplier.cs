@@ -3,6 +3,9 @@ using RastrPVEqConsole.Models;
 
 namespace RastrPVEqConsole.Infrastructure
 {
+    /// <summary>
+    /// Rastr supply method provider class
+    /// </summary>
     public static class RastrSupplier
     {
         /// <summary>
@@ -65,7 +68,7 @@ namespace RastrPVEqConsole.Infrastructure
         /// <summary>
         /// Check file existance from path
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">Path to file check</param>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="FileNotFoundException"></exception>
         private static void CheckFileExistance(string filePath)
@@ -110,7 +113,7 @@ namespace RastrPVEqConsole.Infrastructure
 
             ICol elementParameter = table.Cols.Item(columnName);
 
-            //var numberOfElements = table.Count;
+            var numberOfElements = table.Count;
 
             //if (elementIndex >= numberOfElements)
             //    throw new ArgumentException($"Table {tableName} doesn't contain element with index {elementIndex}. " +
@@ -122,30 +125,39 @@ namespace RastrPVEqConsole.Infrastructure
         private const string NodeTable = "node";
         private const string BranchTable = "vetv";
         private const string AdjustmentRangeTable = "graphik2";
+        private const string GeneratorTable = "Generator";
 
         private const string ElementStatusColumn = "sta";
         private const string ElementNameColumn = "name";
+        private const string NumElementNumberColumn = "Num";
 
         private const string NodeNumberColumn = "ny";
         private const string NodeRatedVoltageColumn = "uhom";
 
         private const string BranchTypeColumn = "tip";
+        private const string BranchStartNodeColumn = "ip";
+        private const string BranchEndNodeColumn = "iq";
         private const string BranchResistanceColumn = "r";
         private const string BranchInductanceColumn = "x";
         private const string BranchCapacitanceColumn = "b";
         private const string BranchTranformerRatioColumn = "ktr";
 
-        private const string AdjustmentRangeNumberColumn = "Num";
+        
         private const string AdjustmentRangeActivePowerColumn = "P";
         private const string AdjustmentRangeMinimumReactivePowerColumn = "Qmin";
         private const string AdjustmentRangeMaximumReactivePowerColumn = "Qmax";
+
+        private const string GeneratorNodeNumberColumn = "Node";
+        private const string GeneratorNameColumn = "Name";
+        private const string GeneratorMaxActivePowerColumn = "Pmax";
+        private const string GeneratorNumPQDiagramColumn = "NumPQ";
 
         /// <summary>
         /// Get node
         /// </summary>
         /// <param name="elementIndex">Index of element in table</param>
         /// <returns></returns>
-        public static Node GetNodeByIndex(int elementIndex)
+        private static Node GetNodeByIndex(int elementIndex)
         {
             var elementStatusValue = !(bool)GetElementParameterValue(NodeTable, ElementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
             var nodeNumberValue = (int)GetElementParameterValue(NodeTable, NodeNumberColumn, elementIndex);
@@ -158,10 +170,10 @@ namespace RastrPVEqConsole.Infrastructure
         /// <summary>
         /// Get branch
         /// </summary>
-        /// <param name="elementIndex"></param>
+        /// <param name="elementIndex">Element's index in table</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Branch GetBranchByIndex(int elementIndex)
+        private static Branch GetBranchByIndex(int elementIndex)
         {
             var elementStatusValue = (int)GetElementParameterValue(BranchTable, ElementStatusColumn, elementIndex) == 0 ? ElementStatus.Enable : ElementStatus.Disable;
             var branchTypeValue = (int)GetElementParameterValue(BranchTable, BranchTypeColumn, elementIndex) switch
@@ -190,11 +202,11 @@ namespace RastrPVEqConsole.Infrastructure
         /// <summary>
         /// Get adjustment range
         /// </summary>
-        /// <param name="elementIndex"></param>
+        /// <param name="elementIndex">Element's index in table</param>
         /// <returns></returns>
-        public static AdjustmentRange GetAdjustmentRangeByIndex(int elementIndex)
+        private static AdjustmentRange GetAdjustmentRangeByIndex(int elementIndex)
         {
-            var adjustmentRangeNumberValue = (int)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeNumberColumn, elementIndex);
+            var adjustmentRangeNumberValue = (int)GetElementParameterValue(AdjustmentRangeTable, NumElementNumberColumn, elementIndex);
             var adjustmentRangeActivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeActivePowerColumn, elementIndex);
             var adjustmentRangeMinimumReactivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeMinimumReactivePowerColumn, elementIndex);
             var adjustmentRangeMaximumReactivePowerValue = (double)GetElementParameterValue(AdjustmentRangeTable, AdjustmentRangeMaximumReactivePowerColumn, elementIndex);
@@ -204,6 +216,25 @@ namespace RastrPVEqConsole.Infrastructure
                                        adjustmentRangeActivePowerValue, 
                                        adjustmentRangeMinimumReactivePowerValue, 
                                        adjustmentRangeMaximumReactivePowerValue);
+        }
+
+        /// <summary>
+        /// Get generator
+        /// </summary>
+        /// <param name="elementIndex">Element's index in table</param>
+        /// <returns></returns>
+        private static Generator GetGeneratorByIndex(int elementIndex)
+        {
+            var elementStatusValue = !(bool)GetElementParameterValue(GeneratorTable, ElementStatusColumn, elementIndex) ? ElementStatus.Enable : ElementStatus.Disable;
+            var generatorNumberValue = (int)GetElementParameterValue(GeneratorTable, NumElementNumberColumn, elementIndex);
+            var generatorNameValue = (string)GetElementParameterValue(GeneratorTable, GeneratorNameColumn, elementIndex);
+            var maxActivePowerValue = (double)GetElementParameterValue(GeneratorTable, GeneratorMaxActivePowerColumn, elementIndex);
+
+            return new Generator(elementIndex,
+                                 elementStatusValue, 
+                                 generatorNumberValue, 
+                                 generatorNameValue, 
+                                 maxActivePowerValue);
         }
 
         /// <summary>
@@ -240,6 +271,100 @@ namespace RastrPVEqConsole.Infrastructure
             }
 
             return adjustmentRanges;
+        }
+
+        /// <summary>
+        /// Get PQdiagrams
+        /// </summary>
+        /// <param name="adjustmentRanges">List of adjustment ranges</param>
+        /// <returns></returns>
+        public static List<PQDiagram> GetPQDiagrams(List<AdjustmentRange> adjustmentRanges)
+        {
+            var pqDiagramsDict = adjustmentRanges.GroupBy(r => r.DiagramNumber)
+                                   .ToDictionary(g => g.Key, g => g.ToList());
+
+            var pqDiagrams = new List<PQDiagram>();
+
+            foreach (var pqDiagram in pqDiagramsDict)
+            {
+                pqDiagrams.Add(new PQDiagram(pqDiagram.Key, pqDiagram.Value));
+            }
+
+            return pqDiagrams;
+        }
+
+        /// <summary>
+        /// GetGenerators
+        /// </summary>
+        /// <param name="nodes">List of nodes</param>
+        /// <param name="pqDiagrams">List of PQ diagrams</param>
+        /// <returns></returns>
+        public static List<Generator> GetGenerators(List<Node> nodes, List<PQDiagram> pqDiagrams)
+        {
+            var nodesDict = nodes.ToDictionary(n => n.NodeNumber, n => n);
+            var pqDiagramsDict = pqDiagrams.ToDictionary(d => d.DiagramNumber, d => d);
+
+            var generators = new List<Generator>();
+
+            var numberOfElements = Rastr.Tables.Item(GeneratorTable).Count;
+
+            for (int i = 0; i < numberOfElements; i++)
+            {
+                var generator = GetGeneratorByIndex(i);
+
+                var generatorNodeNumber = (int)GetElementParameterValue(GeneratorTable, GeneratorNodeNumberColumn, i);
+                var generatorPQDiagramNuber = (int)GetElementParameterValue(GeneratorTable, GeneratorNumPQDiagramColumn, i);
+
+                if (nodesDict.ContainsKey(generatorNodeNumber))
+                {
+                    generator.Node = nodesDict[generatorNodeNumber];
+                }
+
+                if (pqDiagramsDict.ContainsKey(generatorPQDiagramNuber))
+                {
+                    generator.PQDiagram = pqDiagramsDict[generatorPQDiagramNuber];
+                }
+
+                generators.Add(generator);
+            }
+
+            return generators;
+        }
+
+        /// <summary>
+        /// Get branches
+        /// </summary>
+        /// <param name="nodes">List of nodes</param>
+        /// <returns></returns>
+        public static List<Branch> GetBranches(List<Node> nodes)
+        {
+            var nodesDict = nodes.ToDictionary(n => n.NodeNumber, n => n);
+
+            var branches = new List<Branch>();
+
+            var numberOfElements = Rastr.Tables.Item(BranchTable).Count;
+
+            for (int i = 0; i < numberOfElements; i++)
+            {
+                var branch = GetBranchByIndex(i);
+
+                var branchStartNodeNumber = (int)GetElementParameterValue(BranchTable, BranchStartNodeColumn, i);
+                var branchEndNodeNumber = (int)GetElementParameterValue(BranchTable, BranchEndNodeColumn, i);
+
+                if (nodesDict.ContainsKey(branchStartNodeNumber))
+                {
+                    branch.StartNode = nodesDict[branchStartNodeNumber];
+                }
+
+                if (nodesDict.ContainsKey(branchEndNodeNumber))
+                {
+                    branch.EndNode = nodesDict[branchEndNodeNumber];
+                }
+
+                branches.Add(branch);
+            }
+
+            return branches;
         }
     }
 }
