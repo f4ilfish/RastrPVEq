@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RastrPVEqConsole.Infrastructure.Graph;
+using RastrPVEqConsole.Models.Graph;
 
-namespace RastrPVEqConsole.Infrastructure.Algorithms
+namespace RastrPVEqConsole.Infrastructure.Graph
 {
     public static class DepthFirstTraversal<T>
     {

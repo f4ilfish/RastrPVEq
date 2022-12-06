@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RastrPVEqConsole.Models.Graph;
-using RastrPVEqConsole.Infrastructure.Graph;
 
-namespace RastrPVEqConsole.Infrastructure.Algorithms
+namespace RastrPVEqConsole.Infrastructure.Graph
 {
     public static class DijkstraAlgorithm<T>
     {

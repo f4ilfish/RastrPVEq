@@ -1,6 +1,4 @@
-﻿using RastrPVEqConsole.Infrastructure.Graph;
-
-namespace RastrPVEqConsole.Models.Graph
+﻿namespace RastrPVEqConsole.Models.Graph
 {
     public class Graph<T> : IGraph<T>
     {

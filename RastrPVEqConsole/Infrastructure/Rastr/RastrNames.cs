@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RastrPVEqConsole.Infrastructure
+namespace RastrPVEqConsole.Infrastructure.Rastr
 {
     /// <summary>
     /// RastrNames class
@@ -13,7 +13,7 @@ namespace RastrPVEqConsole.Infrastructure
     {
         #region Table "Узлы" for Узлы
         public const string NodeTable = "node";
-        
+
         public const string NodeStatusColumn = "sta";
         public const string NodeNumberColumn = "ny";
         public const string NodeNameColumn = "name";

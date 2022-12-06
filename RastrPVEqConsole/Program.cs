@@ -1,9 +1,8 @@
 ﻿using RastrPVEqConsole.Infrastructure;
 using System.Diagnostics;
 using RastrPVEqConsole.Infrastructure.Graph;
-using RastrPVEqConsole.Infrastructure.Algorithms;
-using RastrPVEqConsole.Models;
 using RastrPVEqConsole.Models.Graph;
+using RastrPVEqConsole.Models.Rastr;
 
 namespace RastrPVEqConsole
 {

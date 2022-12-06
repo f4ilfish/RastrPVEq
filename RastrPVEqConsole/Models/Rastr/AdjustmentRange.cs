@@ -1,6 +1,6 @@
 ﻿using RastrPVEqConsole.Infrastructure;
 
-namespace RastrPVEqConsole.Models
+namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// Adjustment range class
@@ -51,15 +51,15 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets active power
         /// </summary>
-        public double ActivePower 
-        { 
+        public double ActivePower
+        {
             get => _activePower;
             private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNegative(value);
                 _activePower = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets adjusted minimum of reactive power
         /// </summary>
-        public double MinReactivePower 
-        { 
+        public double MinReactivePower
+        {
             get => _minReactivePower;
             private set
             {
                 ValueValidation.CheckNotNaN(value);
                 _minReactivePower = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -88,14 +88,14 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets adjusted maximum of reactive power
         /// </summary>
-        public double MaxReactivePower 
-        { 
+        public double MaxReactivePower
+        {
             get => _maxReactivePower;
             private set
             {
                 ValueValidation.CheckNotNaN(value);
                 _maxReactivePower = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace RastrPVEqConsole.Models
             Index = index;
             PQDiagramNumber = pqDiagramNumber;
             ActivePower = activePower;
-            MinReactivePower = minReactivePower; 
-            MaxReactivePower = maxReactivePower; 
+            MinReactivePower = minReactivePower;
+            MaxReactivePower = maxReactivePower;
         }
     }
 }

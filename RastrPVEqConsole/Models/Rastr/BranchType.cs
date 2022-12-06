@@ -1,4 +1,4 @@
-﻿namespace RastrPVEqConsole.Models
+﻿namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// Branch types
@@ -9,7 +9,7 @@
         /// Power line
         /// </summary>
         Line,
-        
+
         /// <summary>
         /// Power tranformer
         /// </summary>

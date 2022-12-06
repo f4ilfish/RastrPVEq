@@ -1,6 +1,6 @@
 ﻿using RastrPVEqConsole.Infrastructure;
 
-namespace RastrPVEqConsole.Models
+namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// PQ diagram class
@@ -15,16 +15,16 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets number
         /// </summary>
-        public int Number 
-        { 
+        public int Number
+        {
             get => _number;
-            private set 
+            private set
             {
                 ValueValidation.CheckIsNotPositive(value);
                 _number = value;
-            } 
+            }
         }
-        
+
         /// <summary>
         /// Gets or sets list of adjustment ranges
         /// </summary>

@@ -1,6 +1,4 @@
-﻿using RastrPVEqConsole.Infrastructure.Graph;
-
-namespace RastrPVEqConsole.Models.Graph
+﻿namespace RastrPVEqConsole.Models.Graph
 {
     public class Edge<T> : IEdge<T>
     {

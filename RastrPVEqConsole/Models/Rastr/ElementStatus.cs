@@ -1,4 +1,4 @@
-﻿namespace RastrPVEqConsole.Models
+﻿namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// Element statuses

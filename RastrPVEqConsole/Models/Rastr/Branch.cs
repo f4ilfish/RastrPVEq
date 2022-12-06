@@ -1,6 +1,6 @@
 ﻿using RastrPVEqConsole.Infrastructure;
 
-namespace RastrPVEqConsole.Models
+namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// Branch class
@@ -53,14 +53,14 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets name
         /// </summary>
-        public string Name 
-        { 
-            get => _name; 
+        public string Name
+        {
+            get => _name;
             private set
             {
                 ValueValidation.CheckNotNullOrEmptyString(value);
                 _name = value;
-            } 
+            }
         }
 
         /// <summary>

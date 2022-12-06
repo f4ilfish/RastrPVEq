@@ -1,6 +1,6 @@
 ﻿using RastrPVEqConsole.Infrastructure;
 
-namespace RastrPVEqConsole.Models
+namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// Generator class
@@ -38,9 +38,9 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets number
         /// </summary>
-        public int Number 
-        { 
-            get => _number; 
+        public int Number
+        {
+            get => _number;
             private set
             {
                 ValueValidation.CheckIsNotPositive(value);
@@ -56,14 +56,14 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets name
         /// </summary>
-        public string Name 
-        { 
+        public string Name
+        {
             get => _name;
             private set
             {
                 ValueValidation.CheckNotNullOrEmptyString(value);
                 _name = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -79,15 +79,15 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets adjusted maximum active power
         /// </summary>
-        public double MaxActivePower 
-        { 
+        public double MaxActivePower
+        {
             get => _maxActivePower;
             private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNotPositive(value);
                 _maxActivePower = value;
-            } 
+            }
         }
 
         /// <summary>

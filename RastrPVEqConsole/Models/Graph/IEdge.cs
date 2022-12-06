@@ -1,4 +1,4 @@
-﻿namespace RastrPVEqConsole.Infrastructure.Graph
+﻿namespace RastrPVEqConsole.Models.Graph
 {
     public interface IEdge<T>
     {

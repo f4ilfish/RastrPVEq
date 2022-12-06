@@ -1,6 +1,6 @@
 ﻿using RastrPVEqConsole.Infrastructure;
 
-namespace RastrPVEqConsole.Models
+namespace RastrPVEqConsole.Models.Rastr
 {
     /// <summary>
     /// Node class
@@ -29,7 +29,7 @@ namespace RastrPVEqConsole.Models
         /// Gets node status
         /// </summary>
         public ElementStatus NodeStatus { get; private set; }
-        
+
         /// <summary>
         /// Number
         /// </summary>
@@ -38,8 +38,8 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets number
         /// </summary>
-        public int Number 
-        { 
+        public int Number
+        {
             get => _number;
             private set
             {
@@ -56,14 +56,14 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets name
         /// </summary>
-        public string Name 
-        { 
+        public string Name
+        {
             get => _name;
             private set
             {
                 ValueValidation.CheckNotNullOrEmptyString(value);
                 _name = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -74,15 +74,15 @@ namespace RastrPVEqConsole.Models
         /// <summary>
         /// Gets rated voltage
         /// </summary>
-        public double RatedVoltage 
-        { 
+        public double RatedVoltage
+        {
             get => _ratedVoltage;
-            private set 
+            private set
             {
                 ValueValidation.CheckNotNaN(value);
                 ValueValidation.CheckIsNotPositive(value);
                 _ratedVoltage = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -93,10 +93,10 @@ namespace RastrPVEqConsole.Models
         /// <param name="number">Node number</param>
         /// <param name="name">Node name</param>
         /// <param name="ratedVoltage">Node rated voltage</param>
-        public Node(int index, 
-                    ElementStatus nodeStatus, 
-                    int number, 
-                    string name, 
+        public Node(int index,
+                    ElementStatus nodeStatus,
+                    int number,
+                    string name,
                     double ratedVoltage)
         {
             Index = index;

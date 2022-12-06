@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RastrPVEqConsole.Infrastructure.Graph
+namespace RastrPVEqConsole.Models.Graph
 {
     public interface IVertex<T> : IEquatable<IVertex<T>>
     {
