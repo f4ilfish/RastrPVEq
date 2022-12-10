@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RastrPVEqConsole.Models.AdjustmentRange">
+    <Position X="12.75" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAIACAAAAgAAAgAAAQAAAIACAAAAEAAIAAAAA=</HashCode>
+      <FileName>Models\AdjustmentRange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RastrPVEqConsole.Models.Branch">
+    <Position X="4" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAgEADAAQgAAAgBAQAAAAAAAAAIAEBAIAIAAA=</HashCode>
+      <FileName>Models\Branch.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BranchEndNode" />
+      <Property Name="BranchStartNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RastrPVEqConsole.Models.Generator">
+    <Position X="10" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASIAAAAAAAAAQAAUAgAAQAAAAAAAAAAAEAAABgAAA=</HashCode>
+      <FileName>Models\Generator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GeneratorNode" />
+      <Property Name="GeneratorPQDiagram" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RastrPVEqConsole.Models.Node">
+    <Position X="7.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAgACAAAAAAAEAgAAQAAAAAACAAAAEAAABAAAA=</HashCode>
+      <FileName>Models\Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RastrPVEqConsole.Models.PQDiagram">
+    <Position X="13.25" Y="2.25" Width="1.25" />
+    <AssociationLine Name="AdjustmentRanges" Type="RastrPVEqConsole.Models.AdjustmentRange">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.11" Y="0.158" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAACAAAAAAABAAAA=</HashCode>
+      <FileName>Models\PQDiagram.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="AdjustmentRanges" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Enum Name="RastrPVEqConsole.Models.BranchType">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAIAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\BranchType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RastrPVEqConsole.Models.ElementStatus">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\ElementStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="8.83" />
+</ClassDiagram>

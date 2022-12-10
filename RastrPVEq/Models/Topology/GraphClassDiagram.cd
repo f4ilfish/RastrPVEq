@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RastrPVEqConsole.Models.Graph.Vertex&lt;T&gt;">
+    <Position X="13" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gIAAAAAAAgAABCQEgAAAAAAAAAAAApAAAAAAAAAAAgE=</HashCode>
+      <FileName>Models\Graph\Vertex.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentGraph" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RastrPVEqConsole.Models.Graph.Graph&lt;T&gt;">
+    <Position X="3" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AJREgBQAAAAABAAACCAUIAQBAAABEiAQEABAAAAAAoE=</HashCode>
+      <FileName>Models\Graph\Graph.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Vertices" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RastrPVEqConsole.Models.Graph.Edge&lt;T&gt;">
+    <Position X="9.75" Y="3" Width="2" />
+    <AssociationLine Name="CurrentGraph" Type="RastrPVEqConsole.Infrastructure.Graph.IGraph&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.171" Y="0.121" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAACAAAAIAgAAAAAAAAAA=</HashCode>
+      <FileName>Models\Graph\Edge.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="EndVertex" />
+      <Property Name="StartVertex" />
+      <Property Name="CurrentGraph" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="RastrPVEqConsole.Infrastructure.Graph.IVertex&lt;T&gt;">
+    <Position X="6.5" Y="3" Width="2.25" />
+    <AssociationLine Name="CurrentGraph" Type="RastrPVEqConsole.Infrastructure.Graph.IGraph&lt;T&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.75" Y="4.875" />
+        <Point X="8.893" Y="4.875" />
+        <Point X="8.893" Y="4.871" />
+        <Point X="10.062" Y="4.871" />
+        <Point X="10.062" Y="5.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.188" Y="0.537" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gIAAAAAAAgAABCQAAAAAAAAAAAAAAhAAAAAAAAAAAgE=</HashCode>
+      <FileName>Infrastructure\Graph\IVertex.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentGraph" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="RastrPVEqConsole.Infrastructure.Graph.IGraph&lt;T&gt;">
+    <Position X="9.5" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AJREgBQAAAAABAAACCAEIAQBAAAAAiAAEABAAAAAAoE=</HashCode>
+      <FileName>Infrastructure\Graph\IGraph.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Edges" />
+      <Property Name="Vertices" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="RastrPVEqConsole.Infrastructure.Graph.IEdge&lt;T&gt;">
+    <Position X="6.5" Y="8.25" Width="1.5" />
+    <AssociationLine Name="EndVertex" Type="RastrPVEqConsole.Infrastructure.Graph.IVertex&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.085" Y="0.513" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="StartVertex" Type="RastrPVEqConsole.Infrastructure.Graph.IVertex&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.921" Y="0.521" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAACAAAAIAgAAAAAAAAAA=</HashCode>
+      <FileName>Infrastructure\Graph\IEdge.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentGraph" />
+      <Property Name="EndVertex" />
+      <Property Name="StartVertex" />
+    </ShowAsAssociation>
+  </Interface>
+  <Font Name="Segoe UI" Size="8.83" />
+</ClassDiagram>

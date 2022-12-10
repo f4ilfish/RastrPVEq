@@ -1,8 +1,7 @@
 ﻿using RastrPVEqConsole.Infrastructure;
-using System.Diagnostics;
-using RastrPVEqConsole.Infrastructure.Graph;
-using RastrPVEqConsole.Models.Graph;
-using RastrPVEqConsole.Models.Rastr;
+using RastrPVEqConsole.Infrastructure.Topology;
+using RastrPVEqConsole.Models.Topology;
+using RastrPVEqConsole.Models.RastrWin3;
 
 namespace RastrPVEqConsole
 {
@@ -57,34 +56,38 @@ namespace RastrPVEqConsole
             var d = graph.AddVertex(dNode);
             var e = graph.AddVertex(eNode);
 
-            graph.AddEdge(a, b, abBranch.Resistance);
+            //graph.AddEdge(a, b, abBranch.Resistance);
             graph.AddEdge(b, a, abBranch.Resistance);
 
             graph.AddEdge(a, d, adBranch.Resistance);
-            graph.AddEdge(d, a, adBranch.Resistance);
+            //graph.AddEdge(d, a, adBranch.Resistance);
 
             graph.AddEdge(d, e, deBranch.Resistance);
-            graph.AddEdge(e, d, deBranch.Resistance);
+            //graph.AddEdge(e, d, deBranch.Resistance);
 
             graph.AddEdge(d, b, dbBranch.Resistance);
-            graph.AddEdge(b, d, dbBranch.Resistance);
+            //graph.AddEdge(b, d, dbBranch.Resistance);
 
             graph.AddEdge(e, b, ebBranch.Resistance);
-            graph.AddEdge(b, e, ebBranch.Resistance);
+            //graph.AddEdge(b, e, ebBranch.Resistance);
 
             graph.AddEdge(e, c, ecBranch.Resistance);
-            graph.AddEdge(c, e, ecBranch.Resistance);
+            //graph.AddEdge(c, e, ecBranch.Resistance);
 
             graph.AddEdge(c, b, cbBranch.Resistance);
-            graph.AddEdge(b, c, cbBranch.Resistance);
+            //graph.AddEdge(b, c, cbBranch.Resistance);
 
             Console.WriteLine("Depth-First iterative path between two vertices: ");
-            var depthFirstIterative = DepthFirstTraversal<Node>.DepthFirstIterative(graph, a, e);
+            var depthFirstIterative = DepthFirstTraversal<Node>.DepthFirstIterative(graph, b, c);
 
             foreach (var vertex in depthFirstIterative)
             {
                 Console.WriteLine(vertex.Data.Name);
             }
+
+            Console.WriteLine($"Is acyclic: {graph.IsAcyclic()}");
+
+            Console.WriteLine($"Has adjacent: {graph.AreAdjacent(b, a)}");
 
             //var shortestPathTable = DijkstraAlgorithm<Node>.DijkstraMethod(graph, a);
 
