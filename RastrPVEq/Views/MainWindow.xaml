@@ -10,6 +10,9 @@
         MinWidth="800"
         
         xmlns:vm="clr-namespace:RastrPVEq.ViewModels"
+        xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+        xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+        
         
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -36,11 +39,157 @@
             </MenuItem>
         </Menu>
 
-        <Grid>
-            <DataGrid x:Name="nodesGrid"
+        <ToolBar DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding Path=AddNodeCommand}"
+                        Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Add"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </ToolBar>
+
+        <ProgressBar DockPanel.Dock="Bottom"
+                     Minimum="0" 
+                     Maximum="100"
+                     Value="50"
+                     Height="20"/>
+
+        <TabControl>
+            <TabItem Header="Иерархия">
+                <TreeView x:Name="hierarchicalTree" 
+                          ItemsSource="{Binding Path=NodesCollection}">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Path=BranchCollection}">
+                            <Label Content="{Binding Path=NodeName}"/>
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Path=BranchName}"/>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </TabItem>
+
+            <TabItem Header="Выбор узлов">
+                <Grid ShowGridLines="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GridSplitter Grid.Column="1"
+                                  Width="50"
+                                  ShowsPreview="False"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"/>
+                    <StackPanel Grid.Column="1" 
+                                Orientation="Vertical" 
+                                VerticalAlignment="Center">
+                        <Button Height="100"
+                                Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="ArrowRight" 
+                                                         HorizontalAlignment="Center" 
+                                                         Width="25" 
+                                                         Height="25"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Height="100" 
+                                Margin="0, 50, 0, 0"
+                                Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="ArrowLeft" 
+                                                         HorizontalAlignment="Center" 
+                                                         Width="25" 
+                                                         Height="25"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                    <DataGrid Grid.Column="0"
+                              ItemsSource="{Binding Path=Nodes}"
+                              AutoGenerateColumns="False"
+                              SelectionMode="Single"
+                              SelectedItem="{Binding Path=PickedNode}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Индекс"
+                                                    SortMemberPath="Index">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Index}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Номер"
+                                                    SortMemberPath="Number">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Number}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Наименование"
+                                                    SortMemberPath="Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Uном"
+                                                    SortMemberPath="RatedVoltage">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=RatedVoltage}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Grid.Column="2" 
+                               Text="{Binding Path=PickedNode}"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Узлы">
+                <Grid>
+                    <DataGrid x:Name="nodesGrid"
+                              AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Nodes}">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Ветви">
+                <Grid>
+                    <DataGrid x:Name="branchesGrid"
                       AutoGenerateColumns="True"
-                      ItemsSource="{Binding Path=Nodes}">
-            </DataGrid>
-        </Grid>
+                      ItemsSource="{Binding Path=Branches}">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Генераторы">
+                <Grid>
+                    <DataGrid x:Name="generatorsGrid"
+                      AutoGenerateColumns="True"
+                      ItemsSource="{Binding Path=Generators}">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="PQ диаграммы">
+                <Grid>
+                    <DataGrid x:Name="pqDiagramsGrid"
+                      AutoGenerateColumns="True"
+                      ItemsSource="{Binding Path=PqDiagrams}">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
     </DockPanel>
 </Window>
