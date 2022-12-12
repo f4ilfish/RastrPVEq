@@ -24,5 +24,10 @@ namespace RastrPVEq
         {
             InitializeComponent();
         }
+
+        private void hierarchicalTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+
+        }
     }
 }

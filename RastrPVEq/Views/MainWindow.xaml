@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:RastrPVEq"
         mc:Ignorable="d"
         
+        Title="Эквивалент СЭС"
         MinHeight="600" 
         MinWidth="800"
         
@@ -28,6 +29,7 @@
     </Window.DataContext>
 
     <DockPanel>
+        
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Открыть" Command="{Binding Path=DownloadFileCommand}"/>
@@ -39,56 +41,31 @@
             </MenuItem>
         </Menu>
 
-        <ToolBar DockPanel.Dock="Top">
-            <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding Path=AddNodeCommand}"
-                        Style="{DynamicResource MaterialDesignRaisedAccentButton}">
-                    <Button.Content>
-                        <materialDesign:PackIcon Kind="Add"/>
-                    </Button.Content>
-                </Button>
-            </StackPanel>
-        </ToolBar>
-
         <ProgressBar DockPanel.Dock="Bottom"
                      Minimum="0" 
                      Maximum="100"
-                     Value="50"
-                     Height="20"/>
+                     Value="30"
+                     Height="15"/>
 
         <TabControl>
-            <TabItem Header="Иерархия">
-                <TreeView x:Name="hierarchicalTree" 
-                          ItemsSource="{Binding Path=NodesCollection}">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Path=BranchCollection}">
-                            <Label Content="{Binding Path=NodeName}"/>
-                            <HierarchicalDataTemplate.ItemTemplate>
-                                <DataTemplate>
-                                    <Label Content="{Binding Path=BranchName}"/>
-                                </DataTemplate>
-                            </HierarchicalDataTemplate.ItemTemplate>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
-            </TabItem>
-
+            
             <TabItem Header="Выбор узлов">
-                <Grid ShowGridLines="True">
+                <Grid ShowGridLines="False">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <GridSplitter Grid.Column="1"
-                                  Width="50"
+                                  Width="5"
                                   ShowsPreview="False"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Stretch"/>
                     <StackPanel Grid.Column="1" 
                                 Orientation="Vertical" 
                                 VerticalAlignment="Center">
-                        <Button Height="100"
+                        <Button Command="{Binding Path=AddNodeToEquivalenceNodesCommand}"
+                                Height="100"
                                 Style="{DynamicResource MaterialDesignRaisedAccentButton}">
                             <Button.Content>
                                 <materialDesign:PackIcon Kind="ArrowRight" 
@@ -97,7 +74,8 @@
                                                          Height="25"/>
                             </Button.Content>
                         </Button>
-                        <Button Height="100" 
+                        <Button Command="{Binding Path=RemoveNodeFromEquivalenceNodesCommand}"
+                                Height="100" 
                                 Margin="0, 50, 0, 0"
                                 Style="{DynamicResource MaterialDesignRaisedAccentButton}">
                             <Button.Content>
@@ -109,10 +87,12 @@
                         </Button>
                     </StackPanel>
                     <DataGrid Grid.Column="0"
-                              ItemsSource="{Binding Path=Nodes}"
+                              ItemsSource="{Binding Path=Nodes , 
+                                                    Mode=TwoWay,
+                                                    UpdateSourceTrigger=PropertyChanged}"
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
-                              SelectedItem="{Binding Path=PickedNode}">
+                              SelectedItem="{Binding Path=SelectedNode}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Индекс"
                                                     SortMemberPath="Index">
@@ -148,16 +128,277 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <TextBlock Grid.Column="2" 
-                               Text="{Binding Path=PickedNode}"/>
+                    <DataGrid Grid.Column="2"
+                              ItemsSource="{Binding Path=EquivalenceNodes, 
+                                                    Mode=TwoWay,
+                                                    UpdateSourceTrigger=PropertyChanged}"
+                              AutoGenerateColumns="False"
+                              SelectionMode="Single"
+                              SelectedItem="{Binding Path=SelectedEquivalenceNode}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Индекс"
+                                                    SortMemberPath="NodeElement.Index">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=NodeElement.Index}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Номер"
+                                                    SortMemberPath="NodeElement.Number">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=NodeElement.Number}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Наименование"
+                                                    SortMemberPath="NodeElement.Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=NodeElement.Name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Uном"
+                                                    SortMemberPath="NodeElement.RatedVoltage">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=NodeElement.RatedVoltage}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
+            </TabItem>
+
+            <TabItem Header="Выбор ветвей">
+                <Grid ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GridSplitter Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                                  Grid.Row="1"
+                                  Height="5"
+                                  ShowsPreview="False"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"/>
+                    <GridSplitter Grid.Column="1"
+                                  Grid.Row="2"
+                                  Width="5"
+                                  ShowsPreview="False"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"/>
+                    <StackPanel Grid.Column="1"
+                                Grid.Row="2"
+                                Orientation="Vertical" 
+                                VerticalAlignment="Center">
+                        <Button Command="{Binding Path=AddBranchToEquivalenceGroupBranchCommand}"
+                                Height="100"
+                                Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="ArrowRight" 
+                                                         HorizontalAlignment="Center" 
+                                                         Width="25" 
+                                                         Height="25"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Command="{Binding Path=RemoveEquivalenceBranchFromEquivalenceGroupCommand}"
+                                Height="100" 
+                                Margin="0, 50, 0, 0"
+                                Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="ArrowLeft" 
+                                                         HorizontalAlignment="Center" 
+                                                         Width="25" 
+                                                         Height="25"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                    <DataGrid Grid.Column="0"
+                              Grid.Row="2"
+                              ItemsSource="{Binding Path=Branches , 
+                                                    Mode=TwoWay,
+                                                    UpdateSourceTrigger=PropertyChanged}"
+                              AutoGenerateColumns="False"
+                              SelectionMode="Single"
+                              SelectedItem="{Binding Path=SelectedBranch}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Индекс"
+                                                    SortMemberPath="Index">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Index}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Тип"
+                                                    SortMemberPath="Type">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchType}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Наименование"
+                                                    SortMemberPath="Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="R, Ом"
+                                                    SortMemberPath="Resistance">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Resistance}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="X, Ом"
+                                                    SortMemberPath="Inductance">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Inductance}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid Grid.Column="2"
+                              Grid.Row="2"
+                              ItemsSource="{Binding Path=SelectedEquivalenceGroupBranchViewModel.BranchCollection, 
+                                                    Mode=TwoWay,
+                                                    UpdateSourceTrigger=PropertyChanged}"
+                              AutoGenerateColumns="False"
+                              SelectionMode="Single"
+                              SelectedItem="{Binding Path=SelectedEquivalenceBranchViewModel}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Индекс"
+                                                    SortMemberPath="BranchElement.Index">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Index}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Тип"
+                                                    SortMemberPath="BranchElement.BranchType">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.BranchType}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Наименование"
+                                                    SortMemberPath="BranchElement.Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="R, Ом"
+                                                    SortMemberPath="BranchElement.Resistance">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Resistance}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="X, Ом"
+                                                    SortMemberPath="BranchElement.Inductance">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Inductance}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ListBox Grid.Column="0"
+                             Grid.Row="0"
+                             ItemsSource="{Binding Path=EquivalenceNodes}"
+                             SelectedItem="{Binding Path=SelectedEquivalenceNode}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{Binding Path=NodeElement.Number}"/>
+                                    <Label Content="{Binding Path=NodeElement.Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ListBox Grid.Column="2"
+                             Grid.Row="0"
+                             ItemsSource="{Binding Path=SelectedEquivalenceNode.GroupBranchCollection}"
+                             SelectedItem="{Binding Path=SelectedEquivalenceGroupBranchViewModel}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Column="1"
+                                Grid.Row="0"
+                                Orientation="Vertical" 
+                                VerticalAlignment="Center">
+                        <Button Command="{Binding Path=AddGroupToEquivalenceNodeCommand}"
+                                Height="50"
+                                Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="Add" 
+                                                         HorizontalAlignment="Center" 
+                                                         Width="25" 
+                                                         Height="25"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Command="{Binding Path=RemoveEquivalenceGroupFromEquivalenceNodesCommand}"
+                                Height="50" 
+                                Margin="0, 10, 0, 0"
+                                Style="{DynamicResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="Delete" 
+                                                         HorizontalAlignment="Center" 
+                                                         Width="25" 
+                                                         Height="25"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Иерархия">
+                <TreeView ItemsSource="{Binding Path=EquivalenceNodes}">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Path=GroupBranchCollection}">
+                            <Label Content="{Binding Path=NodeElement.Name}"/>
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Path=Name}"/>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
             </TabItem>
 
             <TabItem Header="Узлы">
                 <Grid>
                     <DataGrid x:Name="nodesGrid"
                               AutoGenerateColumns="True"
-                              ItemsSource="{Binding Path=Nodes}">
+                              ItemsSource="{Binding Path=Nodes}"
+                              >
                     </DataGrid>
                 </Grid>
             </TabItem>
@@ -165,8 +406,8 @@
             <TabItem Header="Ветви">
                 <Grid>
                     <DataGrid x:Name="branchesGrid"
-                      AutoGenerateColumns="True"
-                      ItemsSource="{Binding Path=Branches}">
+                              AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Branches}">
                     </DataGrid>
                 </Grid>
             </TabItem>
@@ -174,8 +415,8 @@
             <TabItem Header="Генераторы">
                 <Grid>
                     <DataGrid x:Name="generatorsGrid"
-                      AutoGenerateColumns="True"
-                      ItemsSource="{Binding Path=Generators}">
+                              AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Generators}">
                     </DataGrid>
                 </Grid>
             </TabItem>
@@ -183,13 +424,14 @@
             <TabItem Header="PQ диаграммы">
                 <Grid>
                     <DataGrid x:Name="pqDiagramsGrid"
-                      AutoGenerateColumns="True"
-                      ItemsSource="{Binding Path=PqDiagrams}">
+                              AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=PqDiagrams}">
                     </DataGrid>
                 </Grid>
             </TabItem>
-
+        
         </TabControl>
-
+    
     </DockPanel>
+
 </Window>

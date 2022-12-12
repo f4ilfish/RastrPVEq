@@ -26,9 +26,6 @@ namespace RastrPVEq.ViewModels
         private List<Node> _nodes = new();
 
         [ObservableProperty]
-        private Node _pickedNode;
-
-        [ObservableProperty]
         private List<Branch> _branches = new();
 
         [ObservableProperty]
@@ -38,43 +35,123 @@ namespace RastrPVEq.ViewModels
         private List<PQDiagram> _pqDiagrams = new();
 
         [ObservableProperty]
-        private ObservableCollection<NodeViewModel> nodesCollection = new();
+        private ObservableCollection<EquivalenceNodeViewModel> equivalenceNodes = new();
 
         [ObservableProperty]
-        private object _selectedItem;
+        private Node _selectedNode;
+
+        [ObservableProperty]
+        private EquivalenceNodeViewModel _selectedEquivalenceNode;
 
         [RelayCommand]
-        private void AddNode()
+        private void AddNodeToEquivalenceNodes()
         {
-            Node firstNode = new(1, ElementStatus.Enable, 1, "First node", 10);
-            Node secondNode = new(2, ElementStatus.Disable, 2, "Second node", 20);
-            Node thirdNode = new(3, ElementStatus.Enable, 3, "Third node", 30);
-
-            NodeViewModel firstViewNode = new(firstNode);
-            NodeViewModel secondViewNode = new(secondNode);
-            NodeViewModel thirdViewNode = new(thirdNode);
-
-            Branch firstBranch = new(1, ElementStatus.Enable, BranchType.Switch, "First branch", 0, 0, 0);
-            Branch secondBranch = new(2, ElementStatus.Disable, BranchType.Line, "Second branch", 2, 2, 0);
-            Branch thirdBranch = new(3, ElementStatus.Enable, BranchType.Transformer, "Third branch", 3, 3, 0.33);
-
-            BranchViewModel firstViewBranch = new(firstBranch);
-            BranchViewModel secondViewBranch = new(secondBranch);
-            BranchViewModel thirdViewBranch = new(thirdBranch);
-
-            firstViewNode.BranchCollection.Add(firstViewBranch);
-
-            secondViewNode.BranchCollection.Add(firstViewBranch);
-            secondViewNode.BranchCollection.Add(secondViewBranch);
-
-            thirdViewNode.BranchCollection.Add(firstViewBranch);
-            thirdViewNode.BranchCollection.Add(secondViewBranch);
-            thirdViewNode.BranchCollection.Add(thirdViewBranch);
-
-            nodesCollection.Add(firstViewNode);
-            nodesCollection.Add(secondViewNode);
-            nodesCollection.Add(thirdViewNode);
+            if (SelectedNode != null)
+            {
+                equivalenceNodes.Add(new EquivalenceNodeViewModel(SelectedNode));
+            }
         }
+
+        [RelayCommand]
+        private void RemoveNodeFromEquivalenceNodes()
+        {
+            if (SelectedEquivalenceNode != null)
+            {
+                EquivalenceNodes.Remove(SelectedEquivalenceNode);
+            }
+        }
+
+        [RelayCommand]
+        private void AddGroupToEquivalenceNode()
+        {
+            if (SelectedEquivalenceNode != null)
+            {
+                if(SelectedEquivalenceNode.GroupBranchCollection.Count == 0)
+                {
+                    SelectedEquivalenceNode.GroupBranchCollection.Add(new EquivalenceGroupBranchViewModel(1, $"Группа 1"));
+                }
+                else
+                {
+                    var newId = SelectedEquivalenceNode.GroupBranchCollection.Max(g => g.Id) + 1;
+                    SelectedEquivalenceNode.GroupBranchCollection.Add(new EquivalenceGroupBranchViewModel(newId, $"Группа {newId}"));
+                }
+            }
+        }
+
+        [ObservableProperty]
+        private EquivalenceGroupBranchViewModel _selectedEquivalenceGroupBranchViewModel;
+
+        [RelayCommand]
+        private void RemoveEquivalenceGroupFromEquivalenceNodes()
+        {
+            if (SelectedEquivalenceGroupBranchViewModel != null && SelectedEquivalenceNode != null)
+            {
+                SelectedEquivalenceNode.GroupBranchCollection.Remove(SelectedEquivalenceGroupBranchViewModel);
+            }
+        }
+
+        [ObservableProperty]
+        private Branch _selectedBranch;
+
+        [RelayCommand]
+        private void AddBranchToEquivalenceGroupBranch()
+        {
+            if (SelectedEquivalenceGroupBranchViewModel != null && SelectedBranch != null)
+            {
+                SelectedEquivalenceGroupBranchViewModel.BranchCollection.Add(new EquivalenceBranchViewModel(SelectedBranch));
+            }
+        }
+
+        [ObservableProperty]
+        private EquivalenceBranchViewModel _selectedEquivalenceBranchViewModel;
+
+        [RelayCommand]
+        private void RemoveEquivalenceBranchFromEquivalenceGroup()
+        {
+            if (SelectedEquivalenceGroupBranchViewModel != null && SelectedEquivalenceBranchViewModel != null)
+            {
+                SelectedEquivalenceGroupBranchViewModel.BranchCollection.Remove(SelectedEquivalenceBranchViewModel);
+            }
+        }
+
+        //public List<Node> GetBranchGroupNodes(EquivalenceGroupBranchViewModel branchGroup)
+        //{
+        //    var branchGroupNodes = new List<Node>();
+        //}
+
+
+        //[RelayCommand]
+        //private void AddNode()
+        //{
+        //    Node firstNode = new(1, ElementStatus.Enable, 1, "First node", 10);
+        //    Node secondNode = new(2, ElementStatus.Disable, 2, "Second node", 20);
+        //    Node thirdNode = new(3, ElementStatus.Enable, 3, "Third node", 30);
+
+        //    EquivalenceNodeViewModel firstViewNode = new(firstNode);
+        //    EquivalenceNodeViewModel secondViewNode = new(secondNode);
+        //    EquivalenceNodeViewModel thirdViewNode = new(thirdNode);
+
+        //    Branch firstBranch = new(1, ElementStatus.Enable, BranchType.Switch, "First branch", 0, 0, 0);
+        //    Branch secondBranch = new(2, ElementStatus.Disable, BranchType.Line, "Second branch", 2, 2, 0);
+        //    Branch thirdBranch = new(3, ElementStatus.Enable, BranchType.Transformer, "Third branch", 3, 3, 0.33);
+
+        //    BranchViewModel firstViewBranch = new(firstBranch);
+        //    BranchViewModel secondViewBranch = new(secondBranch);
+        //    BranchViewModel thirdViewBranch = new(thirdBranch);
+
+        //    firstViewNode.BranchCollection.Add(firstViewBranch);
+
+        //    secondViewNode.BranchCollection.Add(firstViewBranch);
+        //    secondViewNode.BranchCollection.Add(secondViewBranch);
+
+        //    thirdViewNode.BranchCollection.Add(firstViewBranch);
+        //    thirdViewNode.BranchCollection.Add(secondViewBranch);
+        //    thirdViewNode.BranchCollection.Add(thirdViewBranch);
+
+        //    nodesCollection.Add(firstViewNode);
+        //    nodesCollection.Add(secondViewNode);
+        //    nodesCollection.Add(thirdViewNode);
+        //}
 
         [RelayCommand]
         private async void DownloadFile()

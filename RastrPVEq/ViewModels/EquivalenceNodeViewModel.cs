@@ -13,24 +13,16 @@ using System.Collections.ObjectModel;
 namespace RastrPVEq.ViewModels
 {
     [INotifyPropertyChanged]
-    internal partial class NodeViewModel
+    internal partial class EquivalenceNodeViewModel
     {
         public Node NodeElement { get; set; }
 
         [ObservableProperty]
-        private string _nodeName;
+        private ObservableCollection<EquivalenceGroupBranchViewModel> _groupBranchCollection = new();
 
-        [ObservableProperty]
-        private ObservableCollection<BranchViewModel> _branchCollection = new();
-
-        [ObservableProperty]
-        private bool _isChecked;
-
-        public NodeViewModel(Node node)
+        public EquivalenceNodeViewModel(Node node)
         {
             NodeElement = node;
-            NodeName = node.Name;
-            IsChecked = false;
         }
     }
 }
