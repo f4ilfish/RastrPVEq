@@ -15,7 +15,7 @@ namespace RastrPVEq.Infrastructure.RastrWin3
         /// <summary>
         /// Rastr com-object
         /// </summary>
-        private static readonly Rastr _rastr = new();
+        private static readonly Rastr _rastr = new Rastr();
 
         /// <summary>
         /// Load regime file

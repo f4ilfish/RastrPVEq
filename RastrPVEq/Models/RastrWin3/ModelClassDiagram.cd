@@ -1,68 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="RastrPVEqConsole.Models.AdjustmentRange">
-    <Position X="12.75" Y="4.75" Width="1.75" />
+  <Class Name="RastrPVEq.Models.RastrWin3.AdjustmentRange">
+    <Position X="9.75" Y="3.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AABAAAAAIACAAAAgAAAgAAAQAAAIACAAAAEAAIAAAAA=</HashCode>
-      <FileName>Models\AdjustmentRange.cs</FileName>
+      <FileName>Models\RastrWin3\AdjustmentRange.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RastrPVEqConsole.Models.Branch">
-    <Position X="4" Y="2.25" Width="1.75" />
+  <Class Name="RastrPVEq.Models.RastrWin3.Branch">
+    <Position X="4.25" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAIAAAgEADAAQgAAAgBAQAAAAAAAAAIAEBAIAIAAA=</HashCode>
-      <FileName>Models\Branch.cs</FileName>
+      <HashCode>AAAAIAAAgEABAAQAAAAgBAQAAAAAAAAAIAEBAIAIAAA=</HashCode>
+      <FileName>Models\RastrWin3\Branch.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="BranchEndNode" />
       <Property Name="BranchStartNode" />
+      <Property Name="BranchEndNode" />
+      <Property Name="BranchStatus" />
+      <Property Name="BranchType" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="RastrPVEqConsole.Models.Generator">
-    <Position X="10" Y="2.25" Width="1.5" />
+  <Class Name="RastrPVEq.Models.RastrWin3.Generator">
+    <Position X="6.5" Y="2" Width="1.75" />
+    <AssociationLine Name="GeneratorNode" Type="RastrPVEq.Models.RastrWin3.Node" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.438" Y="5.112" />
+        <Point X="7.438" Y="7.477" />
+        <Point X="2" Y="7.477" />
+        <Point X="2" Y="5.112" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAASIAAAAAAAAAQAAUAgAAQAAAAAAAAAAAEAAABgAAA=</HashCode>
-      <FileName>Models\Generator.cs</FileName>
+      <FileName>Models\RastrWin3\Generator.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="GeneratorNode" />
       <Property Name="GeneratorPQDiagram" />
+      <Property Name="GeneratorStatus" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="RastrPVEqConsole.Models.Node">
-    <Position X="7.25" Y="2.25" Width="1.5" />
+  <Class Name="RastrPVEq.Models.RastrWin3.Node">
+    <Position X="1.25" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAIAAgACAAAAAAAEAgAAQAAAAAACAAAAEAAABAAAA=</HashCode>
-      <FileName>Models\Node.cs</FileName>
+      <FileName>Models\RastrWin3\Node.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="NodeStatus" />
+    </ShowAsAssociation>
   </Class>
-  <Class Name="RastrPVEqConsole.Models.PQDiagram">
-    <Position X="13.25" Y="2.25" Width="1.25" />
-    <AssociationLine Name="AdjustmentRanges" Type="RastrPVEqConsole.Models.AdjustmentRange">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.11" Y="0.158" />
-      </MemberNameLabel>
-    </AssociationLine>
+  <Class Name="RastrPVEq.Models.RastrWin3.PQDiagram">
+    <Position X="9.75" Y="1.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAACAAAAAAABAAAA=</HashCode>
-      <FileName>Models\PQDiagram.cs</FileName>
+      <FileName>Models\RastrWin3\PQDiagram.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="AdjustmentRanges" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Enum Name="RastrPVEqConsole.Models.BranchType">
-    <Position X="7.25" Y="0.5" Width="1.5" />
+  <Enum Name="RastrPVEq.Models.RastrWin3.BranchType">
+    <Position X="4.25" Y="6" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAAAIAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
-      <FileName>Models\BranchType.cs</FileName>
+      <FileName>Models\RastrWin3\BranchType.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="RastrPVEqConsole.Models.ElementStatus">
-    <Position X="4" Y="0.5" Width="1.5" />
+  <Enum Name="RastrPVEq.Models.RastrWin3.ElementStatus">
+    <Position X="4.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>Models\ElementStatus.cs</FileName>
+      <FileName>Models\RastrWin3\ElementStatus.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="8.83" />

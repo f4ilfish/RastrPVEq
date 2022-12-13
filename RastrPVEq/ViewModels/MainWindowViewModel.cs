@@ -23,19 +23,19 @@ namespace RastrPVEq.ViewModels
     internal partial class MainWindowViewModel
     {
         [ObservableProperty]
-        private List<Node> _nodes = new();
+        private List<Node> _nodes = new List<Node>();
 
         [ObservableProperty]
-        private List<Branch> _branches = new();
+        private List<Branch> _branches = new List<Branch>();
 
         [ObservableProperty]
-        private List<Generator> _generators = new();
+        private List<Generator> _generators = new List<Generator>();
 
         [ObservableProperty]
-        private List<PQDiagram> _pqDiagrams = new();
+        private List<PQDiagram> _pqDiagrams = new List<PQDiagram>();
 
         [ObservableProperty]
-        private ObservableCollection<EquivalenceNodeViewModel> equivalenceNodes = new();
+        private ObservableCollection<EquivalenceNodeViewModel> equivalenceNodes = new ObservableCollection<EquivalenceNodeViewModel>();
 
         [ObservableProperty]
         private Node _selectedNode;

@@ -36,6 +36,10 @@
                 <MenuItem Header="Сохранить"/>
                 <MenuItem Header="Выход"/>
             </MenuItem>
+            <MenuItem Header="Расчет">
+                <MenuItem Header="Начать"/>
+                <MenuItem Header="Прервать"/>
+            </MenuItem>
             <MenuItem Header="Помощь">
                 <MenuItem Header="О программе"/>
             </MenuItem>
@@ -49,7 +53,7 @@
 
         <TabControl>
             
-            <TabItem Header="Выбор узлов">
+            <TabItem Header="Узлы эквивалента">
                 <Grid ShowGridLines="False">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -173,7 +177,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Выбор ветвей">
+            <TabItem Header="Группы эквивалента">
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.3*"/>
@@ -378,7 +382,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Иерархия">
+            <TabItem Header="Результат">
                 <TreeView ItemsSource="{Binding Path=EquivalenceNodes}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Path=GroupBranchCollection}">
@@ -393,7 +397,7 @@
                 </TreeView>
             </TabItem>
 
-            <TabItem Header="Узлы">
+            <!--<TabItem Header="Узлы">
                 <Grid>
                     <DataGrid x:Name="nodesGrid"
                               AutoGenerateColumns="True"
@@ -428,7 +432,7 @@
                               ItemsSource="{Binding Path=PqDiagrams}">
                     </DataGrid>
                 </Grid>
-            </TabItem>
+            </TabItem>-->
         
         </TabControl>
     

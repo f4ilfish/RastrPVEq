@@ -18,7 +18,7 @@ namespace RastrPVEq.ViewModels
         public Node NodeElement { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<EquivalenceGroupBranchViewModel> _groupBranchCollection = new();
+        private ObservableCollection<EquivalenceGroupBranchViewModel> _groupBranchCollection = new ObservableCollection<EquivalenceGroupBranchViewModel>();
 
         public EquivalenceNodeViewModel(Node node)
         {

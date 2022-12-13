@@ -21,7 +21,7 @@ namespace RastrPVEq.ViewModels
         private string _name;
 
         [ObservableProperty]
-        private ObservableCollection<EquivalenceBranchViewModel> _branchCollection = new();
+        private ObservableCollection<EquivalenceBranchViewModel> _branchCollection = new ObservableCollection<EquivalenceBranchViewModel>();
 
         public EquivalenceGroupBranchViewModel(int id, string name)
         {
