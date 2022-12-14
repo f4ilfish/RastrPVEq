@@ -10,44 +10,49 @@ namespace RastrPVEqConsole
     {
         static async Task Main()
         {
-            RastrSupplier.LoadFileByTemplate("C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\часть до эквивалента.rg2",
+            RastrSupplier.LoadFileByTemplate("C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\до эквивалента.rg2",
                                              "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2");
             Console.WriteLine(">>> File downloaded without exceptions");
 
             #region Async
-            //Stopwatch stopwatch = new();
-            //stopwatch.Start();
-
-            //var nodesTask = RastrSupplierAsync.GetNodesAsync();
-            //var pqDiagramsTask = RastrSupplierAsync.GetPQDiagramsAsync();
-
-            //await nodesTask;
-            //var nodes = nodesTask.Result;
-            //var branchesTask = RastrSupplierAsync.GetBranchesAsync(nodes);
-
-            //await pqDiagramsTask;
-            //var pqDiagrams = pqDiagramsTask.Result;
-            //var generatorsTask = RastrSupplierAsync.GetGeneratorsAsync(nodes, pqDiagrams);
-
-            //await Task.WhenAll(branchesTask, generatorsTask);
-            //var branches = branchesTask.Result;
-            //var generators = generatorsTask.Result;
-
-            //stopwatch.Stop();
-            //Console.WriteLine(stopwatch.Elapsed);
-            #endregion
-
-            #region Sync
             Stopwatch stopwatch = new();
             stopwatch.Start();
 
-            var nodes = RastrSupplier.GetNodes();
-            var pqDiagramms = RastrSupplier.GetPQDiagrams();
-            var branches = RastrSupplier.GetBranches(nodes);
-            var generators = RastrSupplier.GetGenerators(nodes, pqDiagramms);
+            var nodesTask = RastrSupplierAsync.GetNodesAsync();
+            var pqDiagramsTask = RastrSupplierAsync.GetPQDiagramsAsync();
+
+            await nodesTask;
+            var nodes = nodesTask.Result;
+            var branchesTask = RastrSupplierAsync.GetBranchesAsync(nodes);
+
+            await pqDiagramsTask;
+            var pqDiagrams = pqDiagramsTask.Result;
+            var generatorsTask = RastrSupplierAsync.GetGeneratorsAsync(nodes, pqDiagrams);
+
+            await Task.WhenAll(branchesTask, generatorsTask);
+            var branches = branchesTask.Result;
+            var generators = generatorsTask.Result;
 
             stopwatch.Stop();
             Console.WriteLine(stopwatch.Elapsed);
+            #endregion
+
+            #region Sync
+            //Stopwatch stopwatch = new();
+            //stopwatch.Start();
+
+            //var nodes = RastrSupplier.GetNodes();
+            //Console.WriteLine("Node downloaded");
+            //var pqDiagramms = RastrSupplier.GetPQDiagrams();
+            //Console.WriteLine("PQ diagram downloaded");
+            //var branches = RastrSupplier.GetBranches(nodes);
+            //Console.WriteLine("Branches downloaded");
+            //var generators = RastrSupplier.GetGenerators(nodes, pqDiagramms);
+            //Console.WriteLine("Generators downloaded");
+
+            //stopwatch.Stop();
+            //Console.WriteLine(stopwatch.Elapsed);
+            //Console.ReadKey();
             #endregion
 
             //var aNode = new Node(1, ElementStatus.Enable, 1, "A", 10);

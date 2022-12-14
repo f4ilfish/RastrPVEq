@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.ObjectModel;
 using RastrPVEq.Models.RastrWin3;
-using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace RastrPVEq.ViewModels
 {
@@ -18,7 +10,7 @@ namespace RastrPVEq.ViewModels
         public Node NodeElement { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<EquivalenceGroupBranchViewModel> _groupBranchCollection = new ObservableCollection<EquivalenceGroupBranchViewModel>();
+        private ObservableCollection<EquivalenceGroupViewModel> _equivalenceGroupCollection = new();
 
         public EquivalenceNodeViewModel(Node node)
         {

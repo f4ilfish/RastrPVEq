@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace RastrPVEq.ViewModels
 {
-
     [INotifyPropertyChanged]
     internal partial class EquivalenceBranchViewModel
     {

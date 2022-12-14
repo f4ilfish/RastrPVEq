@@ -1,27 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using Microsoft.Win32;
 
 using RastrPVEq.Models.RastrWin3;
-using RastrPVEq.Models.Topology;
-
 using RastrPVEq.Infrastructure.RastrWin3;
-using CommunityToolkit.Mvvm;
+using RastrPVEq.Views;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using RastrPVEq.Views;
 
 namespace RastrPVEq.ViewModels
 {
     [INotifyPropertyChanged]
     internal partial class MainWindowViewModel
     {
+        #region Загрузка модели
+        
         [ObservableProperty]
         private List<Node> _nodes = new List<Node>();
 
@@ -33,125 +31,6 @@ namespace RastrPVEq.ViewModels
 
         [ObservableProperty]
         private List<PQDiagram> _pqDiagrams = new List<PQDiagram>();
-
-        [ObservableProperty]
-        private ObservableCollection<EquivalenceNodeViewModel> equivalenceNodes = new ObservableCollection<EquivalenceNodeViewModel>();
-
-        [ObservableProperty]
-        private Node _selectedNode;
-
-        [ObservableProperty]
-        private EquivalenceNodeViewModel _selectedEquivalenceNode;
-
-        [RelayCommand]
-        private void AddNodeToEquivalenceNodes()
-        {
-            if (SelectedNode != null)
-            {
-                equivalenceNodes.Add(new EquivalenceNodeViewModel(SelectedNode));
-            }
-        }
-
-        [RelayCommand]
-        private void RemoveNodeFromEquivalenceNodes()
-        {
-            if (SelectedEquivalenceNode != null)
-            {
-                EquivalenceNodes.Remove(SelectedEquivalenceNode);
-            }
-        }
-
-        [RelayCommand]
-        private void AddGroupToEquivalenceNode()
-        {
-            if (SelectedEquivalenceNode != null)
-            {
-                if(SelectedEquivalenceNode.GroupBranchCollection.Count == 0)
-                {
-                    SelectedEquivalenceNode.GroupBranchCollection.Add(new EquivalenceGroupBranchViewModel(1, $"Группа 1"));
-                }
-                else
-                {
-                    var newId = SelectedEquivalenceNode.GroupBranchCollection.Max(g => g.Id) + 1;
-                    SelectedEquivalenceNode.GroupBranchCollection.Add(new EquivalenceGroupBranchViewModel(newId, $"Группа {newId}"));
-                }
-            }
-        }
-
-        [ObservableProperty]
-        private EquivalenceGroupBranchViewModel _selectedEquivalenceGroupBranchViewModel;
-
-        [RelayCommand]
-        private void RemoveEquivalenceGroupFromEquivalenceNodes()
-        {
-            if (SelectedEquivalenceGroupBranchViewModel != null && SelectedEquivalenceNode != null)
-            {
-                SelectedEquivalenceNode.GroupBranchCollection.Remove(SelectedEquivalenceGroupBranchViewModel);
-            }
-        }
-
-        [ObservableProperty]
-        private Branch _selectedBranch;
-
-        [RelayCommand]
-        private void AddBranchToEquivalenceGroupBranch()
-        {
-            if (SelectedEquivalenceGroupBranchViewModel != null && SelectedBranch != null)
-            {
-                SelectedEquivalenceGroupBranchViewModel.BranchCollection.Add(new EquivalenceBranchViewModel(SelectedBranch));
-            }
-        }
-
-        [ObservableProperty]
-        private EquivalenceBranchViewModel _selectedEquivalenceBranchViewModel;
-
-        [RelayCommand]
-        private void RemoveEquivalenceBranchFromEquivalenceGroup()
-        {
-            if (SelectedEquivalenceGroupBranchViewModel != null && SelectedEquivalenceBranchViewModel != null)
-            {
-                SelectedEquivalenceGroupBranchViewModel.BranchCollection.Remove(SelectedEquivalenceBranchViewModel);
-            }
-        }
-
-        //public List<Node> GetBranchGroupNodes(EquivalenceGroupBranchViewModel branchGroup)
-        //{
-        //    var branchGroupNodes = new List<Node>();
-        //}
-
-
-        //[RelayCommand]
-        //private void AddNode()
-        //{
-        //    Node firstNode = new(1, ElementStatus.Enable, 1, "First node", 10);
-        //    Node secondNode = new(2, ElementStatus.Disable, 2, "Second node", 20);
-        //    Node thirdNode = new(3, ElementStatus.Enable, 3, "Third node", 30);
-
-        //    EquivalenceNodeViewModel firstViewNode = new(firstNode);
-        //    EquivalenceNodeViewModel secondViewNode = new(secondNode);
-        //    EquivalenceNodeViewModel thirdViewNode = new(thirdNode);
-
-        //    Branch firstBranch = new(1, ElementStatus.Enable, BranchType.Switch, "First branch", 0, 0, 0);
-        //    Branch secondBranch = new(2, ElementStatus.Disable, BranchType.Line, "Second branch", 2, 2, 0);
-        //    Branch thirdBranch = new(3, ElementStatus.Enable, BranchType.Transformer, "Third branch", 3, 3, 0.33);
-
-        //    BranchViewModel firstViewBranch = new(firstBranch);
-        //    BranchViewModel secondViewBranch = new(secondBranch);
-        //    BranchViewModel thirdViewBranch = new(thirdBranch);
-
-        //    firstViewNode.BranchCollection.Add(firstViewBranch);
-
-        //    secondViewNode.BranchCollection.Add(firstViewBranch);
-        //    secondViewNode.BranchCollection.Add(secondViewBranch);
-
-        //    thirdViewNode.BranchCollection.Add(firstViewBranch);
-        //    thirdViewNode.BranchCollection.Add(secondViewBranch);
-        //    thirdViewNode.BranchCollection.Add(thirdViewBranch);
-
-        //    nodesCollection.Add(firstViewNode);
-        //    nodesCollection.Add(secondViewNode);
-        //    nodesCollection.Add(thirdViewNode);
-        //}
 
         [RelayCommand]
         private async void DownloadFile()
@@ -191,13 +70,110 @@ namespace RastrPVEq.ViewModels
                 MessageBox.Show($"{ex}");
             }
         }
+        
+        #endregion
 
-        /// <summary>
-        /// MainWindowViewModel instance constructor
-        /// </summary>
-        public MainWindowViewModel()
+        #region Подготовка модели эквивалентирования
+
+        [ObservableProperty]
+        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodesCollection = new();
+
+        [ObservableProperty]
+        private Node _selectedNode;
+
+        [ObservableProperty]
+        private EquivalenceNodeViewModel _selectedEquivalenceNode;
+
+        [ObservableProperty]
+        private EquivalenceGroupViewModel _selectedEquivalenceGroup;
+
+        [ObservableProperty]
+        private Branch _selectedBranch;
+
+        [ObservableProperty]
+        private EquivalenceBranchViewModel _selectedEquivalenceBranch;
+
+        [RelayCommand]
+        private void AddNodeToEquivalenceNodes()
         {
-
+            if (SelectedNode != null)
+            {
+                EquivalenceNodesCollection
+                    .Add(new EquivalenceNodeViewModel(SelectedNode));
+            }
         }
+
+        [RelayCommand]
+        private void RemoveNodeFromEquivalenceNodes()
+        {
+            if (SelectedEquivalenceNode != null)
+            {
+                EquivalenceNodesCollection
+                    .Remove(SelectedEquivalenceNode);
+            }
+        }
+
+        [RelayCommand]
+        private void AddEquivalenceGroupToEquivalenceNode()
+        {
+            if (SelectedEquivalenceNode != null)
+            {
+                if(SelectedEquivalenceNode.EquivalenceGroupCollection.Count != 0)
+                {
+                    var newGroupId = SelectedEquivalenceNode.EquivalenceGroupCollection
+                                     .Max(group => group.Id) + 1;
+                    
+                    SelectedEquivalenceNode.EquivalenceGroupCollection
+                        .Add(new EquivalenceGroupViewModel(newGroupId, $"Группа {newGroupId}"));
+                }
+
+                SelectedEquivalenceNode.EquivalenceGroupCollection
+                        .Add(new EquivalenceGroupViewModel(1, "Группа 1"));
+            }
+        }
+
+        [RelayCommand]
+        private void RemoveEquivalenceGroupFromEquivalenceNode()
+        {
+            if (SelectedEquivalenceGroup!= null 
+                && SelectedEquivalenceNode != null)
+            {
+                SelectedEquivalenceNode.EquivalenceGroupCollection
+                    .Remove(SelectedEquivalenceGroup);
+            }
+        }
+
+        [RelayCommand]
+        private void AddBranchToEquivalenceGroup()
+        {
+            if (SelectedEquivalenceGroup != null 
+                && SelectedBranch != null)
+            {
+                SelectedEquivalenceGroup.EquivalenceBranchCollection
+                    .Add(new EquivalenceBranchViewModel(SelectedBranch));
+            }
+        }
+
+        [RelayCommand]
+        private void RemoveEquivalenceBranchFromEquivalenceGroup()
+        {
+            if (SelectedEquivalenceGroup != null 
+                && SelectedEquivalenceBranch != null)
+            {
+                SelectedEquivalenceGroup.EquivalenceBranchCollection
+                    .Remove(SelectedEquivalenceBranch);
+            }
+        }
+
+        #endregion
+
+        [RelayCommand]
+        private void OpenAddNodeWindow()
+        {
+            var addNodeWindow = new AddNodeWindow();
+            addNodeWindow.Show();
+        }
+
+        public MainWindowViewModel() { }
     }
 }

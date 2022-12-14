@@ -117,7 +117,7 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             var nodeStatus = !GetElementParameterValue<bool>(RastrNames.NodeTable,
                                                              RastrNames.NodeStatusColumn,
                                                              nodeIndex) ? ElementStatus.Enable
-                                                                           : ElementStatus.Disable;
+                                                                        : ElementStatus.Disable;
 
             var nodeNumber = GetElementParameterValue<int>(RastrNames.NodeTable,
                                                            RastrNames.NodeNumberColumn,
