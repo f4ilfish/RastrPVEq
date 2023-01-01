@@ -11,17 +11,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using RastrPVEq.ViewModels;
 
 namespace RastrPVEq.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AddNodeWindow.xaml
+    /// Логика взаимодействия для NodeSelection.xaml
     /// </summary>
-    public partial class AddNodeWindow : Window
+    public partial class NodeSelectionWindow : Window
     {
-        public AddNodeWindow()
+        public NodeSelectionWindow(MainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
+            DataContext = mainWindowViewModel;
         }
     }
 }

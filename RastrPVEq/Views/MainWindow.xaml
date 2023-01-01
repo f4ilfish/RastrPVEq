@@ -41,7 +41,7 @@
                 <MenuItem Header="Прервать"/>
             </MenuItem>
             <MenuItem Header="Помощь">
-                <MenuItem Header="О программе" Command="{Binding Path=OpenAddNodeWindowCommand}"/>
+                <MenuItem Header="О программе" Command="{Binding Path=OpenNodeSelectionWindowCommand}"/>
             </MenuItem>
         </Menu>
 
@@ -96,7 +96,8 @@
                                                     UpdateSourceTrigger=PropertyChanged}"
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
-                              SelectedItem="{Binding Path=SelectedNode}">
+                              SelectedItem="{Binding Path=SelectedNode}"
+                              IsTextSearchEnabled="True">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Индекс"
                                                     SortMemberPath="Index">
@@ -281,12 +282,12 @@
                     </DataGrid>
                     <DataGrid Grid.Column="2"
                               Grid.Row="2"
-                              ItemsSource="{Binding Path=SelectedEquivalenceGroupBranchViewModel.BranchCollection, 
+                              ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalenceBranchCollection, 
                                                     Mode=TwoWay,
                                                     UpdateSourceTrigger=PropertyChanged}"
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
-                              SelectedItem="{Binding Path=SelectedEquivalenceBranchViewModel}">
+                              SelectedItem="{Binding Path=SelectedEquivalenceBranch}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Индекс"
                                                     SortMemberPath="BranchElement.Index">
@@ -383,7 +384,7 @@
             </TabItem>
 
             <TabItem Header="Результат">
-                <TreeView ItemsSource="{Binding Path=EquivalenceNodesCollection}">
+                <!--<TreeView ItemsSource="{Binding Path=EquivalenceNodesCollection}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Path=EquivalenceGroupCollection}">
                             <Label Content="{Binding Path=NodeElement.Name}"/>
@@ -394,7 +395,115 @@
                             </HierarchicalDataTemplate.ItemTemplate>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
-                </TreeView>
+                </TreeView>-->
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Расчет"
+                                Command="{Binding Path=CalculateCommand}"/>
+                        <StackPanel Orientation="Horizontal" 
+                                    VerticalAlignment="Center">
+                            <Label Content="Cвязь вершины и графа:"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding Path=IsEquivalenceGroupNodesContainEquivalenceNode}"/>
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <Grid ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Column="0"
+                                  Grid.Row="0"
+                                  Header="Узлы группы:">
+                            <GroupBox.Content>
+                                <ListBox ItemsSource="{Binding Path=EquivalenceGroupNodes, 
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Column="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Path=Index}"/>
+                                                <Label Content="{Binding Path=RatedVoltage}"/>
+                                                <Label Content="{Binding Path=Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </GroupBox.Content>
+                        </GroupBox>
+
+                        <GroupBox Grid.Column="1"
+                                  Grid.Row="0"
+                                  Header="Генераторы группы:">
+                            <GroupBox.Content>
+                                <ListBox ItemsSource="{Binding Path=ListOfGenerators, 
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Column="1">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Path=GeneratorNode.Index}"/>
+                                                <Label Content="{Binding Path=GeneratorNode.RatedVoltage}"/>
+                                                <Label Content="{Binding Path=Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </GroupBox.Content>
+                        </GroupBox>
+
+                        <GroupBox Grid.Column="2"
+                                  Grid.Row="0"
+                                  Header="Узлы-вершины графа:">
+                            <GroupBox.Content>
+                                <ListBox ItemsSource="{Binding Path=GraphToEquivalentation.Vertices,
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Column="2">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Path=Data.Index}"/>
+                                                <Label Content="{Binding Path=Data.RatedVoltage}"/>
+                                                <Label Content="{Binding Path=Data.Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </GroupBox.Content>
+                        </GroupBox>
+
+                        <GroupBox Grid.Column="0"
+                                  Grid.Row="1"
+                                  Header="Путь:">
+                            <GroupBox.Content>
+                                <ListBox ItemsSource="{Binding Path=TraversedVerices,
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Column="2">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Path=Data.Index}"/>
+                                                <Label Content="{Binding Path=Data.RatedVoltage}"/>
+                                                <Label Content="{Binding Path=Data.Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </GroupBox.Content>
+                        </GroupBox>
+
+                    </Grid>
+                </StackPanel>
             </TabItem>
 
             <!--<TabItem Header="Узлы">

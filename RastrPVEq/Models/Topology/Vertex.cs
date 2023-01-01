@@ -21,6 +21,8 @@ namespace RastrPVEq.Models.Topology
         /// </summary>
         public IGraph<T> CurrentGraph { get; set; }
 
+        public Vertex() { }
+
         public Vertex(T data) => Data = data;
 
         public Vertex(T data, IGraph<T> currentGraph)
