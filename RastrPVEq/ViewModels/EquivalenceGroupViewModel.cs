@@ -26,7 +26,7 @@ namespace RastrPVEq.ViewModels
         /// Equivalence Branch Collection
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<EquivalenceBranchViewModel> _equivalenceBranchCollection = new();
+        private ObservableCollection<Branch> _equivalenceBranches = new();
 
         /// <summary>
         /// Equivalent Branches Collection

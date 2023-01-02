@@ -93,7 +93,7 @@ namespace RastrPVEq.ViewModels
         private Branch _selectedBranch;
 
         [ObservableProperty]
-        private EquivalenceBranchViewModel _selectedEquivalenceBranch;
+        private Branch _selectedEquivalenceBranch;
 
         [RelayCommand]
         private void AddNodeToEquivalenceNodes()
@@ -153,8 +153,8 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup != null
                 && SelectedBranch != null)
             {
-                SelectedEquivalenceGroup.EquivalenceBranchCollection
-                    .Add(new EquivalenceBranchViewModel(SelectedBranch));
+                SelectedEquivalenceGroup.EquivalenceBranches
+                    .Add(SelectedBranch);
             }
         }
 
@@ -164,7 +164,7 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup != null
                 && SelectedEquivalenceBranch != null)
             {
-                SelectedEquivalenceGroup.EquivalenceBranchCollection
+                SelectedEquivalenceGroup.EquivalenceBranches
                     .Remove(SelectedEquivalenceBranch);
             }
         }
@@ -261,9 +261,9 @@ namespace RastrPVEq.ViewModels
         {
             var branchToGeneratorsPower = new Dictionary<Branch, double>();
 
-            foreach (var branch in equivalenceGroup.EquivalenceBranchCollection)
+            foreach (var branch in equivalenceGroup.EquivalenceBranches)
             {
-                if (!branchToGeneratorsPower.TryAdd(branch.BranchElement, 0))
+                if (!branchToGeneratorsPower.TryAdd(branch, 0))
                 {
                     MessageBox.Show($"{equivalenceGroup.Name} имеет дубликаты для эквивалентирования");
                 };
@@ -313,20 +313,20 @@ namespace RastrPVEq.ViewModels
                                                           Node firstNode,
                                                           Node secondNode)
         {
-            foreach (var branch in equivalenceGroup.EquivalenceBranchCollection)
+            foreach (var branch in equivalenceGroup.EquivalenceBranches)
             {
-                if (branch.BranchElement.BranchStartNode == firstNode)
+                if (branch.BranchStartNode == firstNode)
                 {
-                    if (branch.BranchElement.BranchEndNode == secondNode)
+                    if (branch.BranchEndNode == secondNode)
                     {
-                        return branch.BranchElement;
+                        return branch;
                     }
                 }
-                else if (branch.BranchElement.BranchStartNode == secondNode)
+                else if (branch.BranchStartNode == secondNode)
                 {
-                    if (branch.BranchElement.BranchEndNode == firstNode)
+                    if (branch.BranchEndNode == firstNode)
                     {
-                        return branch.BranchElement;
+                        return branch;
                     }
                 }
             }
@@ -345,22 +345,21 @@ namespace RastrPVEq.ViewModels
         {
             var nodes = new List<Node>();
 
-            var equivalenceBranchCollection = equivalenceGroupViewModel.EquivalenceBranchCollection;
+            var equivalenceBranches = equivalenceGroupViewModel.EquivalenceBranches;
 
-            if (equivalenceBranchCollection != null)
+            if (equivalenceBranches != null)
             {
-                foreach (var equivalenceBranchViewModel in equivalenceBranchCollection)
+                foreach (var equivalenceBranch in equivalenceBranches)
                 {
-                    var eqivalenceBranch = equivalenceBranchViewModel.BranchElement;
 
-                    if (eqivalenceBranch.BranchStartNode != null)
+                    if (equivalenceBranch.BranchStartNode != null)
                     {
-                        nodes.Add(eqivalenceBranch.BranchStartNode);
+                        nodes.Add(equivalenceBranch.BranchStartNode);
                     }
 
-                    if (eqivalenceBranch.BranchEndNode != null)
+                    if (equivalenceBranch.BranchEndNode != null)
                     {
-                        nodes.Add(eqivalenceBranch.BranchEndNode);
+                        nodes.Add(equivalenceBranch.BranchEndNode);
                     }
                 }
             }
@@ -426,13 +425,13 @@ namespace RastrPVEq.ViewModels
                 graph.AddVertex(node);
             }
 
-            foreach (var branchViewModel in equivalenceGroupViewModel.EquivalenceBranchCollection)
+            foreach (var equivalenceBranch in equivalenceGroupViewModel.EquivalenceBranches)
             {
-                var startNode = branchViewModel.BranchElement.BranchStartNode;
-                var endNode = branchViewModel.BranchElement.BranchEndNode;
+                var startNode = equivalenceBranch.BranchStartNode;
+                var endNode = equivalenceBranch.BranchEndNode;
 
-                graph.AddEdge(startNode, endNode, branchViewModel.BranchElement.Resistance);
-                graph.AddEdge(endNode, startNode, branchViewModel.BranchElement.Resistance);
+                graph.AddEdge(startNode, endNode, equivalenceBranch.Resistance);
+                graph.AddEdge(endNode, startNode, equivalenceBranch.Resistance);
             }
 
             return graph;
