@@ -24,6 +24,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         
+        xmlns:filterDataGrid="http://filterdatagrid.control.com/2021"
         xmlns:customConverters="clr-namespace:RastrPVEq.Infrastructure">
 
     <Window.DataContext>
@@ -36,6 +37,7 @@
 
     <DockPanel>
 
+        <!--Меню-->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Открыть" Command="{Binding Path=DownloadFileCommand}"/>
@@ -51,14 +53,17 @@
             </MenuItem>
         </Menu>
 
+        <!--Прогресс бар-->
         <ProgressBar DockPanel.Dock="Bottom"
                      Minimum="0" 
                      Maximum="100"
                      Value="30"
                      Height="15"/>
 
+        <!--Вкладки-->
         <TabControl>
-
+            
+            <!--Узлы эквивалента-->
             <TabItem Header="Узлы эквивалента">
                 <Grid ShowGridLines="False">
                     <Grid.ColumnDefinitions>
@@ -66,11 +71,15 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+
+                    <!--Узлы эквивалента | Разделитель-->
                     <GridSplitter Grid.Column="1"
                                   Width="5"
                                   ShowsPreview="False"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Stretch"/>
+
+                    <!--Узлы эквивалента | Кнопки добавить/удалить-->
                     <StackPanel Grid.Column="1" 
                                 Orientation="Vertical" 
                                 VerticalAlignment="Center">
@@ -96,94 +105,136 @@
                             </Button.Content>
                         </Button>
                     </StackPanel>
-                    <DataGrid Grid.Column="0"
-                              ItemsSource="{Binding Path=Nodes , 
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                              AutoGenerateColumns="False"
-                              SelectionMode="Single"
-                              SelectedItem="{Binding Path=SelectedNode}"
-                              IsTextSearchEnabled="True">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Индекс"
-                                                    SortMemberPath="Index">
-                                <DataGridTemplateColumn.CellTemplate>
+                    
+                    <!--Узлы эквивалента | Исходные узлы-->
+                    <filterDataGrid:FilterDataGrid Grid.Column="0"
+                                                   ItemsSource="{Binding Path=Nodes , 
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="True"
+                                                   SelectionMode="Extended"
+                                                   SelectedItem="{Binding Path=SelectedNode}"
+                                                   
+                                                   Margin="8,0,8,0"
+                                                   
+                                                   AutoGenerateColumns="False"
+                                                   FilterLanguage="Russian" 
+                                                   DateFormatString="d" 
+                                                   ShowStatusBar="True" 
+                                                   ShowElapsedTime="False"
+                                                   Style="{StaticResource MaterialDesignDataGrid}">
+
+                        <filterDataGrid:FilterDataGrid.Columns>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
+                                                                   Header="Индекс"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Index">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Index}"/>
+                                        <TextBlock Text="{Binding Path=Index}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Номер"
-                                                    SortMemberPath="Number">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Number"
+                                                                   Header="Номер"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Number">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Number}"/>
+                                        <TextBlock Text="{Binding Path=Number}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Наименование"
-                                                    SortMemberPath="Name">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Name"
+                                                                   Header="Наименование"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Name">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Name}"/>
+                                        <TextBlock Text="{Binding Path=Name}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Uном"
-                                                    SortMemberPath="RatedVoltage">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="RatedVoltage"
+                                                                   Header="Uном, кВ"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="RatedVoltage">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=RatedVoltage}"/>
+                                        <TextBlock Text="{Binding Path=RatedVoltage, 
+                                                                  StringFormat=N2}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <DataGrid Grid.Column="2"
-                              ItemsSource="{Binding Path=EquivalenceNodesCollection, 
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                              AutoGenerateColumns="False"
-                              SelectionMode="Single"
-                              SelectedItem="{Binding Path=SelectedEquivalenceNode}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Индекс"
-                                                    SortMemberPath="NodeElement.Index">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                        </filterDataGrid:FilterDataGrid.Columns>
+                    </filterDataGrid:FilterDataGrid>
+
+                    <!--Узлы эквивалента | Выбранные узлы-->
+                    <filterDataGrid:FilterDataGrid Grid.Column="2"
+                                                   ItemsSource="{Binding Path=EquivalenceNodesCollection , 
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="True"
+                                                   SelectionMode="Extended"
+                                                   SelectedItem="{Binding Path=SelectedEquivalenceNode}"
+                                                   
+                                                   Margin="8,0,8,0"
+                                                   
+                                                   AutoGenerateColumns="False"
+                                                   FilterLanguage="Russian" 
+                                                   DateFormatString="d" 
+                                                   ShowStatusBar="True" 
+                                                   ShowElapsedTime="False"
+                                                   Style="{StaticResource MaterialDesignDataGrid}">
+
+                        <filterDataGrid:FilterDataGrid.Columns>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="NodeElement.Index"
+                                                                   Header="Индекс"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="NodeElement.Index">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=NodeElement.Index}"/>
+                                        <TextBlock Text="{Binding Path=NodeElement.Index}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Номер"
-                                                    SortMemberPath="NodeElement.Number">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="NodeElement.Number"
+                                                                   Header="Номер"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="NodeElement.Number">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=NodeElement.Number}"/>
+                                        <TextBlock Text="{Binding Path=NodeElement.Number}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Наименование"
-                                                    SortMemberPath="NodeElement.Name">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="NodeElement.Name"
+                                                                   Header="Наименование"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="NodeElement.Name">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=NodeElement.Name}"/>
+                                        <TextBlock Text="{Binding Path=NodeElement.Name}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Uном"
-                                                    SortMemberPath="NodeElement.RatedVoltage">
-                                <DataGridTemplateColumn.CellTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="NodeElement.RatedVoltage"
+                                                                   Header="Uном, кВ"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="NodeElement.RatedVoltage">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=NodeElement.RatedVoltage}"/>
+                                        <TextBlock Text="{Binding Path=NodeElement.RatedVoltage, 
+                                                                  StringFormat=N2}" />
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                        </filterDataGrid:FilterDataGrid.Columns>
+                    </filterDataGrid:FilterDataGrid>
                 </Grid>
             </TabItem>
 
+            <!--Группы эквивалента-->
             <TabItem Header="Группы эквивалента">
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
@@ -196,6 +247,8 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+
+                    <!--Группы эквивалента | Горизонтальный разделитель-->
                     <GridSplitter Grid.Column="0"
                                   Grid.ColumnSpan="3"
                                   Grid.Row="1"
@@ -203,12 +256,16 @@
                                   ShowsPreview="False"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center"/>
+
+                    <!--Группы эквивалента | Вертикальный разделитель-->
                     <GridSplitter Grid.Column="1"
                                   Grid.Row="2"
                                   Width="5"
                                   ShowsPreview="False"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Stretch"/>
+
+                    <!--Группы эквивалента | Кнопки добавить/удалить ветвь-->
                     <StackPanel Grid.Column="1"
                                 Grid.Row="2"
                                 Orientation="Vertical" 
@@ -235,133 +292,8 @@
                             </Button.Content>
                         </Button>
                     </StackPanel>
-                    <DataGrid Grid.Column="0"
-                              Grid.Row="2"
-                              ItemsSource="{Binding Path=Branches , 
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                              AutoGenerateColumns="False"
-                              SelectionMode="Single"
-                              SelectedItem="{Binding Path=SelectedBranch}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Индекс"
-                                                    SortMemberPath="Index">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Index}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Тип"
-                                                    SortMemberPath="Type">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchType, 
-                                                                  Converter={StaticResource BranchTypeConverter}}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Наименование"
-                                                    SortMemberPath="Name">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Name}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="R, Ом"
-                                                    SortMemberPath="Resistance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Resistance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="X, Ом"
-                                                    SortMemberPath="Inductance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Inductance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <DataGrid Grid.Column="2"
-                              Grid.Row="2"
-                              ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalenceBranchCollection, 
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                              AutoGenerateColumns="False"
-                              SelectionMode="Single"
-                              SelectedItem="{Binding Path=SelectedEquivalenceBranch}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Индекс"
-                                                    SortMemberPath="BranchElement.Index">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Index}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Тип"
-                                                    SortMemberPath="BranchElement.BranchType">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.BranchType, 
-                                                                  Converter={StaticResource BranchTypeConverter}}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Наименование"
-                                                    SortMemberPath="BranchElement.Name">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Name}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="R, Ом"
-                                                    SortMemberPath="BranchElement.Resistance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Resistance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="X, Ом"
-                                                    SortMemberPath="BranchElement.Inductance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Inductance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <ListBox Grid.Column="0"
-                             Grid.Row="0"
-                             ItemsSource="{Binding Path=EquivalenceNodesCollection}"
-                             SelectedItem="{Binding Path=SelectedEquivalenceNode}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding Path=NodeElement.Number}"/>
-                                    <Label Content="{Binding Path=NodeElement.Name}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <ListBox Grid.Column="2"
-                             Grid.Row="0"
-                             ItemsSource="{Binding Path=SelectedEquivalenceNode.EquivalenceGroupCollection}"
-                             SelectedItem="{Binding Path=SelectedEquivalenceGroup}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=Name}"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+
+                    <!--Группы эквивалента | Кнопки добавить/удалить группу-->
                     <StackPanel Grid.Column="1"
                                 Grid.Row="0"
                                 Orientation="Vertical" 
@@ -388,134 +320,8 @@
                             </Button.Content>
                         </Button>
                     </StackPanel>
-                </Grid>
-            </TabItem>
 
-            <TabItem Header="Результат">
-                <Grid ShowGridLines="False">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="0.3*"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <GridSplitter Grid.Column="0"
-                                  Grid.ColumnSpan="3"
-                                  Grid.Row="1"
-                                  Height="5"
-                                  ShowsPreview="False"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Center"/>
-                    <GridSplitter Grid.Column="1"
-                                  Grid.Row="2"
-                                  Width="5"
-                                  ShowsPreview="False"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Stretch"/>
-                    <DataGrid Grid.Column="0"
-                              Grid.Row="2"
-                              ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalenceBranchCollection, 
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                              AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Индекс"
-                                                    SortMemberPath="BranchElement.Index">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Index}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Тип"
-                                                    SortMemberPath="BranchElement.BranchType">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.BranchType,
-                                                                  Converter={StaticResource BranchTypeConverter}}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Наименование"
-                                                    SortMemberPath="BranchElement.Name">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Name}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="R, Ом"
-                                                    SortMemberPath="BranchElement.Resistance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Resistance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="X, Ом"
-                                                    SortMemberPath="BranchElement.Inductance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchElement.Inductance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <DataGrid Grid.Column="2"
-                              Grid.Row="2"
-                              ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalentBranches, 
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                              AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Индекс"
-                                                    SortMemberPath="Index">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Index}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Тип"
-                                                    SortMemberPath="BranchType">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=BranchType,
-                                                                  Converter={StaticResource BranchTypeConverter}}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Наименование"
-                                                    SortMemberPath="Name">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Name}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="R, Ом"
-                                                    SortMemberPath="Resistance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Resistance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="X, Ом"
-                                                    SortMemberPath="Inductance">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Inductance}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <!--Группы эквивалента | Выбранные узлы-->
                     <ListBox Grid.Column="0"
                              Grid.Row="0"
                              ItemsSource="{Binding Path=EquivalenceNodesCollection}"
@@ -529,6 +335,416 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+
+                    <!--Группы эквивалента | Группы-->
+                    <ListBox Grid.Column="2"
+                             Grid.Row="0"
+                             ItemsSource="{Binding Path=SelectedEquivalenceNode.EquivalenceGroupCollection}"
+                             SelectedItem="{Binding Path=SelectedEquivalenceGroup}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!--Группы эквивалента | Ветви-->
+                    <filterDataGrid:FilterDataGrid Grid.Column="0"
+                                                   Grid.Row="2"
+                                                   ItemsSource="{Binding Path=Branches , 
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="True"
+                                                   SelectionMode="Extended"
+                                                   SelectedItem="{Binding Path=SelectedBranch}"
+                                                   
+                                                   Margin="8,0,8,0"
+                                                   
+                                                   AutoGenerateColumns="False"
+                                                   FilterLanguage="Russian" 
+                                                   DateFormatString="d" 
+                                                   ShowStatusBar="True" 
+                                                   ShowElapsedTime="False"
+                                                   Style="{StaticResource MaterialDesignDataGrid}">
+
+                        <filterDataGrid:FilterDataGrid.Columns>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
+                                                                   Header="Индекс"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Index">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Index}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchType"
+                                                                   Header="Тип"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchType">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchType,
+                                                                  Converter={StaticResource BranchTypeConverter}}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Name"
+                                                                   Header="Наименование"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Name">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Resistance"
+                                                                   Header="R, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Resistance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Resistance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Inductance"
+                                                                   Header="X, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Inductance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Inductance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="TransformationRatio"
+                                                                   Header="Kтр"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="TransformationRatio">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=TransformationRatio, 
+                                                                  StringFormat=N3}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                        </filterDataGrid:FilterDataGrid.Columns>
+                    </filterDataGrid:FilterDataGrid>
+
+                    <!--Группы эквивалента | Выбранные ветви-->
+                    <filterDataGrid:FilterDataGrid Grid.Column="2"
+                                                   Grid.Row="2"
+                                                   ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalenceBranchCollection, 
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="True"
+                                                   SelectionMode="Extended"
+                                                   SelectedItem="{Binding Path=SelectedEquivalenceBranch}"
+                                                   
+                                                   Margin="8,0,8,0"
+                                                   
+                                                   AutoGenerateColumns="False"
+                                                   FilterLanguage="Russian" 
+                                                   DateFormatString="d" 
+                                                   ShowStatusBar="True" 
+                                                   ShowElapsedTime="False"
+                                                   Style="{StaticResource MaterialDesignDataGrid}">
+
+                        <filterDataGrid:FilterDataGrid.Columns>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Index"
+                                                                   Header="Индекс"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Index">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Index}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.BranchType"
+                                                                   Header="Тип"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.BranchType">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.BranchType,
+                                                                  Converter={StaticResource BranchTypeConverter}}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Name"
+                                                                   Header="Наименование"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Name">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Name}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Resistance"
+                                                                   Header="R, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Resistance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Resistance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Inductance"
+                                                                   Header="X, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Inductance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Inductance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.TransformationRatio"
+                                                                   Header="Kтр"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.TransformationRatio">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.TransformationRatio, 
+                                                                  StringFormat=N3}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                        </filterDataGrid:FilterDataGrid.Columns>
+                    </filterDataGrid:FilterDataGrid>
+                </Grid>
+            </TabItem>
+            
+            <!--Результат-->
+            <TabItem Header="Результат">
+                <Grid ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Результат | Горизонталный разделитель-->
+                    <GridSplitter Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                                  Grid.Row="1"
+                                  Height="5"
+                                  ShowsPreview="False"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"/>
+
+                    <!--Результат | Вертикальный разделитель-->
+                    <GridSplitter Grid.Column="1"
+                                  Grid.RowSpan="3"
+                                  Width="5"
+                                  ShowsPreview="False"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"/>
+
+                    <!--Результат | Выбранные ветви-->
+                    <filterDataGrid:FilterDataGrid Grid.Column="0"
+                                                   Grid.Row="2"
+                                                   ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalenceBranchCollection, 
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="True"
+                                                   SelectionMode="Extended"
+                                                   SelectedItem="{Binding Path=SelectedEquivalenceBranch}"
+                                                   
+                                                   Margin="8,0,8,0"
+                                                   
+                                                   AutoGenerateColumns="False"
+                                                   FilterLanguage="Russian" 
+                                                   DateFormatString="d" 
+                                                   ShowStatusBar="True" 
+                                                   ShowElapsedTime="False"
+                                                   Style="{StaticResource MaterialDesignDataGrid}">
+
+                        <filterDataGrid:FilterDataGrid.Columns>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Index"
+                                                                   Header="Индекс"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Index">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Index}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.BranchType"
+                                                                   Header="Тип"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.BranchType">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.BranchType,
+                                                                  Converter={StaticResource BranchTypeConverter}}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Name"
+                                                                   Header="Наименование"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Name">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Name}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Resistance"
+                                                                   Header="R, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Resistance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Resistance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.Inductance"
+                                                                   Header="X, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.Inductance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.Inductance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchElement.TransformationRatio"
+                                                                   Header="Kтр"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchElement.TransformationRatio">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchElement.TransformationRatio, 
+                                                                  StringFormat=N3}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                        </filterDataGrid:FilterDataGrid.Columns>
+                    </filterDataGrid:FilterDataGrid>
+
+                    <!--Результат | Эквивалентные ветви-->
+                    <filterDataGrid:FilterDataGrid Grid.Column="2"
+                                                   Grid.Row="2"
+                                                   ItemsSource="{Binding Path=SelectedEquivalenceGroup.EquivalentBranches, 
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="True"
+                                                   SelectionMode="Extended"
+                                                   SelectedItem="{Binding Path=SelectedEquivalenceBranch}"
+                                                   
+                                                   Margin="8,0,8,0"
+                                                   
+                                                   AutoGenerateColumns="False"
+                                                   FilterLanguage="Russian" 
+                                                   DateFormatString="d" 
+                                                   ShowStatusBar="True" 
+                                                   ShowElapsedTime="False"
+                                                   Style="{StaticResource MaterialDesignDataGrid}">
+
+                        <filterDataGrid:FilterDataGrid.Columns>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
+                                                                   Header="Индекс"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Index">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Index}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="BranchType"
+                                                                   Header="Тип"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="BranchType">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=BranchType,
+                                                                  Converter={StaticResource BranchTypeConverter}}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Name"
+                                                                   Header="Наименование"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Name">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Resistance"
+                                                                   Header="R, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Resistance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Resistance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Inductance"
+                                                                   Header="X, Ом"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="Inductance">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Inductance, 
+                                                                  StringFormat=N2}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                            <filterDataGrid:DataGridTemplateColumn FieldName="TransformationRatio"
+                                                                   Header="Kтр"
+                                                                   IsColumnFiltered="True"
+                                                                   SortMemberPath="TransformationRatio">
+                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=TransformationRatio, 
+                                                                  StringFormat=N3}" />
+                                    </DataTemplate>
+                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
+                            </filterDataGrid:DataGridTemplateColumn>
+                        </filterDataGrid:FilterDataGrid.Columns>
+                    </filterDataGrid:FilterDataGrid>
+                    
+                    <!--Результат | Выбранные узлы-->
+                    <ListBox Grid.Column="0"
+                             Grid.Row="0"
+                             ItemsSource="{Binding Path=EquivalenceNodesCollection}"
+                             SelectedItem="{Binding Path=SelectedEquivalenceNode}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{Binding Path=NodeElement.Number}"/>
+                                    <Label Content="{Binding Path=NodeElement.Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!--Результат | Группы-->
                     <ListBox Grid.Column="2"
                              Grid.Row="0"
                              ItemsSource="{Binding Path=SelectedEquivalenceNode.EquivalenceGroupCollection}"

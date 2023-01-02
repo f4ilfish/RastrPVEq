@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RastrPVEq", "RastrPVEq\Rast
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RastrPVEqConsole", "RastrPVEqConsole\RastrPVEqConsole.csproj", "{23E7872B-2257-4DBA-A45A-D2821DA16EE8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterDataGrid.Net", "..\DatagridFilter\DataGridFilter\FilterDataGrid.Net\FilterDataGrid.Net.csproj", "{823B8361-12DC-48D6-9570-0385A261EEEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{23E7872B-2257-4DBA-A45A-D2821DA16EE8}.Release|x64.Build.0 = Release|x64
 		{23E7872B-2257-4DBA-A45A-D2821DA16EE8}.Release|x86.ActiveCfg = Release|x86
 		{23E7872B-2257-4DBA-A45A-D2821DA16EE8}.Release|x86.Build.0 = Release|x86
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Debug|x64.Build.0 = Debug|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Debug|x86.Build.0 = Debug|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Release|x64.ActiveCfg = Release|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Release|x64.Build.0 = Release|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{823B8361-12DC-48D6-9570-0385A261EEEF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

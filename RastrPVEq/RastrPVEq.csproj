@@ -30,4 +30,8 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\DatagridFilter\DataGridFilter\FilterDataGrid.Net\FilterDataGrid.Net.csproj" />
+  </ItemGroup>
+
 </Project>
