@@ -121,7 +121,7 @@ namespace RastrPVEq.Models.RastrWin3
         }
 
         /// <summary>
-        /// Branch class instance constructor
+        /// Branch class instance constructor (for download)
         /// </summary>
         /// <param name="index">Branch index</param>
         /// <param name="branchStatus">Branch status</param>
@@ -139,6 +139,31 @@ namespace RastrPVEq.Models.RastrWin3
                       double tranformationRatio)
         {
             Index = index;
+            BranchStatus = branchStatus;
+            BranchType = branchType;
+            Name = name;
+            Resistance = resistance;
+            Inductance = inductance;
+            TransformationRatio = tranformationRatio;
+        }
+
+        /// <summary>
+        /// Branch class instance constructor (for equivalent branch)
+        /// </summary>
+        /// <param name="index">Branch index</param>
+        /// <param name="branchStatus">Branch status</param>
+        /// <param name="branchType">Branch type</param>
+        /// <param name="name">Branch name</param>
+        /// <param name="resistance">Branch resistance</param>
+        /// <param name="inductance">Branch inductance</param>
+        /// <param name="tranformationRatio">Transformation ratio</param>
+        public Branch(ElementStatus branchStatus,
+                      BranchType branchType,
+                      string name,
+                      double resistance,
+                      double inductance,
+                      double tranformationRatio)
+        {
             BranchStatus = branchStatus;
             BranchType = branchType;
             Name = name;

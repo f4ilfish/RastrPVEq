@@ -6,7 +6,7 @@ using RastrPVEq.Models.RastrWin3;
 namespace RastrPVEq.Infrastructure
 {
     [ValueConversion(typeof(BranchType), typeof(string))]
-    public class BranchTypeConverter : IValueConverter
+    class BranchTypeConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

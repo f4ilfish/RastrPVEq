@@ -19,7 +19,7 @@ namespace RastrPVEq.ViewModels
         /// Equvalence group collection
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<EquivalenceGroupViewModel> _equivalenceGroupCollection = new();
+        private ObservableCollection<EquivalenceGroupViewModel> _equivalenceGroups = new();
 
         /// <summary>
         /// Equivalence Node View Model instance constructor

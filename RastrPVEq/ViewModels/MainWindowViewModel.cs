@@ -1,39 +1,59 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+
+using RastrPVEq.Infrastructure;
+using RastrPVEq.Infrastructure.RastrWin3;
 
 using RastrPVEq.Models.RastrWin3;
 using RastrPVEq.Models.Topology;
-using RastrPVEq.Infrastructure;
-using RastrPVEq.Infrastructure.RastrWin3;
 using RastrPVEq.Views;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+
 
 namespace RastrPVEq.ViewModels
 {
+    /// <summary>
+    /// Main Window View Model class
+    /// </summary>
     [INotifyPropertyChanged]
     public partial class MainWindowViewModel
     {
-        #region Загрузка модели
 
+        /// <summary>
+        /// Nodes
+        /// </summary>
         [ObservableProperty]
         private List<Node> _nodes = new();
 
+        /// <summary>
+        /// Branches
+        /// </summary>
         [ObservableProperty]
         private List<Branch> _branches = new();
 
+        /// <summary>
+        /// Generators
+        /// </summary>
         [ObservableProperty]
         private List<Generator> _generators = new();
 
+        /// <summary>
+        /// PQ Diagrams
+        /// </summary>
         [ObservableProperty]
         private List<PQDiagram> _pqDiagrams = new();
 
+        /// <summary>
+        /// Download file command
+        /// </summary>
         [RelayCommand]
         private async void DownloadFile()
         {
@@ -73,80 +93,107 @@ namespace RastrPVEq.ViewModels
             }
         }
 
-        #endregion
-
-        #region Подготовка модели эквивалентирования
-
+        /// <summary>
+        /// Equivalence Nodes
+        /// </summary>
         [ObservableProperty]
-        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodesCollection = new();
+        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodes = new();
 
+        /// <summary>
+        /// Selected Node
+        /// </summary>
         [ObservableProperty]
         private Node _selectedNode;
 
+        /// <summary>
+        /// Selected Equivalence Node
+        /// </summary>
         [ObservableProperty]
         private EquivalenceNodeViewModel _selectedEquivalenceNode;
 
+        /// <summary>
+        /// Selected Equivalence Group
+        /// </summary>
         [ObservableProperty]
         private EquivalenceGroupViewModel _selectedEquivalenceGroup;
 
+        /// <summary>
+        /// Selected Branch
+        /// </summary>
         [ObservableProperty]
         private Branch _selectedBranch;
 
+        /// <summary>
+        /// Selected Equivalence Branch
+        /// </summary>
         [ObservableProperty]
         private Branch _selectedEquivalenceBranch;
 
+        /// <summary>
+        /// Add Node to Equivalence Nodes command
+        /// </summary>
         [RelayCommand]
         private void AddNodeToEquivalenceNodes()
         {
             if (SelectedNode != null)
             {
-                EquivalenceNodesCollection
-                    .Add(new EquivalenceNodeViewModel(SelectedNode));
+                EquivalenceNodes.Add(new EquivalenceNodeViewModel(SelectedNode));
             }
         }
 
+        /// <summary>
+        /// Remode Node from Equivalence Nodes command
+        /// </summary>
         [RelayCommand]
         private void RemoveNodeFromEquivalenceNodes()
         {
             if (SelectedEquivalenceNode != null)
             {
-                EquivalenceNodesCollection
-                    .Remove(SelectedEquivalenceNode);
+                EquivalenceNodes.Remove(SelectedEquivalenceNode);
             }
         }
 
+        /// <summary>
+        /// Add Equivalence Group to Equivalence Node command
+        /// </summary>
         [RelayCommand]
         private void AddEquivalenceGroupToEquivalenceNode()
         {
             if (SelectedEquivalenceNode != null)
             {
-                if (SelectedEquivalenceNode.EquivalenceGroupCollection.Count != 0)
+                if (SelectedEquivalenceNode.EquivalenceGroups.Count != 0)
                 {
-                    var newGroupId = SelectedEquivalenceNode.EquivalenceGroupCollection
+                    var newGroupId = SelectedEquivalenceNode.EquivalenceGroups
                                      .Max(group => group.Id) + 1;
 
-                    SelectedEquivalenceNode.EquivalenceGroupCollection
+                    SelectedEquivalenceNode.EquivalenceGroups
                         .Add(new EquivalenceGroupViewModel(newGroupId, $"Группа {newGroupId}"));
 
                     return;
                 }
 
-                SelectedEquivalenceNode.EquivalenceGroupCollection
+                SelectedEquivalenceNode.EquivalenceGroups
                         .Add(new EquivalenceGroupViewModel(1, "Группа 1"));
             }
         }
 
+        /// <summary>
+        /// Delete Equivalence Group from Equivalence Node command
+        /// </summary>
         [RelayCommand]
-        private void RemoveEquivalenceGroupFromEquivalenceNode()
+        private void DeleteEquivalenceGroupFromEquivalenceNode()
         {
             if (SelectedEquivalenceGroup != null
                 && SelectedEquivalenceNode != null)
             {
-                SelectedEquivalenceNode.EquivalenceGroupCollection
+                SelectedEquivalenceNode.EquivalenceGroups
                     .Remove(SelectedEquivalenceGroup);
             }
         }
 
+        /// <summary>
+        /// Add Branch To Equivalence Group command
+        /// </summary>
         [RelayCommand]
         private void AddBranchToEquivalenceGroup()
         {
@@ -158,8 +205,11 @@ namespace RastrPVEq.ViewModels
             }
         }
 
+        /// <summary>
+        /// Remove Branch from Equivalence Group command
+        /// </summary>
         [RelayCommand]
-        private void RemoveEquivalenceBranchFromEquivalenceGroup()
+        private void RemoveBranchFromEquivalenceGroup()
         {
             if (SelectedEquivalenceGroup != null
                 && SelectedEquivalenceBranch != null)
@@ -169,92 +219,98 @@ namespace RastrPVEq.ViewModels
             }
         }
 
-        #endregion
-
-        #region Тест поиска пути
-
-        [ObservableProperty]
-        private List<Node> _equivalenceGroupNodes = new();
-
-        [ObservableProperty]
-        private bool _isEquivalenceGroupNodesContainEquivalenceNode;
-
+        /// <summary>
+        /// Calculate equivalent command
+        /// </summary>
         [RelayCommand]
-        private void Calculate()
+        private void CalculateEquivalent()
         {
-            foreach (var equivalenceNode in EquivalenceNodesCollection)
+            foreach (var equivalenceNode in EquivalenceNodes)
             {
-                foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroupCollection)
+                foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroups)
                 {
-                    var equivalenceGroupNodes = GetEquivalenceGroupNodes(equivalenceGroup);
+                    var nodesOfEquivalenceGroup = GetNodeOfEquivalenceGroup(equivalenceGroup);
 
-                    if (!IsEquivalenceNodeInEquivalenceGroupNodes(equivalenceNode, equivalenceGroupNodes))
+                    if (!IsNodesOfEquivalenceGroupContainEquivalenceGroup(equivalenceNode, nodesOfEquivalenceGroup))
                     {
                         MessageBox.Show($"{equivalenceGroup.Name} не содержит {equivalenceNode.NodeElement.Name}");
                         continue;
                     }
 
-                    var equivalenceGroupGenerators = GetEquivalenceGroupGenerators(equivalenceGroupNodes, Generators);
+                    var generatorsOfEquivalenceGroup = GetGeneratorsOfEquivalenceGroup(nodesOfEquivalenceGroup, Generators);
 
-                    var graph = GetGraphToEquivalentation(equivalenceGroupNodes, equivalenceGroup);
-                    var dijkstra = new Dijkstra<Node>(graph);
+                    var graphOfEquivalenceGroup = GetGraphOfEquivalenceGroup(nodesOfEquivalenceGroup, equivalenceGroup);
+                    var dijkstraGraph = new Dijkstra<Node>(graphOfEquivalenceGroup);
 
-                    var equivalenceBranchToGeneratorsPower = SetBranchToGeneratorsPower(equivalenceNode,
-                                                                                        equivalenceGroup,
-                                                                                        equivalenceGroupGenerators,
-                                                                                        dijkstra);
+                    var equivalenceBranchToGeneratorsPower = GetEquivalenceBranchToGeneratorsPower(equivalenceNode,
+                                                                                                   equivalenceGroup,
+                                                                                                   generatorsOfEquivalenceGroup,
+                                                                                                   dijkstraGraph);
 
                     /// расчет эквивалента
                     double totalGeneratorsPower = 0;
 
-                    foreach (var generator in equivalenceGroupGenerators)
+                    foreach (var generator in generatorsOfEquivalenceGroup)
                     {
                         totalGeneratorsPower += generator.Key.MaxActivePower;
                     }
 
-                    var groupedEquivalenceBranchToGeneratorsPower = equivalenceBranchToGeneratorsPower.GroupBy(o => o.Key.BranchType);
+                    var groupedByTypeEquivalenceBranches = equivalenceBranchToGeneratorsPower.GroupBy(kvpair => kvpair.Key.BranchType);
 
-                    foreach (var branchType in groupedEquivalenceBranchToGeneratorsPower)
+                    foreach (var branchType in groupedByTypeEquivalenceBranches)
                     {
-                        double eqResistance = 0;
-                        double eqInductance = 0;
-                        double eqTranformerRatio = 0;
+                        double equivalentResistance = 0;
+                        double equivalentInductance = 0;
+                        double equivalentTranformerRatio = 0;
 
                         foreach (var kvpair in branchType)
                         {
-                            eqResistance += kvpair.Key.Resistance * Math.Pow(kvpair.Value, 2);
-                            eqInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
-                            eqTranformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
+                            equivalentResistance += kvpair.Key.Resistance * Math.Pow(kvpair.Value, 2);
+                            equivalentInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
+                            equivalentTranformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
                         }
 
-                        eqResistance /= Math.Pow(totalGeneratorsPower, 2);
-                        eqInductance /= Math.Pow(totalGeneratorsPower, 2);
-                        eqTranformerRatio /= totalGeneratorsPower;
+                        equivalentResistance /= Math.Pow(totalGeneratorsPower, 2);
+                        equivalentInductance /= Math.Pow(totalGeneratorsPower, 2);
+                        equivalentTranformerRatio /= totalGeneratorsPower;
 
-                        var newBranch = new Branch(1,
-                                                   ElementStatus.Enable,
-                                                   branchType.Key,
-                                                   $"{equivalenceGroup.Name} {branchType}",
-                                                   eqResistance,
-                                                   eqInductance,
-                                                   eqTranformerRatio);
+                        var equivalentBranchName = "Эквивалент";
 
-                        equivalenceGroup.EquivalentBranches.Add(newBranch);
+                        if (branchType.Key is BranchType.Line)
+                        {
+                            equivalentBranchName += " Л";
+                        }
+                        else if (branchType.Key is BranchType.Transformer)
+                        {
+                            equivalentBranchName += " ТР";
+                        }
+                        else
+                        {
+                            equivalentBranchName += " ?";
+                        }
+
+                        var equivalentBranch = new Branch(ElementStatus.Enable,
+                                                          branchType.Key,
+                                                          $"{equivalentBranchName}",
+                                                          equivalentResistance,
+                                                          equivalentInductance,
+                                                          equivalentTranformerRatio);
+
+                        equivalenceGroup.EquivalentBranches.Add(equivalentBranch);
                     }
                 }
             }
         }
-        #endregion
 
         /// <summary>
-        /// Проставить веса (переток мощности) ветвям
+        /// Get Equivalence Branch to Generators Power (flowed) method
         /// </summary>
         /// <param name="equivalenceNode"></param>
         /// <param name="equivalenceGroup"></param>
         /// <param name="equivalenceGroupGenerators"></param>
         /// <param name="dijkstra"></param>
         /// <returns></returns>
-        private Dictionary<Branch, double> SetBranchToGeneratorsPower(EquivalenceNodeViewModel equivalenceNode,
+        private Dictionary<Branch, double> GetEquivalenceBranchToGeneratorsPower(EquivalenceNodeViewModel equivalenceNode,
                                                                       EquivalenceGroupViewModel equivalenceGroup,
                                                                       Dictionary<Generator, Node> equivalenceGroupGenerators,
                                                                       Dijkstra<Node> dijkstra)
@@ -280,7 +336,7 @@ namespace RastrPVEq.ViewModels
                         var firstNode = nodePath.ElementAt(i).Data;
                         var secondNode = nodePath.ElementAt(i + 1).Data;
 
-                        var branch = FindBranchInEquivalenceBranchGroup(equivalenceGroup, firstNode, secondNode);
+                        var branch = FindBranchInEquivalenceGroup(equivalenceGroup, firstNode, secondNode);
 
                         if (branchToGeneratorsPower.ContainsKey(branch))
                         {
@@ -302,14 +358,14 @@ namespace RastrPVEq.ViewModels
         }
 
         /// <summary>
-        /// Найти ветвь группы эквивалентирования по узлам
+        /// Find Branch in Equivalence Group method
         /// </summary>
         /// <param name="equivalenceGroup"></param>
         /// <param name="firstNode"></param>
         /// <param name="secondNode"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        private Branch FindBranchInEquivalenceBranchGroup(EquivalenceGroupViewModel equivalenceGroup,
+        private Branch FindBranchInEquivalenceGroup(EquivalenceGroupViewModel equivalenceGroup,
                                                           Node firstNode,
                                                           Node secondNode)
         {
@@ -335,13 +391,13 @@ namespace RastrPVEq.ViewModels
         }
 
         /// <summary>
-        /// Получить узлы ветвей эквивалентируемой группы
+        /// Get Node of Equivalence Group method
         /// </summary>
         /// <param name="equivalenceGroupViewModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
 
-        private List<Node> GetEquivalenceGroupNodes(EquivalenceGroupViewModel equivalenceGroupViewModel)
+        private List<Node> GetNodeOfEquivalenceGroup(EquivalenceGroupViewModel equivalenceGroupViewModel)
         {
             var nodes = new List<Node>();
 
@@ -372,24 +428,24 @@ namespace RastrPVEq.ViewModels
         }
 
         /// <summary>
-        /// Узлы ветвей эквивалентируемой группы содержат узел-вершину
+        /// Is Nodes of Equivalence Group contain Equivalence Group
         /// </summary>
         /// <param name="equivalenceNodeViewModel"></param>
         /// <param name="equivalenceGroupNodes"></param>
         /// <returns></returns>
-        private bool IsEquivalenceNodeInEquivalenceGroupNodes(EquivalenceNodeViewModel equivalenceNodeViewModel,
+        private bool IsNodesOfEquivalenceGroupContainEquivalenceGroup(EquivalenceNodeViewModel equivalenceNodeViewModel,
                                                               List<Node> equivalenceGroupNodes)
         {
             return equivalenceGroupNodes.Contains(equivalenceNodeViewModel.NodeElement);
         }
 
         /// <summary>
-        /// Получить генераторы узлов ветвей эквивалентируемой группы
+        /// Get Generators of Equivalence Group method
         /// </summary>
         /// <param name="equivalenceGroupNodes"></param>
         /// <param name="generators"></param>
         /// <returns></returns>
-        private Dictionary<Generator, Node> GetEquivalenceGroupGenerators(List<Node> equivalenceGroupNodes, List<Generator> generators)
+        private Dictionary<Generator, Node> GetGeneratorsOfEquivalenceGroup(List<Node> equivalenceGroupNodes, List<Generator> generators)
         {
             var equivalenceGroupGenerators = new Dictionary<Generator, Node>();
 
@@ -410,12 +466,12 @@ namespace RastrPVEq.ViewModels
         }
 
         /// <summary>
-        /// Восстановить граф сети
+        /// Get Graph Of Equivalence Group
         /// </summary>
         /// <param name="equivalenceGroupNodes"></param>
         /// <param name="equivalenceGroupViewModel"></param>
         /// <returns></returns>
-        private Graph<Node> GetGraphToEquivalentation(List<Node> equivalenceGroupNodes,
+        private Graph<Node> GetGraphOfEquivalenceGroup(List<Node> equivalenceGroupNodes,
                                                       EquivalenceGroupViewModel equivalenceGroupViewModel)
         {
             var graph = new Graph<Node>();
@@ -437,6 +493,10 @@ namespace RastrPVEq.ViewModels
             return graph;
         }
 
+        /// NOT USED
+        /// <summary>
+        /// Open Node Selection Window command 
+        /// </summary>
         [RelayCommand]
         public void OpenNodeSelectionWindow()
         {
@@ -444,6 +504,9 @@ namespace RastrPVEq.ViewModels
             nodeSelectionWindow.Show();
         }
 
+        /// <summary>
+        /// Main Window View Model default constructor
+        /// </summary>
         public MainWindowViewModel() { }
     }
 }
