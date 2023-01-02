@@ -179,18 +179,6 @@ namespace RastrPVEq.ViewModels
         [ObservableProperty]
         private bool _isEquivalenceGroupNodesContainEquivalenceNode;
 
-        [ObservableProperty]
-        private Dictionary<Generator, Node> _dictOfGenerators = new();
-
-        [ObservableProperty]
-        private Graph<Node> graph = new();
-
-        [ObservableProperty]
-        private Dijkstra<Node> dijkstra = new();
-
-        [ObservableProperty]
-        private List<GraphVertex<Node>> nodePath = new();
-
         [RelayCommand]
         private void Calculate()
         {
@@ -208,15 +196,13 @@ namespace RastrPVEq.ViewModels
 
                     var equivalenceGroupGenerators = GetEquivalenceGroupGenerators(equivalenceGroupNodes, Generators);
 
-                    graph = GetGraphToEquivalentation(equivalenceGroupNodes, equivalenceGroup);
-                    dijkstra = new Dijkstra<Node>(graph);
+                    var graph = GetGraphToEquivalentation(equivalenceGroupNodes, equivalenceGroup);
+                    var dijkstra = new Dijkstra<Node>(graph);
 
-                    equivalenceGroup.EquivalenceBranchToGeneratorsPower = SetBranchToGeneratorsPower(equivalenceNode,
-                                                                                                     equivalenceGroup,
-                                                                                                     equivalenceGroupGenerators,
-                                                                                                     dijkstra);
-
-                    var equivalenceBranchToGeneratorsPower = equivalenceGroup.EquivalenceBranchToGeneratorsPower;
+                    var equivalenceBranchToGeneratorsPower = SetBranchToGeneratorsPower(equivalenceNode,
+                                                                                        equivalenceGroup,
+                                                                                        equivalenceGroupGenerators,
+                                                                                        dijkstra);
 
                     /// расчет эквивалента
                     double totalGeneratorsPower = 0;
@@ -225,11 +211,6 @@ namespace RastrPVEq.ViewModels
                     {
                         totalGeneratorsPower += generator.Key.MaxActivePower;
                     }
-
-                    //foreach (var kvpair in equivalenceBranchToGeneratorsPower)
-                    //{
-                    //    equivalenceBranchToGeneratorsPower[kvpair.Key] = Math.Pow(kvpair.Value, 2);
-                    //}
 
                     var groupedEquivalenceBranchToGeneratorsPower = equivalenceBranchToGeneratorsPower.GroupBy(o => o.Key.BranchType);
 
@@ -290,7 +271,7 @@ namespace RastrPVEq.ViewModels
 
             foreach (var generator in equivalenceGroupGenerators)
             {
-                nodePath = dijkstra.FindShortestPath(equivalenceNode.NodeElement, generator.Value);
+                var nodePath = dijkstra.FindShortestPath(equivalenceNode.NodeElement, generator.Value);
 
                 if (nodePath.Count > 1)
                 {
