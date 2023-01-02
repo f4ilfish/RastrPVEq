@@ -108,7 +108,7 @@ namespace RastrPVEq.Models.RastrWin3
         /// <summary>
         /// Gets transformation ratio
         /// </summary>
-        public double TransformationRation
+        public double TransformationRatio
         {
             get => _transformationRatio;
             private set
@@ -144,7 +144,7 @@ namespace RastrPVEq.Models.RastrWin3
             Name = name;
             Resistance = resistance;
             Inductance = inductance;
-            TransformationRation = tranformationRatio;
+            TransformationRatio = tranformationRatio;
         }
     }
 }
