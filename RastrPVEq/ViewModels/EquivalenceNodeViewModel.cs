@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using RastrPVEq.Models.RastrWin3;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace RastrPVEq.ViewModels
 {
@@ -9,6 +11,7 @@ namespace RastrPVEq.ViewModels
     /// </summary>
     [INotifyPropertyChanged]
     public partial class EquivalenceNodeViewModel
+
     {
         /// <summary>
         /// Gets or sets node

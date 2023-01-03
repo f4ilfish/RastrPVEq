@@ -45,6 +45,7 @@
                 <MenuItem Header="Выход"/>
             </MenuItem>
             <MenuItem Header="Расчет">
+                <MenuItem Header="Проверить" Command="{Binding Path=ValidateModelCommand}"/>
                 <MenuItem Header="Начать" Command="{Binding Path=CalculateEquivalentCommand}"/>
                 <MenuItem Header="Прервать"/>
             </MenuItem>
@@ -277,7 +278,8 @@
                                 <materialDesign:PackIcon Kind="ArrowRight" 
                                                          HorizontalAlignment="Center" 
                                                          Width="25" 
-                                                         Height="25"/>
+                                                         Height="25"
+                                                         />
                             </Button.Content>
                         </Button>
                         <Button Command="{Binding Path=RemoveBranchFromEquivalenceGroupCommand}"
@@ -324,7 +326,7 @@
                     <!--Группы эквивалента | Выбранные узлы-->
                     <ListBox Grid.Column="0"
                              Grid.Row="0"
-                             ItemsSource="{Binding Path=EquivalenceNodesC}"
+                             ItemsSource="{Binding Path=EquivalenceNodes}"
                              SelectedItem="{Binding Path=SelectedEquivalenceNode}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -730,7 +732,7 @@
                     <!--Результат | Выбранные узлы-->
                     <ListBox Grid.Column="0"
                              Grid.Row="0"
-                             ItemsSource="{Binding Path=EquivalenceNodesCollection}"
+                             ItemsSource="{Binding Path=EquivalenceNodes}"
                              SelectedItem="{Binding Path=SelectedEquivalenceNode}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -754,6 +756,30 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
+            </TabItem>
+
+            <!--Протокол-->   
+            <TabItem Header="Протокол">
+                <ListBox ItemsSource="{Binding Path=ValidateErrors,
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Label>
+                                    <Label.Content>
+                                        <materialDesign:PackIcon Kind="Error" 
+                                                                 HorizontalAlignment="Center" 
+                                                                 Width="25" 
+                                                                 Height="25"/>
+                                    </Label.Content>
+                                </Label>
+                                <TextBlock Text="{Binding Path=Message}" 
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </TabItem>
         </TabControl>
     </DockPanel>
