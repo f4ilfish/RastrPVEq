@@ -114,10 +114,6 @@ namespace RastrPVEq.Infrastructure.RastrWin3
         /// <returns></returns>
         private static Node GetNodeByIndex(int nodeIndex)
         {
-            var nodeStatus = !GetElementParameterValue<bool>(RastrNames.NodeTable,
-                                                             RastrNames.NodeStatusColumn,
-                                                             nodeIndex) ? ElementStatus.Enable
-                                                                        : ElementStatus.Disable;
 
             var nodeNumber = GetElementParameterValue<int>(RastrNames.NodeTable,
                                                            RastrNames.NodeNumberColumn,
@@ -131,7 +127,15 @@ namespace RastrPVEq.Infrastructure.RastrWin3
                                                                     RastrNames.NodeRatedVoltageColumn,
                                                                     nodeIndex);
 
-            return new Node(nodeIndex, nodeStatus, nodeNumber, nodeName, nodeRatedVoltage);
+            var nodeDistrictNumber = GetElementParameterValue<int>(RastrNames.NodeTable,
+                                                                   RastrNames.NodeDistrictNumberColumn,
+                                                                   nodeIndex);
+
+            var nodeTerritoryNumber = GetElementParameterValue<int>(RastrNames.NodeTable,
+                                                                    RastrNames.NodeTerritoryNumberColumn,
+                                                                    nodeIndex);
+
+            return new Node(nodeIndex, nodeNumber, nodeName, nodeRatedVoltage, nodeDistrictNumber, nodeTerritoryNumber);
         }
 
         /// <summary>
@@ -160,20 +164,10 @@ namespace RastrPVEq.Infrastructure.RastrWin3
         /// <exception cref="ArgumentException"></exception>
         private static Branch GetBranchByIndex(int branchIndex)
         {
-            var branchStatus = GetElementParameterValue<int>(RastrNames.BranchTable,
-                                                             RastrNames.BranchStatusColumn,
-                                                             branchIndex) == 0 ? ElementStatus.Enable
-                                                                               : ElementStatus.Disable;
-
             var branchType = GetElementParameterValue<int>(RastrNames.BranchTable,
                                                            RastrNames.BranchTypeColumn,
-                                                           branchIndex) switch
-            {
-                0 => BranchType.Line,
-                1 => BranchType.Transformer,
-                2 => BranchType.Switch,
-                _ => throw new ArgumentException("Unknown branch type"),
-            };
+                                                           branchIndex) == 0 ? BranchType.Line 
+                                                                             : BranchType.Transformer;
 
             var branchName = GetElementParameterValue<string>(RastrNames.BranchTable,
                                                               RastrNames.BranchNameColumn,
@@ -187,17 +181,41 @@ namespace RastrPVEq.Infrastructure.RastrWin3
                                                                     RastrNames.BranchInductanceColumn,
                                                                     branchIndex);
 
+            var branchCapacitance = GetElementParameterValue<double>(RastrNames.BranchTable,
+                                                                     RastrNames.BranchCapacitanceColumn,
+                                                                     branchIndex);
+
             var branchTranformationRatio = GetElementParameterValue<double>(RastrNames.BranchTable,
                                                                             RastrNames.BranchTranformationRatioColumn,
                                                                             branchIndex);
 
+            var branchDistrictNumber = GetElementParameterValue<int>(RastrNames.BranchTable,
+                                                                        RastrNames.BranchDistrictNumberColumn,
+                                                                        branchIndex);
+
+            var branchTerritoryNumber = GetElementParameterValue<int>(RastrNames.BranchTable,
+                                                                         RastrNames.BranchTerritoryNumberColumn,
+                                                                         branchIndex);
+
+            var branchAdmissableCurrent = GetElementParameterValue<double>(RastrNames.BranchTable,
+                                                                           RastrNames.BranchAdmissableCurrentColumn,
+                                                                           branchIndex);
+
+            var branchAdmissableEquipmentCurrent = GetElementParameterValue<double>(RastrNames.BranchTable,
+                                                                                    RastrNames.BranchEquipmentAdmissableCurrentColumn,
+                                                                                    branchIndex);
+
             return new Branch(branchIndex,
-                              branchStatus,
                               branchType,
                               branchName,
                               branchResistance,
-                              branchInductance,
-                              branchTranformationRatio);
+                              branchInductance, 
+                              branchCapacitance,
+                              branchTranformationRatio,
+                              branchDistrictNumber, 
+                              branchTerritoryNumber, 
+                              branchAdmissableCurrent, 
+                              branchAdmissableEquipmentCurrent);
         }
 
         /// <summary>
@@ -319,11 +337,6 @@ namespace RastrPVEq.Infrastructure.RastrWin3
         /// <returns></returns>
         private static Generator GetGeneratorByIndex(int generatorIndex)
         {
-            var generatorStatus = !GetElementParameterValue<bool>(RastrNames.GeneratorTable,
-                                                                  RastrNames.GeneratorStatusColumn,
-                                                                  generatorIndex) ? ElementStatus.Enable
-                                                                                : ElementStatus.Disable;
-
             var generatorNumber = GetElementParameterValue<int>(RastrNames.GeneratorTable,
                                                                 RastrNames.GeneratorNumberColumn,
                                                                 generatorIndex);
@@ -337,7 +350,6 @@ namespace RastrPVEq.Infrastructure.RastrWin3
                                                                            generatorIndex);
 
             return new Generator(generatorIndex,
-                                 generatorStatus,
                                  generatorNumber,
                                  generatorName,
                                  generatorMaxActivePower);

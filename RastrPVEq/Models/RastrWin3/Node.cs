@@ -7,6 +7,8 @@ namespace RastrPVEq.Models.RastrWin3
     /// </summary>
     public class Node
     {
+        // TODO: убрать Index / Status
+
         /// <summary>
         /// Index
         /// </summary>
@@ -20,15 +22,10 @@ namespace RastrPVEq.Models.RastrWin3
             get => _index;
             private set
             {
-                ValueValidation.CheckIsNegative(value);
+                ValueValidation.IsZeroOrPositive(value);
                 _index = value;
             }
         }
-
-        /// <summary>
-        /// Gets node status
-        /// </summary>
-        public ElementStatus NodeStatus { get; private set; }
 
         /// <summary>
         /// Number
@@ -43,7 +40,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _number;
             private set
             {
-                ValueValidation.CheckIsNotPositive(value);
+                ValueValidation.IsPositive(value);
                 _number = value;
             }
         }
@@ -61,7 +58,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _name;
             private set
             {
-                ValueValidation.CheckNotNullOrEmptyString(value);
+                ValueValidation.IsNotNullOrEmptyString(value);
                 _name = value;
             }
         }
@@ -79,9 +76,45 @@ namespace RastrPVEq.Models.RastrWin3
             get => _ratedVoltage;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsNotPositive(value);
+                ValueValidation.IsNotNaN(value);
+                ValueValidation.IsPositive(value);
                 _ratedVoltage = value;
+            }
+        }
+
+        /// <summary>
+        /// District number
+        /// </summary>
+        private int _districtNumber;
+
+        /// <summary>
+        /// Gets district number
+        /// </summary>
+        public int DistrictNumber
+        {
+            get => _districtNumber;
+            private set
+            {
+                ValueValidation.IsZeroOrPositive(value);
+                _districtNumber = value;
+            }
+        }
+
+        /// <summary>
+        /// Territory number
+        /// </summary>
+        private int _territoryNumber;
+
+        /// <summary>
+        /// Gets territory number
+        /// </summary>
+        public int TerritoryNumber
+        {
+            get => _territoryNumber;
+            private set
+            {
+                ValueValidation.IsZeroOrPositive(value);
+                _territoryNumber = value;
             }
         }
 
@@ -89,21 +122,24 @@ namespace RastrPVEq.Models.RastrWin3
         /// Node class instance constructor
         /// </summary>
         /// <param name="index">Node index</param>
-        /// <param name="nodeStatus">Node status</param>
         /// <param name="number">Node number</param>
         /// <param name="name">Node name</param>
         /// <param name="ratedVoltage">Node rated voltage</param>
+        /// <param name="districtNumber">Node district number</param>
+        /// <param name="territoryNumber">Node territory number</param>
         public Node(int index,
-                    ElementStatus nodeStatus,
                     int number,
                     string name,
-                    double ratedVoltage)
+                    double ratedVoltage,
+                    int districtNumber,
+                    int territoryNumber)
         {
             Index = index;
-            NodeStatus = nodeStatus;
             Number = number;
             Name = name;
             RatedVoltage = ratedVoltage;
+            DistrictNumber = districtNumber;
+            TerritoryNumber = territoryNumber;
         }
     }
 }

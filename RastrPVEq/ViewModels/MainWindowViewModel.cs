@@ -345,9 +345,10 @@ namespace RastrPVEq.ViewModels
                                                                                                                        generatorsOfEquivalenceGroup,
                                                                                                                        dijkstraGraph);
 
-                    ViewModelPreparation.EquivalentBranches(equivalenceBranchToGeneratorsPower,
-                                                           generatorsOfEquivalenceGroup,
-                                                           equivalenceGroup);
+                    ViewModelPreparation.EquivalentBranches(equivalenceNode, 
+                                                            equivalenceBranchToGeneratorsPower,
+                                                            generatorsOfEquivalenceGroup,
+                                                            equivalenceGroup);
                 }
             }
         }

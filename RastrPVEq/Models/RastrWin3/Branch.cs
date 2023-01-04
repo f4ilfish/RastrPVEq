@@ -20,15 +20,10 @@ namespace RastrPVEq.Models.RastrWin3
             get => _index;
             private set
             {
-                ValueValidation.CheckIsNegative(value);
+                ValueValidation.IsZeroOrPositive(value);
                 _index = value;
             }
         }
-
-        /// <summary>
-        /// Gets branch status
-        /// </summary>
-        public ElementStatus BranchStatus { get; private set; }
 
         /// <summary>
         /// Gets branch type
@@ -58,7 +53,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _name;
             private set
             {
-                ValueValidation.CheckNotNullOrEmptyString(value);
+                ValueValidation.IsNotNullOrEmptyString(value);
                 _name = value;
             }
         }
@@ -76,8 +71,8 @@ namespace RastrPVEq.Models.RastrWin3
             get => _resistance;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsNegative(value);
+                ValueValidation.IsNotNaN(value);
+                ValueValidation.IsZeroOrPositive(value);
                 _resistance = value;
             }
         }
@@ -95,8 +90,26 @@ namespace RastrPVEq.Models.RastrWin3
             get => _inductance;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
+                ValueValidation.IsNotNaN(value);
                 _inductance = value;
+            }
+        }
+
+        /// <summary>
+        /// Capacitance
+        /// </summary>
+        private double _capacitance;
+
+        /// <summary>
+        /// Gets capacitance
+        /// </summary>
+        public double Capacitance
+        {
+            get => _capacitance;
+            private set
+            {
+                ValueValidation.IsNotNaN(value);
+                _capacitance = value;
             }
         }
 
@@ -113,63 +126,160 @@ namespace RastrPVEq.Models.RastrWin3
             get => _transformationRatio;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsNegative(value);
-                ValueValidation.CheckIsBiggerThanOne(value);
+                ValueValidation.IsNotNaN(value);
+                ValueValidation.IsZeroOrPositive(value);
+                ValueValidation.IsOneOrLess(value);
                 _transformationRatio = value;
             }
         }
 
         /// <summary>
-        /// Branch class instance constructor (for download)
+        /// District number
         /// </summary>
-        /// <param name="index">Branch index</param>
-        /// <param name="branchStatus">Branch status</param>
-        /// <param name="branchType">Branch type</param>
-        /// <param name="name">Branch name</param>
-        /// <param name="resistance">Branch resistance</param>
-        /// <param name="inductance">Branch inductance</param>
-        /// <param name="tranformationRatio">Transformation ratio</param>
-        public Branch(int index,
-                      ElementStatus branchStatus,
-                      BranchType branchType,
-                      string name,
-                      double resistance,
-                      double inductance,
-                      double tranformationRatio)
+        private int _districtNumber;
+        
+        /// <summary>
+        /// Gets district number
+        /// </summary>
+        public int DistrictNumber
         {
-            Index = index;
-            BranchStatus = branchStatus;
-            BranchType = branchType;
-            Name = name;
-            Resistance = resistance;
-            Inductance = inductance;
-            TransformationRatio = tranformationRatio;
+            get => _districtNumber;
+            private set
+            {
+                ValueValidation.IsZeroOrPositive(value);
+                _districtNumber = value;
+            }
         }
 
         /// <summary>
-        /// Branch class instance constructor (for equivalent branch)
+        /// Territory number
         /// </summary>
-        /// <param name="index">Branch index</param>
-        /// <param name="branchStatus">Branch status</param>
-        /// <param name="branchType">Branch type</param>
-        /// <param name="name">Branch name</param>
-        /// <param name="resistance">Branch resistance</param>
-        /// <param name="inductance">Branch inductance</param>
-        /// <param name="tranformationRatio">Transformation ratio</param>
-        public Branch(ElementStatus branchStatus,
-                      BranchType branchType,
-                      string name,
-                      double resistance,
-                      double inductance,
-                      double tranformationRatio)
+        private int _territoryNumber;
+
+        /// <summary>
+        /// Gets territory number
+        /// </summary>
+        public int TerritoryNumber
         {
-            BranchStatus = branchStatus;
+            get => _territoryNumber;
+            private set
+            {
+                ValueValidation.IsZeroOrPositive(value);
+                _territoryNumber = value;
+            }
+        }
+
+        /// <summary>
+        /// Branch admissable  current
+        /// </summary>
+        private double _branchAdmissableCurrent;
+
+        /// <summary>
+        /// Gets branch admissable current
+        /// </summary>
+        public double BranchAdmissableCurrent
+        {
+            get => _branchAdmissableCurrent;
+            private set
+            {
+                ValueValidation.IsNotNaN(value);
+                _branchAdmissableCurrent = value;
+            }
+        }
+
+        /// <summary>
+        /// Branch equipment admissalbe  current
+        /// </summary>
+        private double _branchEquipmentAdmissalbeCurrent;
+
+        /// <summary>
+        /// Gets branch equipment admissalbe  current
+        /// </summary>
+        public double BranchEquipmentAdmissalbeCurrent
+        {
+            get => _branchEquipmentAdmissalbeCurrent;
+            private set
+            {
+                ValueValidation.IsNotNaN(value);
+                _branchEquipmentAdmissalbeCurrent = value;
+            }
+        }
+
+        /// <summary>
+        /// Branch class instance cunstructor (for downloading)
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="branchType"></param>
+        /// <param name="branchStartNode"></param>
+        /// <param name="branchEndNode"></param>
+        /// <param name="name"></param>
+        /// <param name="resistance"></param>
+        /// <param name="inductance"></param>
+        /// <param name="capacitance"></param>
+        /// <param name="transformationRatio"></param>
+        /// <param name="districtNumber"></param>
+        /// <param name="territoryNumber"></param>
+        /// <param name="branchAdmissableCurrent"></param>
+        /// <param name="branchEquipmentAdmissalbeCurrent"></param>
+        public Branch(int index, 
+                      BranchType branchType, 
+                      string name, 
+                      double resistance, 
+                      double inductance, 
+                      double capacitance, 
+                      double transformationRatio, 
+                      int districtNumber, 
+                      int territoryNumber, 
+                      double branchAdmissableCurrent, 
+                      double branchEquipmentAdmissalbeCurrent)
+        {
+            Index = index;
             BranchType = branchType;
             Name = name;
             Resistance = resistance;
             Inductance = inductance;
-            TransformationRatio = tranformationRatio;
+            Capacitance = capacitance;
+            TransformationRatio = transformationRatio;
+            DistrictNumber = districtNumber;
+            TerritoryNumber = territoryNumber;
+            BranchAdmissableCurrent = branchAdmissableCurrent;
+            BranchEquipmentAdmissalbeCurrent = branchEquipmentAdmissalbeCurrent;
+        }
+
+        /// <summary>
+        /// Branch class instance cunstructor (for equivalent)
+        /// </summary>
+        /// <param name="branchType"></param>
+        /// <param name="name"></param>
+        /// <param name="resistance"></param>
+        /// <param name="inductance"></param>
+        /// <param name="capacitance"></param>
+        /// <param name="transformationRatio"></param>
+        /// <param name="districtNumber"></param>
+        /// <param name="territoryNumber"></param>
+        /// <param name="branchAdmissableCurrent"></param>
+        /// <param name="branchEquipmentAdmissalbeCurrent"></param>
+        public Branch(BranchType branchType,
+                      string name,
+                      double resistance,
+                      double inductance,
+                      double capacitance,
+                      double transformationRatio,
+                      int districtNumber,
+                      int territoryNumber,
+                      double branchAdmissableCurrent,
+                      double branchEquipmentAdmissalbeCurrent)
+        {
+            BranchType = branchType;
+            Name = name;
+            Resistance = resistance;
+            Inductance = inductance;
+            Capacitance = capacitance;
+            TransformationRatio = transformationRatio;
+            DistrictNumber = districtNumber;
+            TerritoryNumber = territoryNumber;
+            BranchAdmissableCurrent = branchAdmissableCurrent;
+            BranchEquipmentAdmissalbeCurrent = branchEquipmentAdmissalbeCurrent;
         }
     }
 }

@@ -211,7 +211,16 @@ namespace RastrPVEq.Infrastructure.Equivalentator
             return totalGeneratorsPower;
         }
 
-        public static void EquivalentBranches(Dictionary<Branch, double> equivalenceBranchToGeneratorsPower,
+        /// <summary>
+        /// Equivalent branches
+        /// </summary>
+        /// <param name="equivalenceNode"></param>
+        /// <param name="equivalenceBranchToGeneratorsPower"></param>
+        /// <param name="generatorsOfEquivalenceGroup"></param>
+        /// <param name="equivalenceGroup"></param>
+        /// <exception cref="Exception"></exception>
+        public static void EquivalentBranches(EquivalenceNodeViewModel equivalenceNode, 
+                                              Dictionary<Branch, double> equivalenceBranchToGeneratorsPower,
                                               List<Generator> generatorsOfEquivalenceGroup,
                                               EquivalenceGroupViewModel equivalenceGroup)
         {
@@ -223,13 +232,22 @@ namespace RastrPVEq.Infrastructure.Equivalentator
             {
                 double equivalentResistance = 0;
                 double equivalentInductance = 0;
+                double equivalentCapacitance = 0;
                 double equivalentTranformerRatio = 0;
+                int equivalentDistrictNumber = equivalenceNode.NodeElement.DistrictNumber;
+                int equivalentTerritoryNumber = equivalenceNode.NodeElement.TerritoryNumber;
+                double equivalentAdmissableCurrent = 0;
+                double equivalentAdmissableEquipmentCurrent = 0;
+                
 
                 foreach (var kvpair in branchType)
                 {
                     equivalentResistance += kvpair.Key.Resistance * Math.Pow(kvpair.Value, 2);
                     equivalentInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
+                    equivalentCapacitance += kvpair.Key.Capacitance;
                     equivalentTranformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
+                    equivalentAdmissableCurrent += kvpair.Key.BranchAdmissableCurrent;
+                    equivalentAdmissableEquipmentCurrent += kvpair.Key.BranchEquipmentAdmissalbeCurrent;
                 }
 
                 equivalentResistance /= Math.Pow(totalGeneratorsPower, 2);
@@ -248,15 +266,19 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                 }
                 else
                 {
-                    equivalentBranchName += " ?";
+                    throw new Exception("Unexpcted branch type");
                 }
 
-                var equivalentBranch = new Branch(ElementStatus.Enable,
-                                                  branchType.Key,
+                var equivalentBranch = new Branch(branchType.Key,
                                                   $"{equivalentBranchName}",
                                                   equivalentResistance,
-                                                  equivalentInductance,
-                                                  equivalentTranformerRatio);
+                                                  equivalentInductance, 
+                                                  equivalentCapacitance,
+                                                  equivalentTranformerRatio,
+                                                  equivalentDistrictNumber, 
+                                                  equivalentTerritoryNumber, 
+                                                  equivalentAdmissableCurrent, 
+                                                  equivalentAdmissableEquipmentCurrent);
 
                 equivalenceGroup.EquivalentBranches.Add(equivalentBranch);
             }

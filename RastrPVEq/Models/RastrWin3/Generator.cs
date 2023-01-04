@@ -20,15 +20,10 @@ namespace RastrPVEq.Models.RastrWin3
             get => _index;
             private set
             {
-                ValueValidation.CheckIsNegative(value);
+                ValueValidation.IsZeroOrPositive(value);
                 _index = value;
             }
         }
-
-        /// <summary>
-        /// Gets generator status
-        /// </summary>
-        public ElementStatus GeneratorStatus { get; private set; }
 
         /// <summary>
         /// Number
@@ -43,7 +38,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _number;
             private set
             {
-                ValueValidation.CheckIsNotPositive(value);
+                ValueValidation.IsPositive(value);
                 _number = value;
             }
         }
@@ -61,7 +56,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _name;
             private set
             {
-                ValueValidation.CheckNotNullOrEmptyString(value);
+                ValueValidation.IsNotNullOrEmptyString(value);
                 _name = value;
             }
         }
@@ -84,8 +79,8 @@ namespace RastrPVEq.Models.RastrWin3
             get => _maxActivePower;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsNotPositive(value);
+                ValueValidation.IsNotNaN(value);
+                ValueValidation.IsPositive(value);
                 _maxActivePower = value;
             }
         }
@@ -104,13 +99,11 @@ namespace RastrPVEq.Models.RastrWin3
         /// <param name="name">Name</param>
         /// <param name="maxActivePower">Adjusted max active power</param>
         public Generator(int index,
-                         ElementStatus generatorStatus,
                          int number,
                          string name,
                          double maxActivePower)
         {
             Index = index;
-            GeneratorStatus = generatorStatus;
             Number = number;
             Name = name;
             MaxActivePower = maxActivePower;

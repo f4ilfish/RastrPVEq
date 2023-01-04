@@ -13,11 +13,6 @@
         /// <summary>
         /// Power tranformer
         /// </summary>
-        Transformer,
-
-        /// <summary>
-        /// Switch (zero impedance)
-        /// </summary>
-        Switch
+        Transformer
     }
 }

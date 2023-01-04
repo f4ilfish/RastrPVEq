@@ -21,7 +21,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _number;
             private set
             {
-                ValueValidation.CheckIsNotPositive(value);
+                ValueValidation.IsPositive(value);
                 _number = value;
             }
         }

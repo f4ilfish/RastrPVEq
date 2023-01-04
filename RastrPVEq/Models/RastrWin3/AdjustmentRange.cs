@@ -21,7 +21,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _index;
             private set
             {
-                ValueValidation.CheckIsNegative(value);
+                ValueValidation.IsZeroOrPositive(value);
                 _index = value;
             }
         }
@@ -39,7 +39,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _pqDiagramNumber;
             private set
             {
-                ValueValidation.CheckIsNotPositive(value);
+                ValueValidation.IsPositive(value);
                 _pqDiagramNumber = value;
             }
         }
@@ -57,8 +57,8 @@ namespace RastrPVEq.Models.RastrWin3
             get => _activePower;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
-                ValueValidation.CheckIsNegative(value);
+                ValueValidation.IsNotNaN(value);
+                ValueValidation.IsZeroOrPositive(value);
                 _activePower = value;
             }
         }
@@ -76,7 +76,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _minReactivePower;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
+                ValueValidation.IsNotNaN(value);
                 _minReactivePower = value;
             }
         }
@@ -94,7 +94,7 @@ namespace RastrPVEq.Models.RastrWin3
             get => _maxReactivePower;
             private set
             {
-                ValueValidation.CheckNotNaN(value);
+                ValueValidation.IsNotNaN(value);
                 _maxReactivePower = value;
             }
         }

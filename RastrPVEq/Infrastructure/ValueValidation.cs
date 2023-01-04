@@ -8,77 +8,76 @@ namespace RastrPVEq.Infrastructure
     public static class ValueValidation
     {
         /// <summary>
-        /// Check non NaN constraint
+        /// Is not NaN constraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentException"></exception>
-        public static void CheckNotNaN(double value)
+        public static void IsNotNaN(double value)
         {
-            if (double.IsNaN(value)) throw new ArgumentException("Expected not NaN value");
+            if (double.IsNaN(value)) throw new ArgumentException($"Value must be not NaN");
         }
 
         /// <summary>
-        /// Check is not positive constraint
+        /// Is positive consraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckIsNotPositive(double value)
+        public static void IsPositive(double value)
         {
             if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value),
-                                                                  "Value is not positive. Expected positive");
+                                                                  "Value must positive");
         }
 
         /// <summary>
-        /// Check is not positive constraint
+        /// Is positive consraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckIsNotPositive(int value)
+        public static void IsPositive(int value)
         {
             if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value),
-                                                                  "Value is not positive. Expected positive");
+                                                                  "Value must positive");
         }
 
         /// <summary>
-        /// Check is negative
+        /// Is zero or positive constraint
         /// </summary>
         /// <param name="value">Input value</param>
-        public static void CheckIsNegative(double value)
+        public static void IsZeroOrPositive(double value)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(nameof(value),
-                                                                 "Value is negative. Expected not negative");
+                                                                 "Value must be zero or positive");
         }
 
         /// <summary>
-        /// Check is positive
+        /// Is zero or positive constraint
         /// </summary>
         /// <param name="value">Input value</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckIsPositive(double value)
+        public static void IsZeroOrPositive(int value)
         {
-            if (value > 0) throw new ArgumentOutOfRangeException(nameof(value),
-                                                                 "Value is positive. Expected not positive");
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value),
+                                                                 "Value must be zero or positive");
         }
 
         /// <summary>
-        /// Check not null or empty string
+        /// Is null or empty string constraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentException"></exception>
-        public static void CheckNotNullOrEmptyString(string value)
+        public static void IsNotNullOrEmptyString(string value)
         {
             if (string.IsNullOrEmpty(value)) throw new ArgumentException($"Expected not null or empty string");
         }
 
         /// <summary>
-        /// Check one or less double
+        /// Is one or less constraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void CheckIsBiggerThanOne(double value)
+        public static void IsOneOrLess(double value)
         {
             if (value > 1) throw new ArgumentOutOfRangeException(nameof(value),
-                                                                 "Expected [0...1] value");
+                                                                 "Value must be 1 or less");
         }
     }
 }

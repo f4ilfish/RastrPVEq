@@ -18,10 +18,6 @@ namespace RastrPVEq.Infrastructure
             {
                 return "ТР";
             }
-            else if (value is BranchType.Switch)
-            {
-                return "В";
-            }
             else
             {
                 return "?";
@@ -38,10 +34,6 @@ namespace RastrPVEq.Infrastructure
             else if (stringValue == "ТР")
             {
                 return BranchType.Transformer;
-            }
-            else if (stringValue == "?")
-            {
-                return BranchType.Switch;
             }
             else
             {
