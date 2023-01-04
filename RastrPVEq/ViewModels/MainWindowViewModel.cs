@@ -13,6 +13,7 @@ using RastrPVEq.Models.RastrWin3;
 using RastrPVEq.Models.Topology;
 using RastrPVEq.Infrastructure.Equivalentator;
 using RastrPVEq.Infrastructure.RastrWin3;
+using System.ComponentModel.DataAnnotations;
 
 namespace RastrPVEq.ViewModels
 {
@@ -81,6 +82,38 @@ namespace RastrPVEq.ViewModels
                 await Task.WhenAll(branchesTask, generatorsTask);
                 Branches = branchesTask.Result;
                 Generators = generatorsTask.Result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex}");
+            }
+        }
+
+        [RelayCommand]
+        private void SaveFile()
+        {
+            SaveFileDialog saveFileDialog = new()
+            {
+                Title = "Сохранить файл режима",
+                Filter = "Файл режима (*.rg2)|*.rg2"
+            };
+
+            bool? response = saveFileDialog.ShowDialog();
+
+            if (response == false) return;
+
+            try
+            {
+                var tmpListNodes = new List<Node>() 
+                {
+                    new Node(1, 1, "Тест 1", 500, 0, 0),
+                    new Node(2, 2, "Тест 2", 500, 0, 0),
+                };
+
+                RastrSupplier.AddNodes(tmpListNodes);
+
+                var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
+                RastrSupplier.SaveFileByTemplate(saveFileDialog.FileName, templatePath);
             }
             catch (Exception ex)
             {
@@ -270,7 +303,8 @@ namespace RastrPVEq.ViewModels
                                     if (ViewModelValidation.IsOneGeneratorsRatedVoltageLevel(generatorsOfEquivalenceGroup))
                                     {
                                         /// Проверка наличия связи между генератором и узлом-вершиной
-                                        /// TODO: DFS алгоритм
+                                        
+                                        // TODO: DFS алгоритм
                                         var graphOfEquivalenceGroup = ViewModelPreparation.GetGraphOfEquivalenceGroup(equivalenceGroup, nodesOfEquivalenceGroup);
                                         var dijkstraGraph = new Dijkstra<Node>(graphOfEquivalenceGroup);
 

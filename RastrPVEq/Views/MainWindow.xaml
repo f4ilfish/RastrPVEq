@@ -41,7 +41,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Открыть" Command="{Binding Path=DownloadFileCommand}"/>
-                <MenuItem Header="Сохранить"/>
+                <MenuItem Header="Сохранить" Command="{Binding Path=SaveFileCommand}"/>
                 <MenuItem Header="Выход"/>
             </MenuItem>
             <MenuItem Header="Расчет">
@@ -50,7 +50,7 @@
                 <MenuItem Header="Прервать"/>
             </MenuItem>
             <MenuItem Header="Помощь">
-                <MenuItem Header="О программе" Command="{Binding Path=OpenNodeSelectionWindowCommand}"/>
+                <MenuItem Header="О программе"/>
             </MenuItem>
         </Menu>
 

@@ -7,8 +7,6 @@ namespace RastrPVEq.Models.RastrWin3
     /// </summary>
     public class Node
     {
-        // TODO: убрать Index / Status
-
         /// <summary>
         /// Index
         /// </summary>
