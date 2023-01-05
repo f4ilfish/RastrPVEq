@@ -27,13 +27,13 @@ namespace RastrPVEq.ViewModels
         /// Nodes
         /// </summary>
         [ObservableProperty]
-        private List<Node> _nodes = new();
+        private ObservableCollection<Node> _nodes = new();
 
         /// <summary>
         /// Branches
         /// </summary>
         [ObservableProperty]
-        private List<Branch> _branches = new();
+        private ObservableCollection<Branch> _branches = new();
 
         /// <summary>
         /// Generators
@@ -65,6 +65,8 @@ namespace RastrPVEq.ViewModels
 
             try
             {
+                //TO:DO костыли с observable
+
                 EquivalenceNodes.Clear();
                 
                 var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
@@ -74,15 +76,15 @@ namespace RastrPVEq.ViewModels
                 var pqDiagramsTask = RastrSupplierAsync.GetPQDiagramsAsync();
 
                 await nodesTask;
-                Nodes = nodesTask.Result;
-                var branchesTask = RastrSupplierAsync.GetBranchesAsync(Nodes);
+                Nodes = new ObservableCollection<Node>(nodesTask.Result);
+                var branchesTask = RastrSupplierAsync.GetBranchesAsync(Nodes.ToList());
 
                 await pqDiagramsTask;
                 PqDiagrams = pqDiagramsTask.Result;
-                var generatorsTask = RastrSupplierAsync.GetGeneratorsAsync(Nodes, PqDiagrams);
+                var generatorsTask = RastrSupplierAsync.GetGeneratorsAsync(Nodes.ToList(), PqDiagrams);
 
                 await Task.WhenAll(branchesTask, generatorsTask);
-                Branches = branchesTask.Result;
+                Branches = new ObservableCollection<Branch>(branchesTask.Result);
                 Generators = generatorsTask.Result;
             }
             catch (Exception ex)
@@ -261,6 +263,7 @@ namespace RastrPVEq.ViewModels
             {
                 SelectedEquivalenceGroup.EquivalenceBranches
                     .Add(SelectedBranch);
+                Branches.Remove(SelectedBranch);
             }
         }
 
@@ -273,6 +276,7 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup != null
                 && SelectedEquivalenceBranch != null)
             {
+                Branches.Add(SelectedEquivalenceBranch);
                 SelectedEquivalenceGroup.EquivalenceBranches
                     .Remove(SelectedEquivalenceBranch);
             }

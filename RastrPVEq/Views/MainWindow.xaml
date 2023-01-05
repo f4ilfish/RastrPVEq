@@ -115,12 +115,14 @@
                                                                          NotifyOnSourceUpdated=True,
                                                                          NotifyOnTargetUpdated=True}"
                                                    
+                                                   IsReadOnly="True"
                                                    SelectionMode="Single"
+                                                   SelectionUnit="FullRow"
                                                    SelectedItem="{Binding Path=SelectedNode}"
                                                    
                                                    Margin="8,0,8,0"
-                                                   
                                                    AutoGenerateColumns="False"
+                                                   
                                                    FilterLanguage="Russian" 
                                                    DateFormatString="d" 
                                                    ShowStatusBar="True" 
@@ -361,7 +363,7 @@
                                                                          Mode=TwoWay,
                                                                          UpdateSourceTrigger=PropertyChanged}"
                                                    IsReadOnly="True"
-                                                   SelectionMode="Extended"
+                                                   SelectionMode="Single"
                                                    SelectedItem="{Binding Path=SelectedBranch}"
                                                    
                                                    Margin="8,0,8,0"
