@@ -19,13 +19,14 @@
         public const string BranchTable = "vetv";
 
         public const string BranchTypeColumn = "tip";
+        public const string BranchStatusColumn = "sta";
         public const string BranchStartNodeColumn = "ip";
         public const string BranchEndNodeColumn = "iq";
         public const string BranchNameColumn = "name";
         public const string BranchResistanceColumn = "r";
         public const string BranchInductanceColumn = "x";
         public const string BranchCapacitanceColumn = "b";
-        public const string BranchTranformationRatioColumn = "ktr";
+        public const string BranchTransformationRatioColumn = "ktr";
         public const string BranchDistrictNumberColumn = "na";
         public const string BranchTerritoryNumberColumn = "npa";
         public const string BranchAdmissableCurrentColumn = "i_dop";

@@ -8,6 +8,7 @@ using RastrPVEq.Models;
 using RastrPVEq.Models.RastrWin3;
 using RastrPVEq.Models.Topology;
 using RastrPVEq.ViewModels;
+using RastrPVEq.Views;
 
 namespace RastrPVEq.Infrastructure.Equivalentator
 {
@@ -219,10 +220,10 @@ namespace RastrPVEq.Infrastructure.Equivalentator
         /// <param name="generatorsOfEquivalenceGroup"></param>
         /// <param name="equivalenceGroup"></param>
         /// <exception cref="Exception"></exception>
-        public static void EquivalentBranches(EquivalenceNodeViewModel equivalenceNode, 
-                                              Dictionary<Branch, double> equivalenceBranchToGeneratorsPower,
-                                              List<Generator> generatorsOfEquivalenceGroup,
-                                              EquivalenceGroupViewModel equivalenceGroup)
+        public static void GetEquivalentBranches(EquivalenceNodeViewModel equivalenceNode, 
+                                                 Dictionary<Branch, double> equivalenceBranchToGeneratorsPower,
+                                                 List<Generator> generatorsOfEquivalenceGroup,
+                                                 EquivalenceGroupViewModel equivalenceGroup)
         {
             var totalGeneratorsPower = GetTotalGeneratorsPower(generatorsOfEquivalenceGroup);
 
@@ -239,15 +240,14 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                 double equivalentAdmissableCurrent = 0;
                 double equivalentAdmissableEquipmentCurrent = 0;
                 
-
                 foreach (var kvpair in branchType)
                 {
                     equivalentResistance += kvpair.Key.Resistance * Math.Pow(kvpair.Value, 2);
                     equivalentInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
                     equivalentCapacitance += kvpair.Key.Capacitance;
                     equivalentTranformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
-                    equivalentAdmissableCurrent += kvpair.Key.BranchAdmissableCurrent;
-                    equivalentAdmissableEquipmentCurrent += kvpair.Key.BranchEquipmentAdmissalbeCurrent;
+                    equivalentAdmissableCurrent += kvpair.Key.AdmissableCurrent;
+                    equivalentAdmissableEquipmentCurrent += kvpair.Key.EquipmentAdmissableCurrent;
                 }
 
                 equivalentResistance /= Math.Pow(totalGeneratorsPower, 2);
@@ -256,18 +256,7 @@ namespace RastrPVEq.Infrastructure.Equivalentator
 
                 var equivalentBranchName = "Эквивалент";
 
-                if (branchType.Key is BranchType.Line)
-                {
-                    equivalentBranchName += " Л";
-                }
-                else if (branchType.Key is BranchType.Transformer)
-                {
-                    equivalentBranchName += " ТР";
-                }
-                else
-                {
-                    throw new Exception("Unexpcted branch type");
-                }
+                equivalentBranchName += branchType.Key is BranchType.Transformer ? " ТР" : " Л";
 
                 var equivalentBranch = new Branch(branchType.Key,
                                                   $"{equivalentBranchName}",
@@ -281,6 +270,64 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                                                   equivalentAdmissableEquipmentCurrent);
 
                 equivalenceGroup.EquivalentBranches.Add(equivalentBranch);
+            }
+        }
+
+        public static void GetIntermedietEquivalentNode(EquivalenceNodeViewModel equivalenceNode,
+                                                        EquivalenceGroupViewModel equivalenceGroup)
+        {
+            foreach (var node in equivalenceGroup.EquivalenceNodes)
+            {
+                if (node != equivalenceNode.NodeElement)
+                {
+                    var equivalentNodeVoltage = node.RatedVoltage;
+
+                    if (equivalentNodeVoltage == equivalenceNode.NodeElement.RatedVoltage)
+                    {
+                        var equivalentNodeNumber = node.Number;
+                        var equivalentNodeName = $"{equivalenceGroup.Name} : экв. СШ {equivalentNodeVoltage} кВ";
+                        var equivalentDistrictNumber = node.DistrictNumber;
+                        var equivalentTerritoryNumber = node.TerritoryNumber;
+
+                        equivalenceGroup.IntermedietEquivalentNode = new Node(equivalentNodeNumber, 
+                                                                              equivalentNodeName, 
+                                                                              equivalentNodeVoltage, 
+                                                                              equivalentDistrictNumber, 
+                                                                              equivalentTerritoryNumber);
+                    }
+                }
+            }
+        }
+
+        public static void GetGeneratorEquivalentNode(EquivalenceGroupViewModel equivalenceGroup)
+        {
+            var generatorNode = equivalenceGroup.EquivalenceGenerators.First().GeneratorNode;
+
+            var equivalentGeneratorNodeName = $"{equivalenceGroup.Name} : экв. СШ {generatorNode.RatedVoltage} кВ";
+
+            equivalenceGroup.GeneratorEquivalentNode =  new Node(generatorNode.Number, 
+                                                                 equivalentGeneratorNodeName, 
+                                                                 generatorNode.RatedVoltage, 
+                                                                 generatorNode.DistrictNumber, 
+                                                                 generatorNode.TerritoryNumber);
+        }
+
+        public static void SetEquivalentNodeToEquivalentBranch(EquivalenceNodeViewModel equivalenceNode, 
+                                                               EquivalenceGroupViewModel equivalenceGroup)
+        {
+            foreach (var equivalentBranch in equivalenceGroup.EquivalentBranches)
+            {
+                if (equivalentBranch.BranchType is BranchType.Line) 
+                {
+                    equivalentBranch.BranchStartNode = equivalenceNode.NodeElement;
+                    equivalentBranch.BranchEndNode = equivalenceGroup.IntermedietEquivalentNode;
+                }
+
+                if (equivalentBranch.BranchType is BranchType.Transformer)
+                {
+                    equivalentBranch.BranchStartNode = equivalenceGroup.IntermedietEquivalentNode;
+                    equivalentBranch.BranchEndNode = equivalenceGroup.GeneratorEquivalentNode;
+                }
             }
         }
     }

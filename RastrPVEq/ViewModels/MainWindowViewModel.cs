@@ -65,6 +65,8 @@ namespace RastrPVEq.ViewModels
 
             try
             {
+                EquivalenceNodes.Clear();
+                
                 var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
                 RastrSupplier.LoadFileByTemplate(openFileDialog.FileName, templatePath);
 
@@ -89,6 +91,9 @@ namespace RastrPVEq.ViewModels
             }
         }
 
+        /// <summary>
+        /// Save file command
+        /// </summary>
         [RelayCommand]
         private void SaveFile()
         {
@@ -104,13 +109,37 @@ namespace RastrPVEq.ViewModels
 
             try
             {
-                var tmpListNodes = new List<Node>() 
+                foreach (var equivalenceNode in EquivalenceNodes)
                 {
-                    new Node(1, 1, "Тест 1", 500, 0, 0),
-                    new Node(2, 2, "Тест 2", 500, 0, 0),
-                };
+                    foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroups)
+                    {
+                        var branchesToDelete = new List<Branch>(equivalenceGroup.EquivalenceBranches);
 
-                RastrSupplier.AddNodes(tmpListNodes);
+                        RastrSupplier.DeleteBranches(branchesToDelete);
+
+                        var nodesToDelete = new List<Node>(equivalenceGroup.EquivalenceNodes);
+                        nodesToDelete.Remove(equivalenceNode.NodeElement);
+
+                        RastrSupplier.DeleteNodes(nodesToDelete);
+
+                        var nodesToAdd = new List<Node>
+                        {
+                            equivalenceGroup.IntermedietEquivalentNode,
+                            equivalenceGroup.GeneratorEquivalentNode
+                        };
+
+                        RastrSupplier.DeleteBlankBranches();
+
+                        RastrSupplier.AddNodes(nodesToAdd);
+
+                        var branchesToAdd = new List<Branch>(equivalenceGroup.EquivalentBranches);
+
+                        RastrSupplier.AddBranches(branchesToAdd);
+
+                        var generatorsToUpdate = new List<Generator>(equivalenceGroup.EquivalenceGenerators);
+                        RastrSupplier.UpdateGeneratorsNodes(equivalenceGroup.GeneratorEquivalentNode, generatorsToUpdate);
+                    }
+                }
 
                 var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
                 RastrSupplier.SaveFileByTemplate(saveFileDialog.FileName, templatePath);
@@ -166,6 +195,7 @@ namespace RastrPVEq.ViewModels
             if (SelectedNode != null)
             {
                 EquivalenceNodes.Add(new EquivalenceNodeViewModel(SelectedNode));
+                Nodes.Remove(SelectedNode);
             }
         }
 
@@ -177,6 +207,7 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedEquivalenceNode != null)
             {
+                Nodes.Add(SelectedEquivalenceNode.NodeElement);
                 EquivalenceNodes.Remove(SelectedEquivalenceNode);
             }
         }
@@ -367,22 +398,28 @@ namespace RastrPVEq.ViewModels
             {
                 foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroups)
                 {
-                    var nodesOfEquivalenceGroup = ViewModelPreparation.GetNodesOfEquivalenceGroup(equivalenceGroup);
+                    equivalenceGroup.EquivalenceNodes = ViewModelPreparation.GetNodesOfEquivalenceGroup(equivalenceGroup);
 
-                    var generatorsOfEquivalenceGroup = ViewModelPreparation.GetGeneratorsOfEquvialenceGroup(nodesOfEquivalenceGroup, Generators);
+                    equivalenceGroup.EquivalenceGenerators = ViewModelPreparation.GetGeneratorsOfEquvialenceGroup(equivalenceGroup.EquivalenceNodes, Generators);
 
-                    var graphOfEquivalenceGroup = ViewModelPreparation.GetGraphOfEquivalenceGroup(equivalenceGroup, nodesOfEquivalenceGroup);
+                    var graphOfEquivalenceGroup = ViewModelPreparation.GetGraphOfEquivalenceGroup(equivalenceGroup, equivalenceGroup.EquivalenceNodes);
                     var dijkstraGraph = new Dijkstra<Node>(graphOfEquivalenceGroup);
 
                     var equivalenceBranchToGeneratorsPower = ViewModelPreparation.GetEquivalenceBranchToGeneratorsPower(equivalenceNode,
-                                                                                                                       equivalenceGroup,
-                                                                                                                       generatorsOfEquivalenceGroup,
-                                                                                                                       dijkstraGraph);
+                                                                                                                        equivalenceGroup,
+                                                                                                                        equivalenceGroup.EquivalenceGenerators,
+                                                                                                                        dijkstraGraph);
+                    ViewModelPreparation.GetEquivalentBranches(equivalenceNode, 
+                                                               equivalenceBranchToGeneratorsPower,
+                                                               equivalenceGroup.EquivalenceGenerators,
+                                                               equivalenceGroup);
 
-                    ViewModelPreparation.EquivalentBranches(equivalenceNode, 
-                                                            equivalenceBranchToGeneratorsPower,
-                                                            generatorsOfEquivalenceGroup,
-                                                            equivalenceGroup);
+                    ViewModelPreparation.GetIntermedietEquivalentNode(equivalenceNode, equivalenceGroup);
+
+                    ViewModelPreparation.GetGeneratorEquivalentNode(equivalenceGroup);
+
+                    ViewModelPreparation.SetEquivalentNodeToEquivalentBranch(equivalenceNode,
+                                                                             equivalenceGroup);
                 }
             }
         }

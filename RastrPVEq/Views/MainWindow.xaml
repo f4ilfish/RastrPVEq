@@ -111,9 +111,11 @@
                     <filterDataGrid:FilterDataGrid Grid.Column="0"
                                                    ItemsSource="{Binding Path=Nodes , 
                                                                          Mode=TwoWay,
-                                                                         UpdateSourceTrigger=PropertyChanged}"
-                                                   IsReadOnly="True"
-                                                   SelectionMode="Extended"
+                                                                         UpdateSourceTrigger=PropertyChanged, 
+                                                                         NotifyOnSourceUpdated=True,
+                                                                         NotifyOnTargetUpdated=True}"
+                                                   
+                                                   SelectionMode="Single"
                                                    SelectedItem="{Binding Path=SelectedNode}"
                                                    
                                                    Margin="8,0,8,0"
@@ -174,9 +176,11 @@
                     <filterDataGrid:FilterDataGrid Grid.Column="2"
                                                    ItemsSource="{Binding Path=EquivalenceNodes , 
                                                                          Mode=TwoWay,
-                                                                         UpdateSourceTrigger=PropertyChanged}"
-                                                   IsReadOnly="True"
-                                                   SelectionMode="Extended"
+                                                                         UpdateSourceTrigger=PropertyChanged, 
+                                                                         NotifyOnSourceUpdated=True,
+                                                                         NotifyOnTargetUpdated=True}"
+                                                   
+                                                   SelectionMode="Single"
                                                    SelectedItem="{Binding Path=SelectedEquivalenceNode}"
                                                    
                                                    Margin="8,0,8,0"

@@ -25,10 +25,30 @@ namespace RastrPVEq.ViewModels
         private string _name;
 
         /// <summary>
-        /// Equivalence Branch Collection
+        /// Equivalence branches
         /// </summary>
         [ObservableProperty]
         private ObservableCollection<Branch> _equivalenceBranches = new();
+
+        /// <summary>
+        /// Gets or sets equivalence nodes
+        /// </summary>
+        public List<Node> EquivalenceNodes { get; set; }
+
+        /// <summary>
+        /// Gets or set equivalence generators
+        /// </summary>
+        public List<Generator> EquivalenceGenerators { get; set; }
+
+        /// <summary>
+        /// Gets or sets intermediet equivalent node
+        /// </summary>
+        public Node IntermedietEquivalentNode { get; set; }
+
+        /// <summary>
+        /// Gets or sets generator equivalent node
+        /// </summary>
+        public Node GeneratorEquivalentNode { get; set; }
 
         /// <summary>
         /// Equivalent Branches Collection

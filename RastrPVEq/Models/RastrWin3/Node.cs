@@ -54,7 +54,7 @@ namespace RastrPVEq.Models.RastrWin3
         public string Name
         {
             get => _name;
-            private set
+            set
             {
                 ValueValidation.IsNotNullOrEmptyString(value);
                 _name = value;
@@ -133,6 +133,27 @@ namespace RastrPVEq.Models.RastrWin3
                     int territoryNumber)
         {
             Index = index;
+            Number = number;
+            Name = name;
+            RatedVoltage = ratedVoltage;
+            DistrictNumber = districtNumber;
+            TerritoryNumber = territoryNumber;
+        }
+
+        /// <summary>
+        /// Node class instance constructor (for equivalent)
+        /// </summary>
+        /// <param name="number">Node number</param>
+        /// <param name="name">Node name</param>
+        /// <param name="ratedVoltage">Node rated voltage</param>
+        /// <param name="districtNumber">Node district number</param>
+        /// <param name="territoryNumber">Node territory number</param>
+        public Node(int number,
+                    string name,
+                    double ratedVoltage,
+                    int districtNumber,
+                    int territoryNumber)
+        {
             Number = number;
             Name = name;
             RatedVoltage = ratedVoltage;

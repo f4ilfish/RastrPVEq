@@ -106,12 +106,29 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             return elementParameter.get_ZN(elementIndex);
         }
 
+        /// <summary>
+        /// Set element parameter value
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="columnName"></param>
+        /// <param name="elementIndex"></param>
+        /// <param name="parameterValue"></param>
         private static void SetElementParameterValue<T>(ITable table, string columnName, int elementIndex, T parameterValue)
         {
             ICol elementParameter = table.Cols.Item(columnName);
             elementParameter.set_ZN(elementIndex, parameterValue);
         }
 
+        /// <summary>
+        /// Delete row
+        /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <param name="table"></param>
+        private static void DeleteRowByIndex(int rowIndex, ITable table)
+        {
+            table.DelRow(rowIndex);
+        }
 
         /// <summary>
         /// Get node
@@ -143,20 +160,6 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             return new Node(nodeIndex, nodeNumber, nodeName, nodeRatedVoltage, nodeDistrictNumber, nodeTerritoryNumber);
         }
 
-        private static void AddNode(Node node, ITable nodeTable)
-        {
-            nodeTable.AddRow();
-
-            var addedRowIndex = nodeTable.Count - 1;
-
-            SetElementParameterValue(nodeTable, RastrNames.NodeNumberColumn, addedRowIndex, node.Number);
-            SetElementParameterValue(nodeTable, RastrNames.NodeNameColumn, addedRowIndex, node.Name);
-            SetElementParameterValue(nodeTable, RastrNames.NodeRatedVoltageColumn, addedRowIndex, node.RatedVoltage);
-            SetElementParameterValue(nodeTable, RastrNames.NodeDistrictNumberColumn, addedRowIndex, node.DistrictNumber);
-            SetElementParameterValue(nodeTable, RastrNames.NodeTerritoryNumberColumn, addedRowIndex, node.TerritoryNumber);
-        }
-
-
         /// <summary>
         /// Get nodes
         /// </summary>
@@ -175,6 +178,28 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             return nodes;
         }
 
+        /// <summary>
+        /// Add node
+        /// </summary>
+        /// <param name="node">Node</param>
+        /// <param name="nodeTable">Node table</param>
+        private static void AddNode(Node node, ITable nodeTable)
+        {
+            nodeTable.AddRow();
+
+            var addedRowIndex = nodeTable.Count - 1;
+
+            SetElementParameterValue(nodeTable, RastrNames.NodeNumberColumn, addedRowIndex, node.Number);
+            SetElementParameterValue(nodeTable, RastrNames.NodeNameColumn, addedRowIndex, node.Name);
+            SetElementParameterValue(nodeTable, RastrNames.NodeRatedVoltageColumn, addedRowIndex, node.RatedVoltage);
+            SetElementParameterValue(nodeTable, RastrNames.NodeDistrictNumberColumn, addedRowIndex, node.DistrictNumber);
+            SetElementParameterValue(nodeTable, RastrNames.NodeTerritoryNumberColumn, addedRowIndex, node.TerritoryNumber);
+        }
+
+        /// <summary>
+        /// Add nodes
+        /// </summary>
+        /// <param name="nodes">List of nodes</param>
         public static void AddNodes(List<Node> nodes)
         {
             ITable nodesTable = _rastr.Tables.Item(RastrNames.NodeTable);
@@ -183,6 +208,32 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             {
                 AddNode(node, nodesTable);
             }
+        }
+
+        /// <summary>
+        /// Delete nodes
+        /// </summary>
+        /// <param name="nodes"></param>
+        public static void DeleteNodes(List<Node> nodes)
+        {
+            var nodesNames = nodes.Select(n => n.Name).ToList();
+
+            ITable nodesTable = _rastr.Tables.Item(RastrNames.NodeTable);
+
+            foreach (var nodeName in nodesNames)
+            {
+                var rowsCount = nodesTable.Count;
+
+                for (int i = 0; i < nodesTable.Count; i++)
+                {
+                    var name = GetElementParameterValue<string>(nodesTable, RastrNames.NodeNameColumn, i);
+
+                    if (nodeName == name)
+                    {
+                        DeleteRowByIndex(i, nodesTable);
+                    }
+                }
+            }  
         }
 
         /// <summary>
@@ -215,7 +266,7 @@ namespace RastrPVEq.Infrastructure.RastrWin3
                                                                      branchIndex);
 
             var branchTranformationRatio = GetElementParameterValue<double>(branchesTable,
-                                                                            RastrNames.BranchTranformationRatioColumn,
+                                                                            RastrNames.BranchTransformationRatioColumn,
                                                                             branchIndex);
 
             var branchDistrictNumber = GetElementParameterValue<int>(branchesTable,
@@ -286,6 +337,102 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             }
 
             return branches;
+        }
+
+        /// <summary>
+        /// Add branch
+        /// </summary>
+        /// <param name="branch"></param>
+        /// <param name="branchTable"></param>
+        private static void AddBranch(Branch branch, ITable branchTable)
+        {
+            branchTable.AddRow();
+
+            var addedRowIndex = branchTable.Count - 1;
+
+            SetElementParameterValue(branchTable, RastrNames.BranchStartNodeColumn, addedRowIndex, branch.BranchStartNode.Number);
+            SetElementParameterValue(branchTable, RastrNames.BranchEndNodeColumn, addedRowIndex, branch.BranchEndNode.Number);
+            SetElementParameterValue(branchTable, RastrNames.BranchResistanceColumn, addedRowIndex, branch.Resistance);
+            SetElementParameterValue(branchTable, RastrNames.BranchInductanceColumn, addedRowIndex, branch.Inductance);
+            SetElementParameterValue(branchTable, RastrNames.BranchCapacitanceColumn, addedRowIndex, branch.Capacitance);
+            SetElementParameterValue(branchTable, RastrNames.BranchTransformationRatioColumn, addedRowIndex, branch.TransformationRatio);
+            SetElementParameterValue(branchTable, RastrNames.BranchDistrictNumberColumn, addedRowIndex, branch.DistrictNumber);
+            SetElementParameterValue(branchTable, RastrNames.BranchTerritoryNumberColumn, addedRowIndex, branch.TerritoryNumber);
+            SetElementParameterValue(branchTable, RastrNames.BranchAdmissableCurrentColumn, addedRowIndex, branch.AdmissableCurrent);
+            SetElementParameterValue(branchTable, RastrNames.BranchEquipmentAdmissableCurrentColumn, addedRowIndex, branch.EquipmentAdmissableCurrent);
+        }
+
+        /// <summary>
+        /// Add branches
+        /// </summary>
+        /// <param name="branches"></param>
+        public static void AddBranches(List<Branch> branches)
+        {
+            ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
+
+            foreach (var branch in branches)
+            {
+                AddBranch(branch, branchesTable);
+            }
+        }
+
+        /// <summary>
+        /// Delete branches
+        /// </summary>
+        /// <param name="branches"></param>
+        public static void DeleteBranches(List<Branch> branches)
+        {
+            var branchNames = branches.Select(b => b.Name).ToList();
+
+            ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
+
+            foreach(var branchName in branchNames)
+            {
+                var rowsCount = branchesTable.Count;
+
+                for (int i = 0; i < branchesTable.Count; i++)
+                {
+                    var name = GetElementParameterValue<string>(branchesTable, RastrNames.BranchNameColumn, i);
+
+                    if (branchName == name)
+                    {
+                        DeleteRowByIndex(i, branchesTable);
+                    }
+                }
+            }
+        }
+
+        public static void DeleteBlankBranches()
+        {
+            ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
+
+            branchesTable.SetSel("ip.ny=0|iq.ny=0");
+
+            branchesTable.DelRowS();
+        }
+
+        /// <summary>
+        /// Disable branch
+        /// </summary>
+        /// <param name="branch"></param>
+        /// <param name="branchTable"></param>
+        private static void DisableBranch(Branch branch, ITable branchTable)
+        {
+            SetElementParameterValue(branchTable, RastrNames.BranchStatusColumn, branch.Index, 1);
+        }
+
+        /// <summary>
+        /// Disable branches
+        /// </summary>
+        /// <param name="branches"></param>
+        public static void DisableBranches(List<Branch> branches)
+        {
+            ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
+
+            foreach (var branch in branches)
+            {
+                DisableBranch(branch, branchesTable);
+            }
         }
 
         /// <summary>
@@ -426,6 +573,31 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             }
 
             return generators;
+        }
+
+        /// <summary>
+        /// Update generators node
+        /// </summary>
+        /// <param name="branch"></param>
+        /// <param name="branchTable"></param>
+        private static void UpdateGeneratorsNode(Generator generator, ITable generatorTable, Node newGeneratorsNode)
+        {
+            SetElementParameterValue(generatorTable, RastrNames.GeneratorNodeNumberColumn, generator.Index, newGeneratorsNode.Number);
+        }
+
+        /// <summary>
+        /// Update generators nodes
+        /// </summary>
+        /// <param name="newGeneratorsNode"></param>
+        /// <param name="generators"></param>
+        public static void UpdateGeneratorsNodes(Node newGeneratorsNode, List<Generator> generators)
+        {
+            ITable generatorsTable = _rastr.Tables.Item(RastrNames.GeneratorTable);
+
+            foreach (var generator in generators)
+            {
+                UpdateGeneratorsNode(generator, generatorsTable, newGeneratorsNode);
+            }
         }
     }
 }

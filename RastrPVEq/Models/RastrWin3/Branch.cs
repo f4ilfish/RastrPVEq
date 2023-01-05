@@ -170,38 +170,38 @@ namespace RastrPVEq.Models.RastrWin3
         }
 
         /// <summary>
-        /// Branch admissable  current
+        /// Admissable  current
         /// </summary>
-        private double _branchAdmissableCurrent;
+        private double _admissableCurrent;
 
         /// <summary>
-        /// Gets branch admissable current
+        /// Gets admissable current
         /// </summary>
-        public double BranchAdmissableCurrent
+        public double AdmissableCurrent
         {
-            get => _branchAdmissableCurrent;
+            get => _admissableCurrent;
             private set
             {
                 ValueValidation.IsNotNaN(value);
-                _branchAdmissableCurrent = value;
+                _admissableCurrent = value;
             }
         }
 
         /// <summary>
-        /// Branch equipment admissalbe  current
+        /// Equipment admissalbe  current
         /// </summary>
-        private double _branchEquipmentAdmissalbeCurrent;
+        private double _equipmentAdmissableCurrent;
 
         /// <summary>
-        /// Gets branch equipment admissalbe  current
+        /// Gets equipment admissalbe  current
         /// </summary>
-        public double BranchEquipmentAdmissalbeCurrent
+        public double EquipmentAdmissableCurrent
         {
-            get => _branchEquipmentAdmissalbeCurrent;
+            get => _equipmentAdmissableCurrent;
             private set
             {
                 ValueValidation.IsNotNaN(value);
-                _branchEquipmentAdmissalbeCurrent = value;
+                _equipmentAdmissableCurrent = value;
             }
         }
 
@@ -210,8 +210,6 @@ namespace RastrPVEq.Models.RastrWin3
         /// </summary>
         /// <param name="index"></param>
         /// <param name="branchType"></param>
-        /// <param name="branchStartNode"></param>
-        /// <param name="branchEndNode"></param>
         /// <param name="name"></param>
         /// <param name="resistance"></param>
         /// <param name="inductance"></param>
@@ -219,8 +217,8 @@ namespace RastrPVEq.Models.RastrWin3
         /// <param name="transformationRatio"></param>
         /// <param name="districtNumber"></param>
         /// <param name="territoryNumber"></param>
-        /// <param name="branchAdmissableCurrent"></param>
-        /// <param name="branchEquipmentAdmissalbeCurrent"></param>
+        /// <param name="admissableCurrent"></param>
+        /// <param name="equipmentAdmissalbeCurrent"></param>
         public Branch(int index, 
                       BranchType branchType, 
                       string name, 
@@ -230,8 +228,8 @@ namespace RastrPVEq.Models.RastrWin3
                       double transformationRatio, 
                       int districtNumber, 
                       int territoryNumber, 
-                      double branchAdmissableCurrent, 
-                      double branchEquipmentAdmissalbeCurrent)
+                      double admissableCurrent, 
+                      double equipmentAdmissalbeCurrent)
         {
             Index = index;
             BranchType = branchType;
@@ -242,8 +240,8 @@ namespace RastrPVEq.Models.RastrWin3
             TransformationRatio = transformationRatio;
             DistrictNumber = districtNumber;
             TerritoryNumber = territoryNumber;
-            BranchAdmissableCurrent = branchAdmissableCurrent;
-            BranchEquipmentAdmissalbeCurrent = branchEquipmentAdmissalbeCurrent;
+            AdmissableCurrent = admissableCurrent;
+            EquipmentAdmissableCurrent = equipmentAdmissalbeCurrent;
         }
 
         /// <summary>
@@ -257,8 +255,8 @@ namespace RastrPVEq.Models.RastrWin3
         /// <param name="transformationRatio"></param>
         /// <param name="districtNumber"></param>
         /// <param name="territoryNumber"></param>
-        /// <param name="branchAdmissableCurrent"></param>
-        /// <param name="branchEquipmentAdmissalbeCurrent"></param>
+        /// <param name="admissableCurrent"></param>
+        /// <param name="equipmentAdmissalbeCurrent"></param>
         public Branch(BranchType branchType,
                       string name,
                       double resistance,
@@ -267,8 +265,8 @@ namespace RastrPVEq.Models.RastrWin3
                       double transformationRatio,
                       int districtNumber,
                       int territoryNumber,
-                      double branchAdmissableCurrent,
-                      double branchEquipmentAdmissalbeCurrent)
+                      double admissableCurrent,
+                      double equipmentAdmissalbeCurrent)
         {
             BranchType = branchType;
             Name = name;
@@ -278,8 +276,8 @@ namespace RastrPVEq.Models.RastrWin3
             TransformationRatio = transformationRatio;
             DistrictNumber = districtNumber;
             TerritoryNumber = territoryNumber;
-            BranchAdmissableCurrent = branchAdmissableCurrent;
-            BranchEquipmentAdmissalbeCurrent = branchEquipmentAdmissalbeCurrent;
+            AdmissableCurrent = admissableCurrent;
+            EquipmentAdmissableCurrent = equipmentAdmissalbeCurrent;
         }
     }
 }
