@@ -13,7 +13,6 @@ using RastrPVEq.Models.RastrWin3;
 using RastrPVEq.Models.Topology;
 using RastrPVEq.Infrastructure.Equivalentator;
 using RastrPVEq.Infrastructure.RastrWin3;
-using System.ComponentModel.DataAnnotations;
 
 namespace RastrPVEq.ViewModels
 {
@@ -48,6 +47,73 @@ namespace RastrPVEq.ViewModels
         private List<PQDiagram> _pqDiagrams = new();
 
         /// <summary>
+        /// Equivalence Nodes
+        /// </summary>
+        [ObservableProperty]
+        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodes = new();
+
+        /// <summary>
+        /// Selected Node
+        /// </summary>
+        [ObservableProperty]
+        private Node _selectedNode;
+
+        /// <summary>
+        /// Selected Equivalence Node
+        /// </summary>
+        [ObservableProperty]
+        private EquivalenceNodeViewModel _selectedEquivalenceNode;
+
+        /// <summary>
+        /// Selected Equivalence Group
+        /// </summary>
+        [ObservableProperty]
+        private EquivalenceGroupViewModel _selectedEquivalenceGroup;
+
+        /// <summary>
+        /// Selected Branch
+        /// </summary>
+        [ObservableProperty]
+        private Branch _selectedBranch;
+
+        /// <summary>
+        /// Selected Equivalence Branch
+        /// </summary>
+        [ObservableProperty]
+        private Branch _selectedEquivalenceBranch;
+
+        /// <summary>
+        /// Is file downloaded
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ValidateModelCommand))]
+        private bool _isFileDownloaded;
+
+        /// <summary>
+        /// Is model changed
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CalculateEquivalentCommand))]
+        [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
+        private bool _isModelChanged = true;
+
+        /// <summary>
+        /// Validate errors
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CalculateEquivalentCommand))]
+        [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
+        private ObservableCollection<Exception> _validateErrors = new();
+
+        /// <summary>
+        /// Is calculated equivalent
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
+        private bool _isCalculatedEquivalent = false;
+
+        /// <summary>
         /// Download file command
         /// </summary>
         [RelayCommand]
@@ -65,7 +131,10 @@ namespace RastrPVEq.ViewModels
 
             try
             {
-                //TO:DO костыли с observable
+                /// костыль на оповещение об изменениях в модели
+                IsFileDownloaded = false;
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
 
                 EquivalenceNodes.Clear();
                 
@@ -86,6 +155,8 @@ namespace RastrPVEq.ViewModels
                 await Task.WhenAll(branchesTask, generatorsTask);
                 Branches = new ObservableCollection<Branch>(branchesTask.Result);
                 Generators = generatorsTask.Result;
+
+                IsFileDownloaded = true;
             }
             catch (Exception ex)
             {
@@ -96,7 +167,7 @@ namespace RastrPVEq.ViewModels
         /// <summary>
         /// Save file command
         /// </summary>
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSaveFile))]
         private void SaveFile()
         {
             SaveFileDialog saveFileDialog = new()
@@ -153,40 +224,25 @@ namespace RastrPVEq.ViewModels
         }
 
         /// <summary>
-        /// Equivalence Nodes
+        /// Can save file
         /// </summary>
-        [ObservableProperty]
-        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodes = new();
+        /// <returns></returns>
+        private bool CanSaveFile()
+        {
+            return IsFileDownloaded
+                    && !IsModelChanged
+                    && ValidateErrors.Count == 0
+                    && IsCalculatedEquivalent;
+        }
 
         /// <summary>
-        /// Selected Node
+        /// Close application command
         /// </summary>
-        [ObservableProperty]
-        private Node _selectedNode;
-
-        /// <summary>
-        /// Selected Equivalence Node
-        /// </summary>
-        [ObservableProperty]
-        private EquivalenceNodeViewModel _selectedEquivalenceNode;
-
-        /// <summary>
-        /// Selected Equivalence Group
-        /// </summary>
-        [ObservableProperty]
-        private EquivalenceGroupViewModel _selectedEquivalenceGroup;
-
-        /// <summary>
-        /// Selected Branch
-        /// </summary>
-        [ObservableProperty]
-        private Branch _selectedBranch;
-
-        /// <summary>
-        /// Selected Equivalence Branch
-        /// </summary>
-        [ObservableProperty]
-        private Branch _selectedEquivalenceBranch;
+        [RelayCommand]
+        private void CloseApplication()
+        {
+            Application.Current.Shutdown();
+        }
 
         /// <summary>
         /// Add Node to Equivalence Nodes command
@@ -196,6 +252,10 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedNode != null)
             {
+                /// костыль на оповещение об изменениях в модели
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
+
                 EquivalenceNodes.Add(new EquivalenceNodeViewModel(SelectedNode));
                 Nodes.Remove(SelectedNode);
             }
@@ -209,6 +269,10 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedEquivalenceNode != null)
             {
+                /// костыль на оповещение об изменениях в модели
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
+
                 Nodes.Add(SelectedEquivalenceNode.NodeElement);
                 EquivalenceNodes.Remove(SelectedEquivalenceNode);
             }
@@ -222,6 +286,10 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedEquivalenceNode != null)
             {
+                /// костыль на оповещение об изменениях в модели
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
+
                 if (SelectedEquivalenceNode.EquivalenceGroups.Count != 0)
                 {
                     var newGroupId = SelectedEquivalenceNode.EquivalenceGroups
@@ -247,6 +315,10 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup != null
                 && SelectedEquivalenceNode != null)
             {
+                /// костыль на оповещение об изменениях в модели
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
+
                 SelectedEquivalenceNode.EquivalenceGroups
                     .Remove(SelectedEquivalenceGroup);
             }
@@ -261,6 +333,10 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup != null
                 && SelectedBranch != null)
             {
+                /// костыль на оповещение об изменениях в модели
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
+
                 SelectedEquivalenceGroup.EquivalenceBranches
                     .Add(SelectedBranch);
                 Branches.Remove(SelectedBranch);
@@ -276,6 +352,10 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup != null
                 && SelectedEquivalenceBranch != null)
             {
+                /// костыль на оповещение об изменениях в модели
+                IsModelChanged = true;
+                IsCalculatedEquivalent = false;
+
                 Branches.Add(SelectedEquivalenceBranch);
                 SelectedEquivalenceGroup.EquivalenceBranches
                     .Remove(SelectedEquivalenceBranch);
@@ -283,15 +363,9 @@ namespace RastrPVEq.ViewModels
         }
 
         /// <summary>
-        /// Exceptions
+        /// Validate model command
         /// </summary>
-        [ObservableProperty]
-        private ObservableCollection<Exception> _validateErrors = new();
-
-        /// <summary>
-        /// Validate Model command
-        /// </summary>
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanValidateModel))]
         private void ValidateModel()
         {
             ValidateErrors.Clear();
@@ -385,17 +459,33 @@ namespace RastrPVEq.ViewModels
                         ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | Отсутствуют группы"));
                     }
                 }
+
+                /// костыль на оповещение об изменении в моделях
+                if (ValidateErrors.Count == 0)
+                {
+                    IsModelChanged = false;
+                }
             }
             else
             {
                 MessageBox.Show("Отсутствуют узлы эквивалентирования");
             }
+
+        }
+
+        /// <summary>
+        /// Can validate model
+        /// </summary>
+        /// <returns></returns>
+        private bool CanValidateModel()
+        {
+            return IsFileDownloaded;
         }
 
         /// <summary>
         /// Calculate equivalent command
         /// </summary>
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanCalulcateEquivalent))]
         private void CalculateEquivalent()
         {
             foreach (var equivalenceNode in EquivalenceNodes)
@@ -426,6 +516,18 @@ namespace RastrPVEq.ViewModels
                                                                              equivalenceGroup);
                 }
             }
+
+            IsCalculatedEquivalent = true;
+        }
+
+        /// <summary>
+        /// Can calculate equivalent
+        /// </summary>
+        /// <returns></returns>
+        private bool CanCalulcateEquivalent()
+        {
+            return !IsModelChanged
+                    && ValidateErrors.Count == 0;
         }
 
         ///// <summary>

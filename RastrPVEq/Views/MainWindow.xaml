@@ -40,17 +40,100 @@
         <!--Меню-->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
-                <MenuItem Header="Открыть" Command="{Binding Path=DownloadFileCommand}"/>
-                <MenuItem Header="Сохранить" Command="{Binding Path=SaveFileCommand}"/>
-                <MenuItem Header="Выход"/>
+                <MenuItem Command="{Binding Path=DownloadFileCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FolderEye" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Открыть..." Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding Path=SaveFileCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ContentSaveCheck" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Сохранить как..." Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Command="{Binding Path=CloseApplicationCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ExitToApp" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Выход" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Расчет">
-                <MenuItem Header="Проверить" Command="{Binding Path=ValidateModelCommand}"/>
-                <MenuItem Header="Начать" Command="{Binding Path=CalculateEquivalentCommand}"/>
-                <MenuItem Header="Прервать"/>
+                <MenuItem Command="{Binding Path=ValidateModelCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="BugCheck" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Подготовить" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding Path=CalculateEquivalentCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Creation" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Выполнить" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <Separator/>
+                <MenuItem>
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CloseCircle" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Прервать" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Помощь">
-                <MenuItem Header="О программе"/>
+                <MenuItem>
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ChatQuestion" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="Справка" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem>
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="InformationVariant" 
+                                                           HorizontalAlignment="Center" 
+                                                           Width="20" 
+                                                           Height="20"/>
+                            <TextBlock Text="О программе" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
             </MenuItem>
         </Menu>
 
@@ -65,12 +148,24 @@
         <TabControl>
             
             <!--Узлы эквивалента-->
-            <TabItem Header="Узлы эквивалента">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Grain"
+                                                 VerticalAlignment="Center"
+                                                 Width="20" 
+                                                 Height="20"/>
+                        <TextBlock Text="Вершины эквивалентов" 
+                                   VerticalAlignment="Center"
+                                   Margin="5, 0, 0, 0"/>
+                    </StackPanel>
+                </TabItem.Header>
+                
                 <Grid ShowGridLines="False">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition MinWidth="100"/>
                         <ColumnDefinition Width="50"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition MinWidth="100"/>
                     </Grid.ColumnDefinitions>
 
                     <!--Узлы эквивалента | Разделитель-->
@@ -111,9 +206,7 @@
                     <filterDataGrid:FilterDataGrid Grid.Column="0"
                                                    ItemsSource="{Binding Path=Nodes , 
                                                                          Mode=TwoWay,
-                                                                         UpdateSourceTrigger=PropertyChanged, 
-                                                                         NotifyOnSourceUpdated=True,
-                                                                         NotifyOnTargetUpdated=True}"
+                                                                         UpdateSourceTrigger=PropertyChanged}"
                                                    
                                                    IsReadOnly="True"
                                                    SelectionMode="Single"
@@ -121,8 +214,9 @@
                                                    SelectedItem="{Binding Path=SelectedNode}"
                                                    
                                                    Margin="8,0,8,0"
-                                                   AutoGenerateColumns="False"
+                                                   MinColumnWidth="60"
                                                    
+                                                   AutoGenerateColumns="False"
                                                    FilterLanguage="Russian" 
                                                    DateFormatString="d" 
                                                    ShowStatusBar="True" 
@@ -130,8 +224,8 @@
                                                    Style="{StaticResource MaterialDesignDataGrid}">
 
                         <filterDataGrid:FilterDataGrid.Columns>
-                            <filterDataGrid:DataGridTemplateColumn FieldName="Индекс"
-                                                                   Header="Индекс"
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Id"
+                                                                   Header="Id"
                                                                    IsColumnFiltered="True"
                                                                    SortMemberPath="Index">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
@@ -178,14 +272,15 @@
                     <filterDataGrid:FilterDataGrid Grid.Column="2"
                                                    ItemsSource="{Binding Path=EquivalenceNodes , 
                                                                          Mode=TwoWay,
-                                                                         UpdateSourceTrigger=PropertyChanged, 
-                                                                         NotifyOnSourceUpdated=True,
-                                                                         NotifyOnTargetUpdated=True}"
+                                                                         UpdateSourceTrigger=PropertyChanged}"
                                                    
+                                                   IsReadOnly="True"
                                                    SelectionMode="Single"
+                                                   SelectionUnit="FullRow"
                                                    SelectedItem="{Binding Path=SelectedEquivalenceNode}"
                                                    
                                                    Margin="8,0,8,0"
+                                                   MinColumnWidth="60"
                                                    
                                                    AutoGenerateColumns="False"
                                                    FilterLanguage="Russian" 
@@ -195,8 +290,8 @@
                                                    Style="{StaticResource MaterialDesignDataGrid}">
 
                         <filterDataGrid:FilterDataGrid.Columns>
-                            <filterDataGrid:DataGridTemplateColumn FieldName="NodeElement.Index"
-                                                                   Header="Индекс"
+                            <filterDataGrid:DataGridTemplateColumn FieldName="NodeElement.Id"
+                                                                   Header="Id"
                                                                    IsColumnFiltered="True"
                                                                    SortMemberPath="NodeElement.Index">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
@@ -242,17 +337,29 @@
             </TabItem>
 
             <!--Группы эквивалента-->
-            <TabItem Header="Группы эквивалента">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Graph"
+                                                 VerticalAlignment="Center"
+                                                 Width="20" 
+                                                 Height="20"/>
+                        <TextBlock Text="Группы эквивалентов" 
+                                   VerticalAlignment="Center"
+                                   Margin="5, 0, 0, 0"/>
+                    </StackPanel>
+                </TabItem.Header>
+                
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="0.3*" MinHeight="130"/>
                         <RowDefinition Height="10"/>
-                        <RowDefinition/>
+                        <RowDefinition MinHeight="260"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition MinWidth="100"/>
                         <ColumnDefinition Width="50"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition MinWidth="100"/>
                     </Grid.ColumnDefinitions>
 
                     <!--Группы эквивалента | Горизонтальный разделитель-->
@@ -266,7 +373,7 @@
 
                     <!--Группы эквивалента | Вертикальный разделитель-->
                     <GridSplitter Grid.Column="1"
-                                  Grid.Row="2"
+                                  Grid.RowSpan="3"
                                   Width="5"
                                   ShowsPreview="False"
                                   HorizontalAlignment="Center"
@@ -367,6 +474,7 @@
                                                    SelectedItem="{Binding Path=SelectedBranch}"
                                                    
                                                    Margin="8,0,8,0"
+                                                   MinColumnWidth="60"
                                                    
                                                    AutoGenerateColumns="False"
                                                    FilterLanguage="Russian" 
@@ -376,8 +484,8 @@
                                                    Style="{StaticResource MaterialDesignDataGrid}">
 
                         <filterDataGrid:FilterDataGrid.Columns>
-                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
-                                                                   Header="Индекс"
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Id"
+                                                                   Header="Id"
                                                                    IsColumnFiltered="True"
                                                                    SortMemberPath="Index">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
@@ -389,7 +497,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="BranchType"
                                                                    Header="Тип"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="BranchType">
+                                                                   SortMemberPath="BranchType"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=BranchType,
@@ -421,7 +530,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="Inductance"
                                                                    Header="X, Ом"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="Inductance">
+                                                                   SortMemberPath="Inductance"
+                                                                   MinWidth="90">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
@@ -432,7 +542,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="TransformationRatio"
                                                                    Header="Kтр"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="TransformationRatio">
+                                                                   SortMemberPath="TransformationRatio"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=TransformationRatio, 
@@ -454,6 +565,7 @@
                                                    SelectedItem="{Binding Path=SelectedEquivalenceBranch}"
                                                    
                                                    Margin="8,0,8,0"
+                                                   MinColumnWidth="60"
                                                    
                                                    AutoGenerateColumns="False"
                                                    FilterLanguage="Russian" 
@@ -463,10 +575,11 @@
                                                    Style="{StaticResource MaterialDesignDataGrid}">
 
                         <filterDataGrid:FilterDataGrid.Columns>
-                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
-                                                                   Header="Индекс"
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Id"
+                                                                   Header="Id"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="Index">
+                                                                   SortMemberPath="Index"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Index}" />
@@ -508,7 +621,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="Inductance"
                                                                    Header="X, Ом"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="Inductance">
+                                                                   SortMemberPath="Inductance"
+                                                                   MinWidth="90">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
@@ -519,7 +633,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="TransformationRatio"
                                                                    Header="Kтр"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="TransformationRatio">
+                                                                   SortMemberPath="TransformationRatio"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=TransformationRatio, 
@@ -531,14 +646,60 @@
                     </filterDataGrid:FilterDataGrid>
                 </Grid>
             </TabItem>
-            
+
+            <!--Протокол-->
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Eye"
+                                                 VerticalAlignment="Center"
+                                                 Width="20" 
+                                                 Height="20"/>
+                        <TextBlock Text="Протокол" 
+                                   VerticalAlignment="Center"
+                                   Margin="5, 0, 0, 0"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <ListBox ItemsSource="{Binding Path=ValidateErrors,
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Label>
+                                    <Label.Content>
+                                        <materialDesign:PackIcon Kind="Error" 
+                                                                 HorizontalAlignment="Center" 
+                                                                 Width="25" 
+                                                                 Height="25"/>
+                                    </Label.Content>
+                                </Label>
+                                <TextBlock Text="{Binding Path=Message}" 
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+
             <!--Результат-->
-            <TabItem Header="Результат">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="RayStartVertexEnd"
+                                                 VerticalAlignment="Center"
+                                                 Width="20" 
+                                                 Height="20"/>
+                        <TextBlock Text="Результат" 
+                                   VerticalAlignment="Center"
+                                   Margin="5, 0, 0, 0"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="0.3*" MinHeight="130"/>
                         <RowDefinition Height="10"/>
-                        <RowDefinition/>
+                        <RowDefinition MinHeight="260"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -572,6 +733,7 @@
                                                    IsReadOnly="True"
                                                    
                                                    Margin="8,0,8,0"
+                                                   MinColumnWidth="60"
                                                    
                                                    AutoGenerateColumns="False"
                                                    FilterLanguage="Russian" 
@@ -581,8 +743,8 @@
                                                    Style="{StaticResource MaterialDesignDataGrid}">
 
                         <filterDataGrid:FilterDataGrid.Columns>
-                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
-                                                                   Header="Индекс"
+                            <filterDataGrid:DataGridTemplateColumn FieldName="Id"
+                                                                   Header="Id"
                                                                    IsColumnFiltered="True"
                                                                    SortMemberPath="Index">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
@@ -594,7 +756,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="BranchType"
                                                                    Header="Тип"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="BranchType">
+                                                                   SortMemberPath="BranchType"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=BranchType,
@@ -626,7 +789,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="Inductance"
                                                                    Header="X, Ом"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="Inductance">
+                                                                   SortMemberPath="Inductance"
+                                                                   MaxWidth="90">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
@@ -637,7 +801,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="TransformationRatio"
                                                                    Header="Kтр"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="TransformationRatio">
+                                                                   SortMemberPath="TransformationRatio"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=TransformationRatio, 
@@ -659,6 +824,7 @@
                                                    SelectedItem="{Binding Path=SelectedEquivalenceBranch}"
                                                    
                                                    Margin="8,0,8,0"
+                                                   MinColumnWidth="60"
                                                    
                                                    AutoGenerateColumns="False"
                                                    FilterLanguage="Russian" 
@@ -668,20 +834,11 @@
                                                    Style="{StaticResource MaterialDesignDataGrid}">
 
                         <filterDataGrid:FilterDataGrid.Columns>
-                            <filterDataGrid:DataGridTemplateColumn FieldName="Index"
-                                                                   Header="Индекс"
-                                                                   IsColumnFiltered="True"
-                                                                   SortMemberPath="Index">
-                                <filterDataGrid:DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=Index}" />
-                                    </DataTemplate>
-                                </filterDataGrid:DataGridTemplateColumn.CellTemplate>
-                            </filterDataGrid:DataGridTemplateColumn>
                             <filterDataGrid:DataGridTemplateColumn FieldName="BranchType"
                                                                    Header="Тип"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="BranchType">
+                                                                   SortMemberPath="BranchType"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=BranchType,
@@ -713,7 +870,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="Inductance"
                                                                    Header="X, Ом"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="Inductance">
+                                                                   SortMemberPath="Inductance"
+                                                                   MinWidth="90">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
@@ -724,7 +882,8 @@
                             <filterDataGrid:DataGridTemplateColumn FieldName="TransformationRatio"
                                                                    Header="Kтр"
                                                                    IsColumnFiltered="True"
-                                                                   SortMemberPath="TransformationRatio">
+                                                                   SortMemberPath="TransformationRatio"
+                                                                   MinWidth="75">
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=TransformationRatio, 
@@ -734,7 +893,7 @@
                             </filterDataGrid:DataGridTemplateColumn>
                         </filterDataGrid:FilterDataGrid.Columns>
                     </filterDataGrid:FilterDataGrid>
-                    
+
                     <!--Результат | Выбранные узлы-->
                     <ListBox Grid.Column="0"
                              Grid.Row="0"
@@ -762,30 +921,6 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
-            </TabItem>
-
-            <!--Протокол-->   
-            <TabItem Header="Протокол">
-                <ListBox ItemsSource="{Binding Path=ValidateErrors,
-                                               Mode=TwoWay,
-                                               UpdateSourceTrigger=PropertyChanged}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Label>
-                                    <Label.Content>
-                                        <materialDesign:PackIcon Kind="Error" 
-                                                                 HorizontalAlignment="Center" 
-                                                                 Width="25" 
-                                                                 Height="25"/>
-                                    </Label.Content>
-                                </Label>
-                                <TextBlock Text="{Binding Path=Message}" 
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
             </TabItem>
         </TabControl>
     </DockPanel>
