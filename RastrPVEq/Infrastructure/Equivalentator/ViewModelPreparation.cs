@@ -74,7 +74,8 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                 }
                 else
                 {
-                    throw new NullReferenceException($"{generator.Name} не привязан к узлу");
+                    continue;
+                    //throw new NullReferenceException($"{generator.Name} не привязан к узлу");
                 }
             }
 

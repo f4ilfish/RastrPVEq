@@ -170,12 +170,22 @@ namespace RastrPVEq.Infrastructure.RastrWin3
 
             ITable nodesTable = _rastr.Tables.Item(RastrNames.NodeTable);
 
-            for (int i = 0; i < nodesTable.Count; i++)
+            for (int i = 0; i < GetNodesCount(); i++)
             {
                 nodes.Add(GetNodeByIndex(i, nodesTable));
             }
 
             return nodes;
+        }
+
+        /// <summary>
+        /// Get nodes count
+        /// </summary>
+        /// <returns></returns>
+        public static int GetNodesCount()
+        {
+            ITable nodesTable = _rastr.Tables.Item(RastrNames.NodeTable);
+            return nodesTable.Count;
         }
 
         /// <summary>
@@ -216,24 +226,14 @@ namespace RastrPVEq.Infrastructure.RastrWin3
         /// <param name="nodes"></param>
         public static void DeleteNodes(List<Node> nodes)
         {
-            var nodesNames = nodes.Select(n => n.Name).ToList();
-
             ITable nodesTable = _rastr.Tables.Item(RastrNames.NodeTable);
 
-            foreach (var nodeName in nodesNames)
+            foreach(var node in nodes)
             {
-                var rowsCount = nodesTable.Count;
+                nodesTable.SetSel($"ny={node.Number}");
 
-                for (int i = 0; i < nodesTable.Count; i++)
-                {
-                    var name = GetElementParameterValue<string>(nodesTable, RastrNames.NodeNameColumn, i);
-
-                    if (nodeName == name)
-                    {
-                        DeleteRowByIndex(i, nodesTable);
-                    }
-                }
-            }  
+                nodesTable.DelRowS();
+            }
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace RastrPVEq.Infrastructure.RastrWin3
 
             ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
 
-            for (int i = 0; i < branchesTable.Count; i++)
+            for (int i = 0; i < GetBranchesCount(); i++)
             {
                 var branch = GetBranchByIndex(i, branchesTable);
 
@@ -337,6 +337,16 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             }
 
             return branches;
+        }
+
+        /// <summary>
+        /// Get branches count
+        /// </summary>
+        /// <returns></returns>
+        public static int GetBranchesCount()
+        {
+            ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
+            return branchesTable.Count;
         }
 
         /// <summary>
@@ -376,32 +386,25 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             }
         }
 
-        /// <summary>
-        /// Delete branches
-        /// </summary>
-        /// <param name="branches"></param>
+        ///// <summary>
+        ///// Delete branches
+        ///// </summary>
+        ///// <param name="branches"></param>
         public static void DeleteBranches(List<Branch> branches)
         {
-            var branchNames = branches.Select(b => b.Name).ToList();
-
             ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
 
-            foreach(var branchName in branchNames)
+            foreach(var branch in branches)
             {
-                var rowsCount = branchesTable.Count;
+                branchesTable.SetSel($"ip.ny={branch.BranchStartNode.Number}&iq.ny={branch.BranchEndNode.Number}");
 
-                for (int i = 0; i < branchesTable.Count; i++)
-                {
-                    var name = GetElementParameterValue<string>(branchesTable, RastrNames.BranchNameColumn, i);
-
-                    if (branchName == name)
-                    {
-                        DeleteRowByIndex(i, branchesTable);
-                    }
-                }
+                branchesTable.DelRowS();
             }
         }
 
+        /// <summary>
+        /// Delete blank branches
+        /// </summary>
         public static void DeleteBlankBranches()
         {
             ITable branchesTable = _rastr.Tables.Item(RastrNames.BranchTable);
@@ -476,12 +479,22 @@ namespace RastrPVEq.Infrastructure.RastrWin3
 
             ITable adjustmentRangesTable = _rastr.Tables.Item(RastrNames.AdjustmentRangeTable);
 
-            for (int i = 0; i < adjustmentRangesTable.Count; i++)
+            for (int i = 0; i < GetAdjustmentRangesCount(); i++)
             {
                 adjustmentRanges.Add(GetAdjustmentRangeByIndex(i, adjustmentRangesTable));
             }
 
             return adjustmentRanges;
+        }
+
+        /// <summary>
+        /// Get adjustment ranges count
+        /// </summary>
+        /// <returns></returns>
+        public static int GetAdjustmentRangesCount()
+        {
+            ITable adjustmentRangesTable = _rastr.Tables.Item(RastrNames.AdjustmentRangeTable);
+            return adjustmentRangesTable.Count;
         }
 
         /// <summary>
@@ -547,7 +560,7 @@ namespace RastrPVEq.Infrastructure.RastrWin3
 
             ITable generatorsTable = _rastr.Tables.Item(RastrNames.GeneratorTable);
 
-            for (int i = 0; i < generatorsTable.Count; i++)
+            for (int i = 0; i < GetGeneratorsCount(); i++)
             {
                 var generator = GetGeneratorByIndex(i, generatorsTable);
 
@@ -573,6 +586,16 @@ namespace RastrPVEq.Infrastructure.RastrWin3
             }
 
             return generators;
+        }
+
+        /// <summary>
+        /// Get generators count
+        /// </summary>
+        /// <returns></returns>
+        public static int GetGeneratorsCount()
+        {
+            ITable generatorsTable = _rastr.Tables.Item(RastrNames.GeneratorTable);
+            return generatorsTable.Count;
         }
 
         /// <summary>

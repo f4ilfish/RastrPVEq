@@ -13,6 +13,8 @@ using RastrPVEq.Models.RastrWin3;
 using RastrPVEq.Models.Topology;
 using RastrPVEq.Infrastructure.Equivalentator;
 using RastrPVEq.Infrastructure.RastrWin3;
+using System.Resources;
+using System.IO;
 
 namespace RastrPVEq.ViewModels
 {
@@ -113,6 +115,12 @@ namespace RastrPVEq.ViewModels
         [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
         private bool _isCalculatedEquivalent = false;
 
+        [ObservableProperty]
+        private double _maxStatusBarValue;
+
+        [ObservableProperty]
+        private double _currentStatusBarValue;
+
         /// <summary>
         /// Download file command
         /// </summary>
@@ -131,37 +139,64 @@ namespace RastrPVEq.ViewModels
 
             try
             {
+                var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+                var resourcePath = "Properties\\режим.rg2";
+                var templatePath = $"{baseDirectoryPath}{resourcePath}";
+
+                //var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
+
+                RastrSupplier.LoadFileByTemplate(openFileDialog.FileName, templatePath);
+                
+                /// костыль для статус бара
+                var nodesCount = RastrSupplier.GetNodesCount();
+                var branchesCount = RastrSupplier.GetBranchesCount();
+                var adjustmentRangesCount = RastrSupplier.GetAdjustmentRangesCount();
+                var generatrosCount = RastrSupplier.GetGeneratorsCount();
+
+                MaxStatusBarValue += nodesCount;
+                MaxStatusBarValue += branchesCount;
+                MaxStatusBarValue += adjustmentRangesCount;
+                MaxStatusBarValue += generatrosCount;
+
+                CurrentStatusBarValue = 0;
+
                 /// костыль на оповещение об изменениях в модели
                 IsFileDownloaded = false;
                 IsModelChanged = true;
                 IsCalculatedEquivalent = false;
-
+                
+                /// очистка перед загрузкой
                 EquivalenceNodes.Clear();
                 
-                var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
-                RastrSupplier.LoadFileByTemplate(openFileDialog.FileName, templatePath);
-
                 var nodesTask = RastrSupplierAsync.GetNodesAsync();
                 var pqDiagramsTask = RastrSupplierAsync.GetPQDiagramsAsync();
 
                 await nodesTask;
                 Nodes = new ObservableCollection<Node>(nodesTask.Result);
+                CurrentStatusBarValue += nodesCount;
                 var branchesTask = RastrSupplierAsync.GetBranchesAsync(Nodes.ToList());
 
                 await pqDiagramsTask;
                 PqDiagrams = pqDiagramsTask.Result;
+                CurrentStatusBarValue += adjustmentRangesCount;
                 var generatorsTask = RastrSupplierAsync.GetGeneratorsAsync(Nodes.ToList(), PqDiagrams);
 
-                await Task.WhenAll(branchesTask, generatorsTask);
-                Branches = new ObservableCollection<Branch>(branchesTask.Result);
+                await generatorsTask;
                 Generators = generatorsTask.Result;
+                CurrentStatusBarValue += generatrosCount;
 
-                IsFileDownloaded = true;
+                await branchesTask;
+                Branches = new ObservableCollection<Branch>(branchesTask.Result);
+                CurrentStatusBarValue += branchesCount; 
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"{ex}");
             }
+
+            MaxStatusBarValue = 0;
+            CurrentStatusBarValue = 0;
+            IsFileDownloaded = true;
         }
 
         /// <summary>
@@ -182,8 +217,15 @@ namespace RastrPVEq.ViewModels
 
             try
             {
+                MaxStatusBarValue = 100;
+                CurrentStatusBarValue = 0;
+
+                double nodeValueIncrement = MaxStatusBarValue / EquivalenceNodes.Count;
+
                 foreach (var equivalenceNode in EquivalenceNodes)
                 {
+                    double groupValueIncrement = nodeValueIncrement / equivalenceNode.EquivalenceGroups.Count;
+
                     foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroups)
                     {
                         var branchesToDelete = new List<Branch>(equivalenceGroup.EquivalenceBranches);
@@ -211,11 +253,15 @@ namespace RastrPVEq.ViewModels
 
                         var generatorsToUpdate = new List<Generator>(equivalenceGroup.EquivalenceGenerators);
                         RastrSupplier.UpdateGeneratorsNodes(equivalenceGroup.GeneratorEquivalentNode, generatorsToUpdate);
+
+                        CurrentStatusBarValue += groupValueIncrement;
                     }
                 }
 
                 var templatePath = "C:\\Users\\mishk\\source\\repos\\RastrPVEq\\RastrPVEqConsole\\Resources\\Templates\\режим.rg2";
                 RastrSupplier.SaveFileByTemplate(saveFileDialog.FileName, templatePath);
+
+                CurrentStatusBarValue = 100;
             }
             catch (Exception ex)
             {
@@ -239,7 +285,7 @@ namespace RastrPVEq.ViewModels
         /// Close application command
         /// </summary>
         [RelayCommand]
-        private void CloseApplication()
+        private static void CloseApplication()
         {
             Application.Current.Shutdown();
         }
@@ -319,6 +365,14 @@ namespace RastrPVEq.ViewModels
                 IsModelChanged = true;
                 IsCalculatedEquivalent = false;
 
+                if(SelectedEquivalenceGroup.EquivalenceBranches.Count != 0)
+                {
+                    foreach(var branch in SelectedEquivalenceGroup.EquivalenceBranches)
+                    {
+                        Branches.Add(branch);
+                    }
+                }
+
                 SelectedEquivalenceNode.EquivalenceGroups
                     .Remove(SelectedEquivalenceGroup);
             }
@@ -370,9 +424,14 @@ namespace RastrPVEq.ViewModels
         {
             ValidateErrors.Clear();
 
+            MaxStatusBarValue = 100;
+            CurrentStatusBarValue = 0;
+
             /// Проверка узлов эквивалентирования
             if (EquivalenceNodes.Count != 0)
             {
+                var nodeValueIncrement = MaxStatusBarValue / EquivalenceNodes.Count;
+
                 foreach (var equivalenceNode in EquivalenceNodes)
                 {
                     var nodeNumber = equivalenceNode.NodeElement.Number;
@@ -381,6 +440,8 @@ namespace RastrPVEq.ViewModels
                     /// Проверка наличия групп эквивалентирования
                     if (equivalenceNode.EquivalenceGroups.Count != 0)
                     {
+                        var groupValueIncrement = nodeValueIncrement / equivalenceNode.EquivalenceGroups.Count;
+
                         foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroups)
                         {
                             var groupName = equivalenceGroup.Name;
@@ -452,6 +513,8 @@ namespace RastrPVEq.ViewModels
                             {
                                 ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствуют ветви"));
                             }
+
+                            CurrentStatusBarValue += groupValueIncrement;
                         }
                     }
                     else
@@ -471,6 +534,7 @@ namespace RastrPVEq.ViewModels
                 MessageBox.Show("Отсутствуют узлы эквивалентирования");
             }
 
+            CurrentStatusBarValue = 100;
         }
 
         /// <summary>
@@ -488,12 +552,21 @@ namespace RastrPVEq.ViewModels
         [RelayCommand(CanExecute = nameof(CanCalulcateEquivalent))]
         private void CalculateEquivalent()
         {
+            MaxStatusBarValue = 100;
+            CurrentStatusBarValue = 0;
+            
             foreach (var equivalenceNode in EquivalenceNodes)
             {
+                double nodeValueIncrement = MaxStatusBarValue / EquivalenceNodes.Count;
+
                 foreach (var equivalenceGroup in equivalenceNode.EquivalenceGroups)
                 {
+                    double groupValueIncrement = nodeValueIncrement / equivalenceNode.EquivalenceGroups.Count;
+
+                    equivalenceGroup.EquivalenceNodes.Clear();
                     equivalenceGroup.EquivalenceNodes = ViewModelPreparation.GetNodesOfEquivalenceGroup(equivalenceGroup);
 
+                    equivalenceGroup.EquivalenceGenerators.Clear();
                     equivalenceGroup.EquivalenceGenerators = ViewModelPreparation.GetGeneratorsOfEquvialenceGroup(equivalenceGroup.EquivalenceNodes, Generators);
 
                     var graphOfEquivalenceGroup = ViewModelPreparation.GetGraphOfEquivalenceGroup(equivalenceGroup, equivalenceGroup.EquivalenceNodes);
@@ -503,6 +576,7 @@ namespace RastrPVEq.ViewModels
                                                                                                                         equivalenceGroup,
                                                                                                                         equivalenceGroup.EquivalenceGenerators,
                                                                                                                         dijkstraGraph);
+                    equivalenceGroup.EquivalentBranches.Clear();
                     ViewModelPreparation.GetEquivalentBranches(equivalenceNode, 
                                                                equivalenceBranchToGeneratorsPower,
                                                                equivalenceGroup.EquivalenceGenerators,
@@ -514,9 +588,12 @@ namespace RastrPVEq.ViewModels
 
                     ViewModelPreparation.SetEquivalentNodeToEquivalentBranch(equivalenceNode,
                                                                              equivalenceGroup);
+
+                    CurrentStatusBarValue += groupValueIncrement;
                 }
             }
 
+            CurrentStatusBarValue = 100;
             IsCalculatedEquivalent = true;
         }
 

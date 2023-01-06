@@ -55,20 +55,14 @@ namespace RastrPVEqConsole.Infrastructure.Topology
 
                 vertex.Visit();
 
-                //yield return vertex;
+                yield return vertex;
 
                 if (vertex.Equals(searchVertex))
                 {
-                    yield return vertex;
                     yield break;
                 }
 
                 var unvisitedVertices = vertex.AdjacentUnvisitedVertices();
-
-                if (unvisitedVertices.Count != 0)
-                {
-                    yield return vertex;
-                }
 
                 foreach (var v in unvisitedVertices)
                 {

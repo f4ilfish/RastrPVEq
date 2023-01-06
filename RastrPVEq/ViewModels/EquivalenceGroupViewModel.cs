@@ -33,12 +33,12 @@ namespace RastrPVEq.ViewModels
         /// <summary>
         /// Gets or sets equivalence nodes
         /// </summary>
-        public List<Node> EquivalenceNodes { get; set; }
+        public List<Node> EquivalenceNodes { get; set; } = new();
 
         /// <summary>
         /// Gets or set equivalence generators
         /// </summary>
-        public List<Generator> EquivalenceGenerators { get; set; }
+        public List<Generator> EquivalenceGenerators { get; set; } = new();
 
         /// <summary>
         /// Gets or sets intermediet equivalent node

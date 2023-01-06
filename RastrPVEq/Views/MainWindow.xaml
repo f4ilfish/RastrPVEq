@@ -140,8 +140,12 @@
         <!--Прогресс бар-->
         <ProgressBar DockPanel.Dock="Bottom"
                      Minimum="0" 
-                     Maximum="100"
-                     Value="30"
+                     Maximum="{Binding Path=MaxStatusBarValue,
+                                       Mode=TwoWay, 
+                                       UpdateSourceTrigger=PropertyChanged}"
+                     Value="{Binding Path=CurrentStatusBarValue, 
+                                     Mode=TwoWay, 
+                                     UpdateSourceTrigger=PropertyChanged}"
                      Height="15"/>
 
         <!--Вкладки-->

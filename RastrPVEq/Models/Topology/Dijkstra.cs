@@ -136,6 +136,12 @@ namespace RastrPVEq.Models.Topology
             path.Add(endVertex);
             while (startVertex != endVertex)
             {
+                // добавлен if
+                if (GetVertexInfo(endVertex).PreviousVertex == null)
+                {
+                    break;
+                }
+
                 endVertex = GetVertexInfo(endVertex).PreviousVertex;
                 path.Add(endVertex);
             }
