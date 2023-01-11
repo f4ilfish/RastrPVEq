@@ -2,42 +2,46 @@
 
 namespace RastrPVEq.Models.Topology
 {
+    /// <summary>
+    /// Graph class
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Graph<T>
     {
         /// <summary>
-        /// Список вершин графа
+        /// Gets vertexes
         /// </summary>
-        public List<GraphVertex<T>> Vertices { get; }
+        public List<GraphVertex<T>> Vertexes { get; }
 
         /// <summary>
-        /// Конструктор
+        /// Graph class constructor
         /// </summary>
         public Graph()
         {
-            Vertices = new List<GraphVertex<T>>();
+            Vertexes = new List<GraphVertex<T>>();
         }
 
         /// <summary>
-        /// Добавление вершины
+        /// Add vertex
         /// </summary>
-        /// <param name="vertexData">Имя вершины</param>
+        /// <param name="vertexData">Vertex data</param>
         public void AddVertex(T vertexData)
         {
-            Vertices.Add(new GraphVertex<T>(vertexData));
+            Vertexes.Add(new GraphVertex<T>(vertexData));
         }
 
         /// <summary>
-        /// Поиск вершины
+        /// Find vertex
         /// </summary>
-        /// <param name="vertexData">Название вершины</param>
-        /// <returns>Найденная вершина</returns>
+        /// <param name="vertexData">Vertex data</param>
+        /// <returns></returns>
         public GraphVertex<T> FindVertex(T vertexData)
         {
-            foreach (var v in Vertices)
+            foreach (var vertex in Vertexes)
             {
-                if (v.Data.Equals(vertexData))
+                if (vertex.VertexData.Equals(vertexData))
                 {
-                    return v;
+                    return vertex;
                 }
             }
 
@@ -45,20 +49,20 @@ namespace RastrPVEq.Models.Topology
         }
 
         /// <summary>
-        /// Добавление ребра
+        /// Add edge
         /// </summary>
-        /// <param name="firstName">Имя первой вершины</param>
-        /// <param name="secondName">Имя второй вершины</param>
-        /// <param name="weight">Вес ребра соединяющего вершины</param>
+        /// <param name="startVertex">Start vertex</param>
+        /// <param name="endVertex">End vertex</param>
+        /// <param name="weight">Weight</param>
         public void AddEdge(T startVertex, T endVertex, double weight)
         {
-            var v1 = FindVertex(startVertex);
-            var v2 = FindVertex(endVertex);
-            if (v2 != null && v1 != null)
-            {
-                v1.AddEdge(v2, weight);
-                v2.AddEdge(v1, weight);
-            }
+            var startGraphVertex = FindVertex(startVertex);
+            var endGraphVertex = FindVertex(endVertex);
+
+            if (endGraphVertex == null || startGraphVertex == null) return;
+            
+            startGraphVertex.AddEdge(endGraphVertex, weight);
+            endGraphVertex.AddEdge(startGraphVertex, weight);
         }
     }
 }

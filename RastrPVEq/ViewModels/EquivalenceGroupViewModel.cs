@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using RastrPVEq.Models.RastrWin3;
+using RastrPVEq.Models.PowerSystem;
 
 namespace RastrPVEq.ViewModels
 {
@@ -41,9 +41,9 @@ namespace RastrPVEq.ViewModels
         public List<Generator> EquivalenceGenerators { get; set; } = new();
 
         /// <summary>
-        /// Gets or sets intermediet equivalent node
+        /// Gets or sets intermediete equivalent node
         /// </summary>
-        public Node IntermedietEquivalentNode { get; set; }
+        public Node IntermedieteEquivalentNode { get; set; }
 
         /// <summary>
         /// Gets or sets generator equivalent node
@@ -57,7 +57,7 @@ namespace RastrPVEq.ViewModels
         private ObservableCollection<Branch> _equivalentBranches = new();
 
         /// <summary>
-        /// Equivalence Group View Model class instance constructor
+        /// Equivalence group view model class constructor
         /// </summary>
         /// <param name="id">Equivalence Group index</param>
         /// <param name="name">Equivalence Group name</param>

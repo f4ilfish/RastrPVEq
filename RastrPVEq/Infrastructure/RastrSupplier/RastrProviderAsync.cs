@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RastrPVEq.Models.RastrWin3;
+using RastrPVEq.Models.PowerSystem;
 
-namespace RastrPVEq.Infrastructure.RastrWin3
+namespace RastrPVEq.Infrastructure.RastrSupplier
 {
     /// <summary>
-    /// Rastr supply async method provider class
+    /// Rastr provider async class 
     /// </summary>
-    public static class RastrSupplierAsync
+    public static class RastrProviderAsync
     {
         /// <summary>
         /// Get nodes async

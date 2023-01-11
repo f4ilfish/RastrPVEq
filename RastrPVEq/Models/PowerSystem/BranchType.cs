@@ -1,4 +1,4 @@
-﻿namespace RastrPVEq.Models.RastrWin3
+﻿namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
     /// Branch types
@@ -11,7 +11,7 @@
         Line,
 
         /// <summary>
-        /// Power tranformer
+        /// Power transformer
         /// </summary>
         Transformer
     }

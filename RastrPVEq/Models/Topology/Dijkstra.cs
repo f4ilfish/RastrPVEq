@@ -2,47 +2,55 @@
 
 namespace RastrPVEq.Models.Topology
 {
+    /// <summary>
+    /// Dijkstra class
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Dijkstra<T>
     {
-        Graph<T> graph;
-
-        List<GraphVertexInfo<T>> infos;
-
-        public Dijkstra() { }
+        /// <summary>
+        /// Graph field
+        /// </summary>
+        private Graph<T> _graph;
 
         /// <summary>
-        /// Конструктор
+        /// Gets or sets vertexes info
         /// </summary>
-        /// <param name="graph">Граф</param>
+        private List<GraphVertexInfo<T>> _vertexesInfo = new ();
+
+        /// <summary>
+        /// Dijkstra class constructor
+        /// </summary>
+        /// <param name="graph">Graph</param>
         public Dijkstra(Graph<T> graph)
         {
-            this.graph = graph;
+            _graph = graph;
+            AddVertexesInfo();
         }
 
         /// <summary>
-        /// Инициализация информации
+        /// Add vertexes info
         /// </summary>
-        void InitInfo()
+        private void AddVertexesInfo()
         {
-            infos = new List<GraphVertexInfo<T>>();
-            foreach (var v in graph.Vertices)
+            foreach (var vertex in _graph.Vertexes)
             {
-                infos.Add(new GraphVertexInfo<T>(v));
+                _vertexesInfo.Add(new GraphVertexInfo<T>(vertex));
             }
         }
 
         /// <summary>
-        /// Получение информации о вершине графа
+        /// Get vertex info
         /// </summary>
-        /// <param name="v">Вершина</param>
-        /// <returns>Информация о вершине</returns>
-        GraphVertexInfo<T> GetVertexInfo(GraphVertex<T> v)
+        /// <param name="vertex">Vertex</param>
+        /// <returns></returns>
+        private GraphVertexInfo<T> GetVertexInfo(GraphVertex<T> vertex)
         {
-            foreach (var i in infos)
+            foreach (var vertexInfo in _vertexesInfo)
             {
-                if (i.Vertex.Equals(v))
+                if (vertexInfo.Vertex.Equals(vertex))
                 {
-                    return i;
+                    return vertexInfo;
                 }
             }
 
@@ -50,99 +58,107 @@ namespace RastrPVEq.Models.Topology
         }
 
         /// <summary>
-        /// Поиск непосещенной вершины с минимальным значением суммы
+        /// Find unvisited vertex with min edges weight sum
         /// </summary>
-        /// <returns>Информация о вершине</returns>
-        public GraphVertexInfo<T> FindUnvisitedVertexWithMinSum()
+        /// <returns></returns>
+        private GraphVertexInfo<T> FindUnvisitedVertexWithMinEdgesWeightSum()
         {
-            var minValue = double.MaxValue;
-            GraphVertexInfo<T> minVertexInfo = null;
-            foreach (var i in infos)
+            var maxVertexEdgesWeightSum = double.MaxValue;
+            
+            GraphVertexInfo<T> vertexWithMinEdgesWeightSum = null;
+            
+            foreach (var vertexInfo in _vertexesInfo)
             {
-                if (i.IsUnvisited && i.EdgesWeightSum < minValue)
-                {
-                    minVertexInfo = i;
-                    minValue = i.EdgesWeightSum;
-                }
+                if (!vertexInfo.IsUnvisited || 
+                    !(vertexInfo.EdgesWeightSum < maxVertexEdgesWeightSum)) continue;
+                
+                vertexWithMinEdgesWeightSum = vertexInfo;
+                maxVertexEdgesWeightSum = vertexInfo.EdgesWeightSum;
             }
 
-            return minVertexInfo;
+            return vertexWithMinEdgesWeightSum;
         }
 
         /// <summary>
-        /// Поиск кратчайшего пути по названиям вершин
+        /// Find shortest path
         /// </summary>
-        /// <param name="startName">Название стартовой вершины</param>
-        /// <param name="finishName">Название финишной вершины</param>
-        /// <returns>Кратчайший путь</returns>
+        /// <param name="startVertex">Start vertex</param>
+        /// <param name="endVertex">End vertex</param>
+        /// <returns></returns>
         public List<GraphVertex<T>> FindShortestPath(T startVertex, T endVertex)
         {
-            return FindShortestPath(graph.FindVertex(startVertex), graph.FindVertex(endVertex));
+            return FindShortestPath(_graph.FindVertex(startVertex), 
+                                    _graph.FindVertex(endVertex));
         }
 
         /// <summary>
-        /// Поиск кратчайшего пути по вершинам
+        /// Find shortest path
         /// </summary>
-        /// <param name="startVertex">Стартовая вершина</param>
-        /// <param name="finishVertex">Финишная вершина</param>
-        /// <returns>Кратчайший путь</returns>
+        /// <param name="startVertex">Start vertex</param>
+        /// <param name="finishVertex">Start vertex</param>
+        /// <returns></returns>
         public List<GraphVertex<T>> FindShortestPath(GraphVertex<T> startVertex, GraphVertex<T> finishVertex)
         {
-            InitInfo();
-            var first = GetVertexInfo(startVertex);
-            first.EdgesWeightSum = 0;
+            var startVertexInfo = GetVertexInfo(startVertex);
+            startVertexInfo.EdgesWeightSum = 0;
+            
             while (true)
             {
-                var current = FindUnvisitedVertexWithMinSum();
-                if (current == null)
+                var unvisitedVertexWithMinEdgesWeightSum = FindUnvisitedVertexWithMinEdgesWeightSum();
+                
+                if (unvisitedVertexWithMinEdgesWeightSum == null)
                 {
                     break;
                 }
 
-                SetSumToNextVertex(current);
+                SetVertexEdgesWeightSum(unvisitedVertexWithMinEdgesWeightSum);
             }
 
             return GetPath(startVertex, finishVertex);
         }
 
         /// <summary>
-        /// Вычисление суммы весов ребер для следующей вершины
+        /// Set vertex edges weight sum
         /// </summary>
-        /// <param name="info">Информация о текущей вершине</param>
-        void SetSumToNextVertex(GraphVertexInfo<T> info)
+        /// <param name="vertexInfo"></param>
+        private void SetVertexEdgesWeightSum(GraphVertexInfo<T> vertexInfo)
         {
-            info.IsUnvisited = false;
-            foreach (var e in info.Vertex.Edges)
+            vertexInfo.IsUnvisited = false;
+            
+            foreach (var edge in vertexInfo.Vertex.VertexEdges)
             {
-                var nextInfo = GetVertexInfo(e.ConnectedVertex);
-                var sum = info.EdgesWeightSum + e.EdgeWeight;
-                if (sum < nextInfo.EdgesWeightSum)
-                {
-                    nextInfo.EdgesWeightSum = sum;
-                    nextInfo.PreviousVertex = info.Vertex;
-                }
+                var connectedVertexInfo = GetVertexInfo(edge.ConnectedVertex);
+                
+                var connectedVertexEdgesWeightSum = vertexInfo.EdgesWeightSum + edge.EdgeWeight;
+
+                if (!(connectedVertexEdgesWeightSum < connectedVertexInfo.EdgesWeightSum)) continue;
+                
+                connectedVertexInfo.EdgesWeightSum = connectedVertexEdgesWeightSum;
+                connectedVertexInfo.PreviousVisitedVertex = vertexInfo.Vertex;
             }
         }
 
         /// <summary>
-        /// Формирование пути
+        /// Get path
         /// </summary>
-        /// <param name="startVertex">Начальная вершина</param>
-        /// <param name="endVertex">Конечная вершина</param>
-        /// <returns>Путь</returns>
-        List<GraphVertex<T>> GetPath(GraphVertex<T> startVertex, GraphVertex<T> endVertex)
+        /// <param name="startVertex">Start vertex</param>
+        /// <param name="endVertex">End vertex</param>
+        /// <returns></returns>
+        private List<GraphVertex<T>> GetPath(GraphVertex<T> startVertex, GraphVertex<T> endVertex)
         {
-            List<GraphVertex<T>> path = new List<GraphVertex<T>>();
-            path.Add(endVertex);
+            var path = new List<GraphVertex<T>>
+            {
+                endVertex
+            };
+            
             while (startVertex != endVertex)
             {
-                // добавлен if
-                if (GetVertexInfo(endVertex).PreviousVertex == null)
+                if (GetVertexInfo(endVertex).PreviousVisitedVertex == null)
                 {
                     break;
                 }
 
-                endVertex = GetVertexInfo(endVertex).PreviousVertex;
+                endVertex = GetVertexInfo(endVertex).PreviousVisitedVertex;
                 path.Add(endVertex);
             }
 

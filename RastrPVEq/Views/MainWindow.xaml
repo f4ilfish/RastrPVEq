@@ -11,9 +11,6 @@
         MinWidth="800"
         
         xmlns:vm="clr-namespace:RastrPVEq.ViewModels"
-        xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-        xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-        
         
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"

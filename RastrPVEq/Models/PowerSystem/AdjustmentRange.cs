@@ -1,7 +1,6 @@
 ﻿using System;
-using RastrPVEq.Infrastructure;
 
-namespace RastrPVEq.Models.RastrWin3
+namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
     /// Adjustment range class
@@ -102,6 +101,7 @@ namespace RastrPVEq.Models.RastrWin3
         /// <summary>
         /// Adjustment range class instance constructor
         /// </summary>
+        /// <param name="index">Index</param>
         /// <param name="activePower">Active power</param>
         /// <param name="pqDiagramNumber">PQ diagram number</param>
         /// <param name="minReactivePower">Adjusted minimum reactive power</param>

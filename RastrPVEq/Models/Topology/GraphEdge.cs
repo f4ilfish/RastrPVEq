@@ -1,22 +1,26 @@
 ﻿namespace RastrPVEq.Models.Topology
 {
+    /// <summary>
+    /// Graph edge class
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class GraphEdge<T>
     {
         /// <summary>
-        /// Связанная вершина
+        /// Gets connected vertex
         /// </summary>
         public GraphVertex<T> ConnectedVertex { get; }
 
         /// <summary>
-        /// Вес ребра
+        /// Gets edge weight
         /// </summary>
         public double EdgeWeight { get; }
 
         /// <summary>
-        /// Конструктор
+        /// Graph edge class constructor
         /// </summary>
-        /// <param name="connectedVertex">Связанная вершина</param>
-        /// <param name="weight">Вес ребра</param>
+        /// <param name="connectedVertex">Connected vertex</param>
+        /// <param name="weight">Weight</param>
         public GraphEdge(GraphVertex<T> connectedVertex, double weight)
         {
             ConnectedVertex = connectedVertex;

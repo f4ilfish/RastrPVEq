@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using RastrPVEq.Infrastructure;
 
-namespace RastrPVEq.Models.RastrWin3
+namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
     /// PQ diagram class

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using RastrPVEq.Models;
-using RastrPVEq.Models.RastrWin3;
+using RastrPVEq.Models.PowerSystem;
 using RastrPVEq.Models.Topology;
 using RastrPVEq.ViewModels;
-using RastrPVEq.Views;
 
-namespace RastrPVEq.Infrastructure.Equivalentator
+namespace RastrPVEq.Infrastructure
 {
-    public class ViewModelPreparation
+    /// <summary>
+    /// Equivalentator class
+    /// </summary>
+    public static class Equivalentator
     {
         /// <summary>
         /// Get nodes of equivalence group
@@ -56,37 +54,29 @@ namespace RastrPVEq.Infrastructure.Equivalentator
         /// <param name="nodesOfEquivalenceGroup"></param>
         /// <param name="generators"></param>
         /// <returns></returns>
-        public static List<Generator> GetGeneratorsOfEquvialenceGroup(List<Node> nodesOfEquivalenceGroup,
+        public static List<Generator> GetGeneratorsOfEquivalenceGroup(List<Node> nodesOfEquivalenceGroup,
                                                                       List<Generator> generators)
         {
             var generatorsOfEquivalenceGroup = new List<Generator>();
 
             foreach (var generator in generators)
             {
-                if (generator.GeneratorNode != null)
-                {
-                    var generatorNode = generator.GeneratorNode;
+                if (generator.GeneratorNode == null) continue;
 
-                    if (nodesOfEquivalenceGroup.Contains(generator.GeneratorNode))
-                    {
-                        generatorsOfEquivalenceGroup.Add(generator);
-                    }
-                }
-                else
+                if (nodesOfEquivalenceGroup.Contains(generator.GeneratorNode))
                 {
-                    continue;
-                    //throw new NullReferenceException($"{generator.Name} не привязан к узлу");
+                    generatorsOfEquivalenceGroup.Add(generator);
                 }
             }
 
             return generatorsOfEquivalenceGroup;
         }
 
-        // <summary>
+        /// <summary>
         /// Get Graph Of Equivalence Group
         /// </summary>
-        /// <param name="equivalenceGroupNodes"></param>
-        /// <param name="equivalenceGroupViewModel"></param>
+        /// <param name="equivalenceGroup">Equivalence group</param>
+        /// <param name="nodesOfEquivalenceGroup">Nodes of equivalence group</param>
         /// <returns></returns>
         public static Graph<Node> GetGraphOfEquivalenceGroup(EquivalenceGroupViewModel equivalenceGroup, List<Node> nodesOfEquivalenceGroup)
         {
@@ -110,7 +100,7 @@ namespace RastrPVEq.Infrastructure.Equivalentator
         }
 
         /// <summary>
-        /// Get Equivalence Branch to Generators Power (flowed) method
+        /// Get equivalence branch to generators power (flowed) method
         /// </summary>
         /// <param name="equivalenceNode"></param>
         /// <param name="equivalenceGroup"></param>
@@ -137,10 +127,10 @@ namespace RastrPVEq.Infrastructure.Equivalentator
 
                 if (vertexPath.Count > 1)
                 {
-                    for (int i = 0; i < vertexPath.Count - 1; i++)
+                    for (var i = 0; i < vertexPath.Count - 1; i++)
                     {
-                        var firstNode = vertexPath.ElementAt(i).Data;
-                        var secondNode = vertexPath.ElementAt(i + 1).Data;
+                        var firstNode = vertexPath.ElementAt(i).VertexData;
+                        var secondNode = vertexPath.ElementAt(i + 1).VertexData;
 
                         var branch = FindBranchInEquivalenceGroup(equivalenceGroup, firstNode, secondNode);
 
@@ -150,13 +140,13 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                         }
                         else
                         {
-                            throw new InvalidOperationException("Ветвь в словаре не найдена");
+                            throw new InvalidOperationException($"Group isn't contain {branch.Name}");
                         }
                     }
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Невозможно найти путь");
+                    throw new InvalidOperationException($"Can't find path to {generator.Name}");
 
                 }
             }
@@ -193,7 +183,7 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                 }
             }
 
-            throw new Exception("Нет ветвей с такой парой узлов");
+            throw new Exception("Group isn't contain branch with such nodes");
         }
 
         /// <summary>
@@ -221,7 +211,7 @@ namespace RastrPVEq.Infrastructure.Equivalentator
         /// <param name="generatorsOfEquivalenceGroup"></param>
         /// <param name="equivalenceGroup"></param>
         /// <exception cref="Exception"></exception>
-        public static void GetEquivalentBranches(EquivalenceNodeViewModel equivalenceNode, 
+        public static void GetEquivalentBranches(EquivalenceNodeViewModel equivalenceNode,
                                                  Dictionary<Branch, double> equivalenceBranchToGeneratorsPower,
                                                  List<Generator> generatorsOfEquivalenceGroup,
                                                  EquivalenceGroupViewModel equivalenceGroup)
@@ -235,25 +225,25 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                 double equivalentResistance = 0;
                 double equivalentInductance = 0;
                 double equivalentCapacitance = 0;
-                double equivalentTranformerRatio = 0;
-                int equivalentDistrictNumber = equivalenceNode.NodeElement.DistrictNumber;
-                int equivalentTerritoryNumber = equivalenceNode.NodeElement.TerritoryNumber;
+                double equivalentTransformerRatio = 0;
+                var equivalentDistrictNumber = equivalenceNode.NodeElement.DistrictNumber;
+                var equivalentTerritoryNumber = equivalenceNode.NodeElement.TerritoryNumber;
                 double equivalentAdmissableCurrent = 0;
                 double equivalentAdmissableEquipmentCurrent = 0;
-                
+
                 foreach (var kvpair in branchType)
                 {
                     equivalentResistance += kvpair.Key.Resistance * Math.Pow(kvpair.Value, 2);
                     equivalentInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
                     equivalentCapacitance += kvpair.Key.Capacitance;
-                    equivalentTranformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
+                    equivalentTransformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
                     equivalentAdmissableCurrent += kvpair.Key.AdmissableCurrent;
                     equivalentAdmissableEquipmentCurrent += kvpair.Key.EquipmentAdmissableCurrent;
                 }
 
                 equivalentResistance /= Math.Pow(totalGeneratorsPower, 2);
                 equivalentInductance /= Math.Pow(totalGeneratorsPower, 2);
-                equivalentTranformerRatio /= totalGeneratorsPower;
+                equivalentTransformerRatio /= totalGeneratorsPower;
 
                 var equivalentBranchName = "Эквивалент";
 
@@ -262,74 +252,124 @@ namespace RastrPVEq.Infrastructure.Equivalentator
                 var equivalentBranch = new Branch(branchType.Key,
                                                   $"{equivalentBranchName}",
                                                   equivalentResistance,
-                                                  equivalentInductance, 
+                                                  equivalentInductance,
                                                   equivalentCapacitance,
-                                                  equivalentTranformerRatio,
-                                                  equivalentDistrictNumber, 
-                                                  equivalentTerritoryNumber, 
-                                                  equivalentAdmissableCurrent, 
+                                                  equivalentTransformerRatio,
+                                                  equivalentDistrictNumber,
+                                                  equivalentTerritoryNumber,
+                                                  equivalentAdmissableCurrent,
                                                   equivalentAdmissableEquipmentCurrent);
 
                 equivalenceGroup.EquivalentBranches.Add(equivalentBranch);
             }
         }
 
-        public static void GetIntermedietEquivalentNode(EquivalenceNodeViewModel equivalenceNode,
+        /// <summary>
+        /// Get intermediate equivalence node
+        /// </summary>
+        /// <param name="equivalenceNode"></param>
+        /// <param name="equivalenceGroup"></param>
+        public static void GetIntermediateEquivalentNode(EquivalenceNodeViewModel equivalenceNode,
                                                         EquivalenceGroupViewModel equivalenceGroup)
         {
             foreach (var node in equivalenceGroup.EquivalenceNodes)
             {
-                if (node != equivalenceNode.NodeElement)
-                {
-                    var equivalentNodeVoltage = node.RatedVoltage;
+                if (node == equivalenceNode.NodeElement) continue;
 
-                    if (equivalentNodeVoltage == equivalenceNode.NodeElement.RatedVoltage)
-                    {
-                        var equivalentNodeNumber = node.Number;
-                        var equivalentNodeName = $"{equivalenceGroup.Name} : экв. СШ {equivalentNodeVoltage} кВ";
-                        var equivalentDistrictNumber = node.DistrictNumber;
-                        var equivalentTerritoryNumber = node.TerritoryNumber;
+                var equivalentNodeVoltage = node.RatedVoltage;
 
-                        equivalenceGroup.IntermedietEquivalentNode = new Node(equivalentNodeNumber, 
-                                                                              equivalentNodeName, 
-                                                                              equivalentNodeVoltage, 
-                                                                              equivalentDistrictNumber, 
-                                                                              equivalentTerritoryNumber);
-                    }
-                }
+                if (equivalentNodeVoltage != equivalenceNode.NodeElement.RatedVoltage) continue;
+
+                var equivalentNodeNumber = node.Number;
+                var equivalentNodeName = $"{equivalenceGroup.Name} : экв. СШ {equivalentNodeVoltage} кВ";
+                var equivalentDistrictNumber = node.DistrictNumber;
+                var equivalentTerritoryNumber = node.TerritoryNumber;
+
+                equivalenceGroup.IntermedieteEquivalentNode = new Node(equivalentNodeNumber,
+                    equivalentNodeName,
+                    equivalentNodeVoltage,
+                    equivalentDistrictNumber,
+                    equivalentTerritoryNumber);
             }
         }
 
+        /// <summary>
+        /// Get Generator Equivalent Node
+        /// </summary>
+        /// <param name="equivalenceGroup"></param>
         public static void GetGeneratorEquivalentNode(EquivalenceGroupViewModel equivalenceGroup)
         {
             var generatorNode = equivalenceGroup.EquivalenceGenerators.First().GeneratorNode;
 
             var equivalentGeneratorNodeName = $"{equivalenceGroup.Name} : экв. СШ {generatorNode.RatedVoltage} кВ";
 
-            equivalenceGroup.GeneratorEquivalentNode =  new Node(generatorNode.Number, 
-                                                                 equivalentGeneratorNodeName, 
-                                                                 generatorNode.RatedVoltage, 
-                                                                 generatorNode.DistrictNumber, 
+            equivalenceGroup.GeneratorEquivalentNode = new Node(generatorNode.Number,
+                                                                 equivalentGeneratorNodeName,
+                                                                 generatorNode.RatedVoltage,
+                                                                 generatorNode.DistrictNumber,
                                                                  generatorNode.TerritoryNumber);
         }
 
-        public static void SetEquivalentNodeToEquivalentBranch(EquivalenceNodeViewModel equivalenceNode, 
+        /// <summary>
+        /// Set Equivalent Node To Equivalent Branch
+        /// </summary>
+        /// <param name="equivalenceNode"></param>
+        /// <param name="equivalenceGroup"></param>
+        public static void SetEquivalentNodeToEquivalentBranch(EquivalenceNodeViewModel equivalenceNode,
                                                                EquivalenceGroupViewModel equivalenceGroup)
         {
             foreach (var equivalentBranch in equivalenceGroup.EquivalentBranches)
             {
-                if (equivalentBranch.BranchType is BranchType.Line) 
+                switch (equivalentBranch.BranchType)
                 {
-                    equivalentBranch.BranchStartNode = equivalenceNode.NodeElement;
-                    equivalentBranch.BranchEndNode = equivalenceGroup.IntermedietEquivalentNode;
-                }
-
-                if (equivalentBranch.BranchType is BranchType.Transformer)
-                {
-                    equivalentBranch.BranchStartNode = equivalenceGroup.IntermedietEquivalentNode;
-                    equivalentBranch.BranchEndNode = equivalenceGroup.GeneratorEquivalentNode;
+                    case BranchType.Line:
+                        equivalentBranch.BranchStartNode = equivalenceNode.NodeElement;
+                        equivalentBranch.BranchEndNode = equivalenceGroup.IntermedieteEquivalentNode;
+                        break;
+                    case BranchType.Transformer:
+                        equivalentBranch.BranchStartNode = equivalenceGroup.IntermedieteEquivalentNode;
+                        equivalentBranch.BranchEndNode = equivalenceGroup.GeneratorEquivalentNode;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unexpected branch type");
                 }
             }
+        }
+
+        /// <summary>
+        /// Check is has equivalence branches duplicates
+        /// </summary>
+        /// <param name="equivalenceGroup">Equivalence group</param>
+        /// <returns></returns>
+        public static bool IsHasEquivalenceBranchesDuplicates(EquivalenceGroupViewModel equivalenceGroup)
+        {
+            var equivalenceBranches = equivalenceGroup.EquivalenceBranches;
+
+            var totalBranches = equivalenceBranches.Count();
+            var uniqueBranches = equivalenceBranches.Distinct().Count();
+
+            return totalBranches != uniqueBranches;
+        }
+
+        /// <summary>
+        /// Check one generators rated voltage level
+        /// </summary>
+        /// <param name="generatorsOfEquivalenceGroup">Generators of equivalence group</param>
+        /// <returns></returns>
+        public static bool IsOneGeneratorsRatedVoltageLevel(List<Generator> generatorsOfEquivalenceGroup)
+        {
+            var generatorsRatedVoltages = new List<double>();
+
+            foreach (var generator in generatorsOfEquivalenceGroup)
+            {
+                var ratedVoltage = generator.GeneratorNode.RatedVoltage;
+
+                generatorsRatedVoltages.Add(ratedVoltage);
+            }
+
+            var uniqueGeneratorsRatedVoltages = generatorsRatedVoltages.Distinct().Count();
+
+            return uniqueGeneratorsRatedVoltages == 1;
         }
     }
 }

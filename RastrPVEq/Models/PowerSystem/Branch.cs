@@ -1,6 +1,4 @@
-﻿using RastrPVEq.Infrastructure;
-
-namespace RastrPVEq.Models.RastrWin3
+﻿namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
     /// Branch class
@@ -206,7 +204,7 @@ namespace RastrPVEq.Models.RastrWin3
         }
 
         /// <summary>
-        /// Branch class instance cunstructor (for downloading)
+        /// Branch class instance constructor (for downloading)
         /// </summary>
         /// <param name="index"></param>
         /// <param name="branchType"></param>
@@ -245,7 +243,7 @@ namespace RastrPVEq.Models.RastrWin3
         }
 
         /// <summary>
-        /// Branch class instance cunstructor (for equivalent)
+        /// Branch class instance constructor (for equivalent)
         /// </summary>
         /// <param name="branchType"></param>
         /// <param name="name"></param>

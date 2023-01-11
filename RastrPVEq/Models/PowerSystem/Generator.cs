@@ -1,6 +1,4 @@
-﻿using RastrPVEq.Infrastructure;
-
-namespace RastrPVEq.Models.RastrWin3
+﻿namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
     /// Generator class
@@ -94,7 +92,6 @@ namespace RastrPVEq.Models.RastrWin3
         /// Generator class instance constructor
         /// </summary>
         /// <param name="index">Index</param>
-        /// <param name="generatorStatus">Status</param>
         /// <param name="number">Number</param>
         /// <param name="name">Name</param>
         /// <param name="maxActivePower">Adjusted max active power</param>

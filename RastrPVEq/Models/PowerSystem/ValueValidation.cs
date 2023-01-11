@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace RastrPVEq.Infrastructure
+namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
-    /// ValueValidation class
+    /// Value validation class
     /// </summary>
     public static class ValueValidation
     {
@@ -18,14 +18,14 @@ namespace RastrPVEq.Infrastructure
         }
 
         /// <summary>
-        /// Is positive consraint
+        /// Is positive constraint
         /// </summary>
         /// <param name="value">Input value</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static void IsPositive(double value)
         {
             if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value),
-                                                                  "Value must positive");
+                                                                  "Value must be positive");
         }
 
         /// <summary>

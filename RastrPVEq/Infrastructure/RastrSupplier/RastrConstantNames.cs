@@ -1,13 +1,12 @@
-﻿namespace RastrPVEq.Infrastructure.RastrWin3
+﻿namespace RastrPVEq.Infrastructure.RastrSupplier
 {
     /// <summary>
-    /// RastrNames class
+    /// RastrConstantNames class
     /// </summary>
-    public static class RastrNames
+    public static class RastrConstantNames
     {
         #region Table "Узлы" for Узлы
         public const string NodeTable = "node";
-
         public const string NodeNumberColumn = "ny";
         public const string NodeNameColumn = "name";
         public const string NodeRatedVoltageColumn = "uhom";
@@ -17,7 +16,6 @@
 
         #region Table "Ветви" for Branch
         public const string BranchTable = "vetv";
-
         public const string BranchTypeColumn = "tip";
         public const string BranchStatusColumn = "sta";
         public const string BranchStartNodeColumn = "ip";
@@ -35,7 +33,6 @@
 
         #region Table "PQ диаграммы" for AdjustmentRange
         public const string AdjustmentRangeTable = "graphik2";
-
         public const string AdjustmentRangeNumberColumn = "Num";
         public const string AdjustmentRangeActivePowerColumn = "P";
         public const string AdjustmentRangeMinimumReactivePowerColumn = "Qmin";
@@ -44,7 +41,6 @@
 
         #region Table "Генераторы УР" for Generator
         public const string GeneratorTable = "Generator";
-
         public const string GeneratorStatusColumn = "sta";
         public const string GeneratorNumberColumn = "Num";
         public const string GeneratorNameColumn = "Name";

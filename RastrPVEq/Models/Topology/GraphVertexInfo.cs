@@ -1,37 +1,41 @@
 ﻿namespace RastrPVEq.Models.Topology
 {
+    /// <summary>
+    /// Graph vertex info class
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class GraphVertexInfo<T>
     {
         /// <summary>
-        /// Вершина
+        /// Vertex
         /// </summary>
-        public GraphVertex<T> Vertex { get; set; }
+        public GraphVertex<T> Vertex { get;}
 
         /// <summary>
-        /// Не посещенная вершина
+        /// Gets is unvisited 
         /// </summary>
         public bool IsUnvisited { get; set; }
 
         /// <summary>
-        /// Сумма весов ребер
+        /// Gets or sets edges weight sum
         /// </summary>
         public double EdgesWeightSum { get; set; }
 
         /// <summary>
-        /// Предыдущая вершина
+        /// Gets or sets previous visited vertex
         /// </summary>
-        public GraphVertex<T> PreviousVertex { get; set; }
+        public GraphVertex<T> PreviousVisitedVertex { get; set; }
 
         /// <summary>
-        /// Конструктор
+        /// Graph vertex info class constructor
         /// </summary>
-        /// <param name="vertex">Вершина</param>
+        /// <param name="vertex">Vertex</param>
         public GraphVertexInfo(GraphVertex<T> vertex)
         {
             Vertex = vertex;
             IsUnvisited = true;
             EdgesWeightSum = double.MaxValue;
-            PreviousVertex = null;
+            PreviousVisitedVertex = null;
         }
     }
 }

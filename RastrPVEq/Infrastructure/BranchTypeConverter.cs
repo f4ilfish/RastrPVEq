@@ -1,44 +1,52 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using RastrPVEq.Models.RastrWin3;
+using RastrPVEq.Models.PowerSystem;
 
 namespace RastrPVEq.Infrastructure
 {
+    /// <summary>
+    /// BranchTypeConverter class
+    /// </summary>
     [ValueConversion(typeof(BranchType), typeof(string))]
-    class BranchTypeConverter : IValueConverter
+    internal class BranchTypeConverter : IValueConverter
     {
+        /// <summary>
+        /// Convert
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="targetType">Target type</param>
+        /// <param name="parameter">Parameter</param>
+        /// <param name="culture">Culture</param>
+        /// <returns></returns>
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is BranchType.Line)
+            return value switch
             {
-                return "Л";
-            }
-            else if (value is BranchType.Transformer)
-            {
-                return "ТР";
-            }
-            else
-            {
-                return "?";
-            }
+                BranchType.Line => "Л",
+                BranchType.Transformer => "ТР",
+                _ => "?"
+            };
         }
 
+        /// <summary>
+        /// Convert back
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="targetType">Target type</param>
+        /// <param name="parameter">Parameter</param>
+        /// <param name="culture">Culture</param>
+        /// <returns></returns>
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var stringValue = value.ToString();
-            if (stringValue == "Л")
+
+            return stringValue switch
             {
-                return BranchType.Line;
-            }
-            else if (stringValue == "ТР")
-            {
-                return BranchType.Transformer;
-            }
-            else
-            {
-                return BranchType.Line;
-            }
+                "Л" => BranchType.Line,
+                "ТР" => BranchType.Transformer,
+                _ => BranchType.Line
+            };
         }
     }
 }

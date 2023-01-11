@@ -2,41 +2,43 @@
 
 namespace RastrPVEq.Models.Topology
 {
+    /// <summary>
+    /// Graph vertex class
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class GraphVertex<T>
     {
         /// <summary>
-        /// Данные по вершине
+        /// Gets vertex data
         /// </summary>
-        public T Data { get; }
+        public T VertexData { get; }
 
         /// <summary>
-        /// Список ребер
+        /// Gets vertex edges
         /// </summary>
-        public List<GraphEdge<T>> Edges { get; }
-
-        public GraphVertex() { }
+        public List<GraphEdge<T>> VertexEdges { get; }
 
         /// <summary>
-        /// Конструктор
+        /// Graph vertex class constructor
         /// </summary>
-        /// <param name="vertexName">Название вершины</param>
-        public GraphVertex(T vertex)
+        /// <param name="vertexData">Vertex data</param>
+        public GraphVertex(T vertexData)
         {
-            Data = vertex;
-            Edges = new List<GraphEdge<T>>();
+            VertexData = vertexData;
+            VertexEdges = new List<GraphEdge<T>>();
         }
 
         /// <summary>
-        /// Добавить ребро
+        /// Add edge
         /// </summary>
-        /// <param name="newEdge">Ребро</param>
-        public void AddEdge(GraphEdge<T> newEdge)
+        /// <param name="edge">Edge</param>
+        public void AddEdge(GraphEdge<T> edge)
         {
-            Edges.Add(newEdge);
+            VertexEdges.Add(edge);
         }
 
         /// <summary>
-        /// Добавить ребро
+        /// Add edge
         /// </summary>
         /// <param name="vertex">Вершина</param>
         /// <param name="edgeWeight">Вес</param>

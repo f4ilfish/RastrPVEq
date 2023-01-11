@@ -1,6 +1,4 @@
-﻿using RastrPVEq.Infrastructure;
-
-namespace RastrPVEq.Models.RastrWin3
+﻿namespace RastrPVEq.Models.PowerSystem
 {
     /// <summary>
     /// Node class
