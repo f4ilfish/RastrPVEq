@@ -15,7 +15,7 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// <summary>
         /// Rastr com-object field
         /// </summary>
-        private static readonly Rastr _rastr = new();
+        private static readonly Rastr _rastr = new Rastr();
 
         /// <summary>
         /// Load file by template
@@ -73,7 +73,7 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         private static void CheckFileExistence(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
-                throw new ArgumentException("File path doesn't inputed");
+                throw new ArgumentException("File path doesn't inputted");
 
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"File on {filePath} path doesn't exist");
@@ -161,7 +161,7 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
 
             ITable nodesTable = _rastr.Tables.Item(RastrConstantNames.NodeTable);
 
-            for (int i = 0; i < GetNodesCount(); i++)
+            for (var i = 0; i < GetNodesCount(); i++)
             {
                 nodes.Add(GetNodeByIndex(i, nodesTable));
             }
@@ -269,12 +269,12 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
                                                                       RastrConstantNames.BranchTerritoryNumberColumn,
                                                                       branchIndex);
 
-            var branchAdmissableCurrent = GetElementParameterValue<double>(branchesTable,
-                                                                           RastrConstantNames.BranchAdmissableCurrentColumn,
+            var branchAdmissibleCurrent = GetElementParameterValue<double>(branchesTable,
+                                                                           RastrConstantNames.BranchAdmissibleCurrentColumn,
                                                                            branchIndex);
 
-            var branchAdmissableEquipmentCurrent = GetElementParameterValue<double>(branchesTable,
-                                                                                    RastrConstantNames.BranchEquipmentAdmissableCurrentColumn,
+            var branchAdmissibleEquipmentCurrent = GetElementParameterValue<double>(branchesTable,
+                                                                                    RastrConstantNames.BranchEquipmentAdmissibleCurrentColumn,
                                                                                     branchIndex);
 
             return new Branch(branchIndex,
@@ -286,8 +286,8 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
                               branchTransformationRatio,
                               branchDistrictNumber, 
                               branchTerritoryNumber, 
-                              branchAdmissableCurrent, 
-                              branchAdmissableEquipmentCurrent);
+                              branchAdmissibleCurrent, 
+                              branchAdmissibleEquipmentCurrent);
         }
 
         /// <summary>
@@ -360,8 +360,8 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
             SetElementParameterValue(branchTable, RastrConstantNames.BranchTransformationRatioColumn, addedRowIndex, branch.TransformationRatio);
             SetElementParameterValue(branchTable, RastrConstantNames.BranchDistrictNumberColumn, addedRowIndex, branch.DistrictNumber);
             SetElementParameterValue(branchTable, RastrConstantNames.BranchTerritoryNumberColumn, addedRowIndex, branch.TerritoryNumber);
-            SetElementParameterValue(branchTable, RastrConstantNames.BranchAdmissableCurrentColumn, addedRowIndex, branch.AdmissableCurrent);
-            SetElementParameterValue(branchTable, RastrConstantNames.BranchEquipmentAdmissableCurrentColumn, addedRowIndex, branch.EquipmentAdmissableCurrent);
+            SetElementParameterValue(branchTable, RastrConstantNames.BranchAdmissibleCurrentColumn, addedRowIndex, branch.AdmissableCurrent);
+            SetElementParameterValue(branchTable, RastrConstantNames.BranchEquipmentAdmissibleCurrentColumn, addedRowIndex, branch.EquipmentAdmissableCurrent);
         }
 
         /// <summary>
@@ -407,89 +407,6 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         }
 
         /// <summary>
-        /// Get adjustment range
-        /// </summary>
-        /// <param name="adjustmentRangeIndex">Index of adjustment range in table</param>
-        /// <param name="adjustmentRangeTable">Adjustment range table</param>
-        /// <returns></returns>
-        private static AdjustmentRange GetAdjustmentRangeByIndex(int adjustmentRangeIndex, 
-                                                                 ITable adjustmentRangeTable)
-        {
-            var rangeNumber = GetElementParameterValue<int>(adjustmentRangeTable,
-                                                            RastrConstantNames.AdjustmentRangeNumberColumn,
-                                                            adjustmentRangeIndex);
-
-            var rangeActivePower = GetElementParameterValue<double>(adjustmentRangeTable,
-                                                                    RastrConstantNames.AdjustmentRangeActivePowerColumn,
-                                                                    adjustmentRangeIndex);
-
-            var rangeMinimumReactivePower = GetElementParameterValue<double>(adjustmentRangeTable,
-                                                                             RastrConstantNames.AdjustmentRangeMinimumReactivePowerColumn,
-                                                                             adjustmentRangeIndex);
-
-            var rangeMaximumReactivePower = GetElementParameterValue<double>(adjustmentRangeTable,
-                                                                             RastrConstantNames.AdjustmentRangeMaximumReactivePowerColumn,
-                                                                             adjustmentRangeIndex);
-
-            return new AdjustmentRange(adjustmentRangeIndex,
-                                       rangeNumber,
-                                       rangeActivePower,
-                                       rangeMinimumReactivePower,
-                                       rangeMaximumReactivePower);
-        }
-
-        /// <summary>
-        /// Get adjustment ranges
-        /// </summary>
-        /// <returns></returns>
-        private static List<AdjustmentRange> GetAdjustmentRanges()
-        {
-            var adjustmentRanges = new List<AdjustmentRange>();
-
-            ITable adjustmentRangesTable = _rastr.Tables.Item(RastrConstantNames.AdjustmentRangeTable);
-
-            for (var i = 0; i < GetAdjustmentRangesCount(); i++)
-            {
-                adjustmentRanges.Add(GetAdjustmentRangeByIndex(i, adjustmentRangesTable));
-            }
-
-            return adjustmentRanges;
-        }
-
-        /// <summary>
-        /// Get adjustment ranges count
-        /// </summary>
-        /// <returns></returns>
-        public static int GetAdjustmentRangesCount()
-        {
-            ITable adjustmentRangesTable = _rastr.Tables.Item(RastrConstantNames.AdjustmentRangeTable);
-            return adjustmentRangesTable.Count;
-        }
-
-        /// <summary>
-        /// Get PQ diagrams
-        /// </summary>
-        /// <returns></returns>
-        public static List<PQDiagram> GetPQDiagrams()
-        {
-            var adjustmentRanges = GetAdjustmentRanges();
-
-            var pqDiagramsDict = adjustmentRanges.GroupBy(r => r.PQDiagramNumber)
-                                   .ToDictionary(g => g.Key, g => g.ToList());
-
-            var pqDiagrams = new List<PQDiagram>();
-
-            foreach (var pqDiagram in pqDiagramsDict)
-            {
-                var pqDiagramNumber = pqDiagram.Key;
-                var ranges = pqDiagram.Value;
-                pqDiagrams.Add(new PQDiagram(pqDiagramNumber, ranges));
-            }
-
-            return pqDiagrams;
-        }
-
-        /// <summary>
         /// Get generator
         /// </summary>
         /// <param name="generatorIndex">Index of generator in table</param>
@@ -505,13 +422,18 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
                                                                  RastrConstantNames.GeneratorNameColumn,
                                                                  generatorIndex);
 
+            var generatorPQDiagramNumber = GetElementParameterValue<int>(generatorsTable, 
+                                                                         RastrConstantNames.GeneratorPQDiagramNumberColumn,
+                                                                         generatorIndex);
+
             var generatorMaxActivePower = GetElementParameterValue<double>(generatorsTable,
                                                                            RastrConstantNames.GeneratorMaxActivePowerColumn,
                                                                            generatorIndex);
 
             return new Generator(generatorIndex,
                                  generatorNumber,
-                                 generatorName,
+                                 generatorName, 
+                                 generatorPQDiagramNumber,
                                  generatorMaxActivePower);
         }
 
@@ -519,12 +441,10 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// Get generators
         /// </summary>
         /// <param name="nodes">List of nodes</param>
-        /// <param name="pqDiagrams">List of PQ diagrams</param>
         /// <returns></returns>
-        public static List<Generator> GetGenerators(List<Node> nodes, List<PQDiagram> pqDiagrams)
+        public static List<Generator> GetGenerators(List<Node> nodes)
         {
             var nodesDict = nodes.ToDictionary(n => n.Number, n => n);
-            var pqDiagramsDict = pqDiagrams.ToDictionary(d => d.Number, d => d);
 
             var generators = new List<Generator>();
 
@@ -538,18 +458,9 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
                                                                         RastrConstantNames.GeneratorNodeNumberColumn,
                                                                         i);
 
-                var generatorPQDiagramNumber = GetElementParameterValue<int>(generatorsTable,
-                                                                            RastrConstantNames.GeneratorPQDiagramNumberColumn,
-                                                                            i);
-
                 if (nodesDict.ContainsKey(generatorNodeNumber))
                 {
                     generator.GeneratorNode = nodesDict[generatorNodeNumber];
-                }
-
-                if (pqDiagramsDict.ContainsKey(generatorPQDiagramNumber))
-                {
-                    generator.GeneratorPQDiagram = pqDiagramsDict[generatorPQDiagramNumber];
                 }
 
                 generators.Add(generator);

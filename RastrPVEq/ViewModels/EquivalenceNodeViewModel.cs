@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using RastrPVEq.Models.PowerSystem;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace RastrPVEq.ViewModels
 {
@@ -19,10 +17,10 @@ namespace RastrPVEq.ViewModels
         public Node NodeElement { get; set; }
 
         /// <summary>
-        /// Equvalence group collection
+        /// Equivalence group collection
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<EquivalenceGroupViewModel> _equivalenceGroups = new();
+        private ObservableCollection<EquivalenceGroupViewModel> _equivalenceGroups;
 
         /// <summary>
         /// Equivalence node view model class constructor
@@ -31,6 +29,7 @@ namespace RastrPVEq.ViewModels
         public EquivalenceNodeViewModel(Node node)
         {
             NodeElement = node;
+            EquivalenceGroups = new ObservableCollection<EquivalenceGroupViewModel>();
         }
     }
 }

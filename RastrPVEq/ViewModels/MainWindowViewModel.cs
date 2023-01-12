@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -23,31 +24,25 @@ namespace RastrPVEq.ViewModels
         /// Nodes
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<Node> _nodes = new();
+        private ObservableCollection<Node> _nodes;
 
         /// <summary>
         /// Branches
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<Branch> _branches = new();
+        private ObservableCollection<Branch> _branches;
 
         /// <summary>
         /// Generators
         /// </summary>
         [ObservableProperty]
-        private List<Generator> _generators = new();
-
-        /// <summary>
-        /// PQ Diagrams
-        /// </summary>
-        [ObservableProperty]
-        private List<PQDiagram> _pqDiagrams = new();
+        private List<Generator> _generators;
 
         /// <summary>
         /// Equivalence Nodes
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodes = new();
+        private ObservableCollection<EquivalenceNodeViewModel> _equivalenceNodes;
 
         /// <summary>
         /// Selected Node
@@ -80,6 +75,13 @@ namespace RastrPVEq.ViewModels
         private Branch _selectedEquivalenceBranch;
 
         /// <summary>
+        /// Is file downloading
+        /// </summary>
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CancelDownloadingFileCommand))]
+        private bool _isFileDownloading;
+
+        /// <summary>
         /// Is file downloaded
         /// </summary>
         [ObservableProperty]
@@ -101,20 +103,24 @@ namespace RastrPVEq.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(CalculateEquivalentCommand))]
         [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
-        private ObservableCollection<Exception> _validateErrors = new();
+        private ObservableCollection<Exception> _validateErrors;
 
         /// <summary>
         /// Is calculated equivalent
         /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveFileCommand))]
-        private bool _isCalculatedEquivalent = false;
+        private bool _isCalculatedEquivalent;
 
         [ObservableProperty]
         private double _maxStatusBarValue;
 
         [ObservableProperty]
         private double _currentStatusBarValue;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(DownloadFileCommand))]
+        private CancellationToken _token;
 
         /// <summary>
         /// Download file command
@@ -134,45 +140,38 @@ namespace RastrPVEq.ViewModels
 
             try
             {
-                var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-                const string resourcePath = "Properties\\режим.rg2";
-                var templatePath = $"{baseDirectoryPath}{resourcePath}";
+                var templatePath = $"{AppDomain.CurrentDomain.BaseDirectory}Properties\\режим.rg2";
 
                 RastrSupplier.LoadFileByTemplate(openFileDialog.FileName, templatePath);
-                
-                /// костыль для статус бара
-                var nodesCount = RastrSupplier.GetNodesCount();
-                var branchesCount = RastrSupplier.GetBranchesCount();
-                var adjustmentRangesCount = RastrSupplier.GetAdjustmentRangesCount();
-                var generatorsCount = RastrSupplier.GetGeneratorsCount();
-
-                MaxStatusBarValue += nodesCount;
-                MaxStatusBarValue += branchesCount;
-                MaxStatusBarValue += adjustmentRangesCount;
-                MaxStatusBarValue += generatorsCount;
-
-                CurrentStatusBarValue = 0;
 
                 /// костыль на оповещение об изменениях в модели
                 IsFileDownloaded = false;
                 IsModelChanged = true;
                 IsCalculatedEquivalent = false;
-                
+                IsFileDownloading = true;
+
+                /// костыль для статус бара
+                var nodesCount = RastrSupplier.GetNodesCount();
+                var branchesCount = RastrSupplier.GetBranchesCount();
+                var generatorsCount = RastrSupplier.GetGeneratorsCount();
+
+                MaxStatusBarValue += nodesCount;
+                MaxStatusBarValue += branchesCount;
+                MaxStatusBarValue += generatorsCount;
+
+                CurrentStatusBarValue = 0;
+
                 /// очистка перед загрузкой
                 EquivalenceNodes.Clear();
                 
-                var nodesTask = RastrProviderAsync.GetNodesAsync();
-                var pqDiagramsTask = RastrProviderAsync.GetPQDiagramsAsync();
-
+                var nodesTask = RastrProviderAsync.GetNodesAsync(Token);
+                
                 await nodesTask;
                 Nodes = new ObservableCollection<Node>(nodesTask.Result);
                 CurrentStatusBarValue += nodesCount;
-                var branchesTask = RastrProviderAsync.GetBranchesAsync(Nodes.ToList());
-
-                await pqDiagramsTask;
-                PqDiagrams = pqDiagramsTask.Result;
-                CurrentStatusBarValue += adjustmentRangesCount;
-                var generatorsTask = RastrProviderAsync.GetGeneratorsAsync(Nodes.ToList(), PqDiagrams);
+                
+                var branchesTask = RastrProviderAsync.GetBranchesAsync(Nodes.ToList(), Token);
+                var generatorsTask = RastrProviderAsync.GetGeneratorsAsync(Nodes.ToList(), Token);
 
                 await generatorsTask;
                 Generators = generatorsTask.Result;
@@ -190,7 +189,30 @@ namespace RastrPVEq.ViewModels
             MaxStatusBarValue = 0;
             CurrentStatusBarValue = 0;
             IsFileDownloaded = true;
+            IsFileDownloading = false;
         }
+
+        /// <summary>
+        /// Cancel downloading file
+        /// </summary>
+        [RelayCommand(CanExecute = nameof(CanCancelDownloadingFile))]
+        private void CancelDownloadingFile()
+        {
+            var cancelTokenSource = new CancellationTokenSource();
+            Token = cancelTokenSource.Token;
+            cancelTokenSource.Cancel();
+            //Token.ThrowIfCancellationRequested();
+        }
+
+        /// <summary>
+        /// Can cancel downloading file
+        /// </summary>
+        /// <returns></returns>
+        private bool CanCancelDownloadingFile()
+        {
+            return IsFileDownloading;
+        }
+
 
         /// <summary>
         /// Save file command
@@ -232,7 +254,7 @@ namespace RastrPVEq.ViewModels
 
                         var nodesToAdd = new List<Node>
                         {
-                            equivalenceGroup.IntermedieteEquivalentNode,
+                            equivalenceGroup.IntermediateEquivalentNode,
                             equivalenceGroup.GeneratorEquivalentNode
                         };
 
@@ -251,10 +273,8 @@ namespace RastrPVEq.ViewModels
                     }
                 }
 
-                var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-                const string resourcePath = "Properties\\режим.rg2";
-                var templatePath = $"{baseDirectoryPath}{resourcePath}";
-                
+                var templatePath = $"{AppDomain.CurrentDomain.BaseDirectory}Properties\\режим.rg2";
+
                 RastrSupplier.SaveFileByTemplate(saveFileDialog.FileName, templatePath);
 
                 CurrentStatusBarValue = 100;
@@ -484,23 +504,23 @@ namespace RastrPVEq.ViewModels
                                             if (!nodesPath.Contains(equivalenceNode.NodeElement)
                                                 || !nodesPath.Contains(generator.GeneratorNode))
                                             {
-                                                ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствует связь узла с генератором (в узле {generatorNodeNumber} {generatorNodeName})"));
+                                                ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствует связь узла с генератором (в узле {generatorNodeNumber} {generatorNodeName})"));
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Генераторы имеют разный Uном"));
+                                        ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Генераторы имеют разный Uном"));
                                     }
                                 }
                                 else
                                 {
-                                    ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Группа не содержит генераторов"));
+                                    ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Группа не содержит генераторов"));
                                 }
                             }
                             else
                             {
-                                ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствуют ветви"));
+                                ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствуют ветви"));
                             }
 
                             CurrentStatusBarValue += groupValueIncrement;
@@ -508,7 +528,7 @@ namespace RastrPVEq.ViewModels
                     }
                     else
                     {
-                        ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | Отсутствуют группы"));
+                        ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | Отсутствуют группы"));
                     }
                 }
 
@@ -516,11 +536,12 @@ namespace RastrPVEq.ViewModels
                 if (ValidateErrors.Count == 0)
                 {
                     IsModelChanged = false;
+                    MessageBox.Show("Модель успешно подготовлена к эквивалентированию");
                 }
             }
             else
             {
-                MessageBox.Show("Отсутствуют узлы эквивалентирования");
+                ValidateErrors.Add(new InvalidOperationException($"Узлы-вершины для эквивалентирования не заданы"));
             }
 
             CurrentStatusBarValue = 100;
@@ -584,6 +605,7 @@ namespace RastrPVEq.ViewModels
 
             CurrentStatusBarValue = 100;
             IsCalculatedEquivalent = true;
+            MessageBox.Show("Эквивалентирование выполнено");
         }
 
         /// <summary>
@@ -599,6 +621,13 @@ namespace RastrPVEq.ViewModels
         /// <summary>
         /// Main Window View Model default constructor
         /// </summary>
-        public MainWindowViewModel() { }
+        public MainWindowViewModel()
+        {
+            Nodes = new ObservableCollection<Node>();
+            Branches = new ObservableCollection<Branch>();
+            Generators = new List<Generator>();
+            EquivalenceNodes = new ObservableCollection<EquivalenceNodeViewModel>();
+            ValidateErrors = new ObservableCollection<Exception>();
+        }
     }
 }

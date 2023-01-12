@@ -60,6 +60,17 @@
                     </MenuItem.Header>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Command="{Binding Path=CancelDownloadingFileCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Cancel" 
+                                                     HorizontalAlignment="Center" 
+                                                     Width="20" 
+                                                     Height="20"/>
+                            <TextBlock Text="Отменить" Margin="10, 0, 0, 0"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
                 <MenuItem Command="{Binding Path=CloseApplicationCommand}">
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -92,18 +103,6 @@
                                                            Width="20" 
                                                            Height="20"/>
                             <TextBlock Text="Выполнить" Margin="10, 0, 0, 0"/>
-                        </StackPanel>
-                    </MenuItem.Header>
-                </MenuItem>
-                <Separator/>
-                <MenuItem>
-                    <MenuItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="CloseCircle" 
-                                                           HorizontalAlignment="Center" 
-                                                           Width="20" 
-                                                           Height="20"/>
-                            <TextBlock Text="Прервать" Margin="10, 0, 0, 0"/>
                         </StackPanel>
                     </MenuItem.Header>
                 </MenuItem>

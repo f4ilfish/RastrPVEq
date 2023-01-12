@@ -82,11 +82,24 @@
                 _maxActivePower = value;
             }
         }
+        
+        /// <summary>
+        /// PQ diagram number
+        /// </summary>
+        private int _pQDiagramNumber;
 
         /// <summary>
-        /// Gets or sets generator PQ diagram
+        /// Gets or sets PQ diagram number
         /// </summary>
-        public PQDiagram? GeneratorPQDiagram { get; set; }
+        public int PQDiagramNumber
+        {
+            get => _pQDiagramNumber;
+            private set
+            {
+                ValueValidation.IsZeroOrPositive(value);
+                _pQDiagramNumber = value;
+            }
+        }
 
         /// <summary>
         /// Generator class instance constructor
@@ -94,15 +107,18 @@
         /// <param name="index">Index</param>
         /// <param name="number">Number</param>
         /// <param name="name">Name</param>
+        /// <param name="pQDiagramNumber">PQ diagram number</param>
         /// <param name="maxActivePower">Adjusted max active power</param>
         public Generator(int index,
                          int number,
                          string name,
+                         int pQDiagramNumber,
                          double maxActivePower)
         {
             Index = index;
             Number = number;
             Name = name;
+            PQDiagramNumber = pQDiagramNumber;
             MaxActivePower = maxActivePower;
         }
     }

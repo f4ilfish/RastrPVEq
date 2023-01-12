@@ -28,22 +28,22 @@ namespace RastrPVEq.ViewModels
         /// Equivalence branches
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<Branch> _equivalenceBranches = new();
+        private ObservableCollection<Branch> _equivalenceBranches;
 
         /// <summary>
         /// Gets or sets equivalence nodes
         /// </summary>
-        public List<Node> EquivalenceNodes { get; set; } = new();
+        public List<Node> EquivalenceNodes { get; set; }
 
         /// <summary>
         /// Gets or set equivalence generators
         /// </summary>
-        public List<Generator> EquivalenceGenerators { get; set; } = new();
+        public List<Generator> EquivalenceGenerators { get; set; }
 
         /// <summary>
-        /// Gets or sets intermediete equivalent node
+        /// Gets or sets intermediate equivalent node
         /// </summary>
-        public Node IntermedieteEquivalentNode { get; set; }
+        public Node IntermediateEquivalentNode { get; set; }
 
         /// <summary>
         /// Gets or sets generator equivalent node
@@ -54,7 +54,7 @@ namespace RastrPVEq.ViewModels
         /// Equivalent Branches Collection
         /// </summary>
         [ObservableProperty]
-        private ObservableCollection<Branch> _equivalentBranches = new();
+        private ObservableCollection<Branch> _equivalentBranches;
 
         /// <summary>
         /// Equivalence group view model class constructor
@@ -65,6 +65,10 @@ namespace RastrPVEq.ViewModels
         {
             Id = id;
             Name = name;
+            EquivalenceBranches = new ObservableCollection<Branch>();
+            EquivalenceNodes = new List<Node>();
+            EquivalenceGenerators = new List<Generator>();
+            EquivalentBranches = new ObservableCollection<Branch>();
         }
     }
 }

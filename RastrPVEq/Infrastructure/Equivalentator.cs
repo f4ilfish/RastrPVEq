@@ -61,7 +61,10 @@ namespace RastrPVEq.Infrastructure
 
             foreach (var generator in generators)
             {
-                if (generator.GeneratorNode == null) continue;
+                if (generator.GeneratorNode == null)
+                {
+                    throw new NullReferenceException($"{generator.Name} haven't generators node");
+                };
 
                 if (nodesOfEquivalenceGroup.Contains(generator.GeneratorNode))
                 {
@@ -183,7 +186,8 @@ namespace RastrPVEq.Infrastructure
                 }
             }
 
-            throw new Exception("Group isn't contain branch with such nodes");
+            throw new InvalidOperationException($"{equivalenceGroup.Name} isn't contain " +
+                                                $"branch with nodes {firstNode.Number} and {secondNode.Number}");
         }
 
         /// <summary>
@@ -228,8 +232,8 @@ namespace RastrPVEq.Infrastructure
                 double equivalentTransformerRatio = 0;
                 var equivalentDistrictNumber = equivalenceNode.NodeElement.DistrictNumber;
                 var equivalentTerritoryNumber = equivalenceNode.NodeElement.TerritoryNumber;
-                double equivalentAdmissableCurrent = 0;
-                double equivalentAdmissableEquipmentCurrent = 0;
+                double equivalentAdmissibleCurrent = 0;
+                double equivalentAdmissibleEquipmentCurrent = 0;
 
                 foreach (var kvpair in branchType)
                 {
@@ -237,8 +241,8 @@ namespace RastrPVEq.Infrastructure
                     equivalentInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
                     equivalentCapacitance += kvpair.Key.Capacitance;
                     equivalentTransformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
-                    equivalentAdmissableCurrent += kvpair.Key.AdmissableCurrent;
-                    equivalentAdmissableEquipmentCurrent += kvpair.Key.EquipmentAdmissableCurrent;
+                    equivalentAdmissibleCurrent += kvpair.Key.AdmissableCurrent;
+                    equivalentAdmissibleEquipmentCurrent += kvpair.Key.EquipmentAdmissableCurrent;
                 }
 
                 equivalentResistance /= Math.Pow(totalGeneratorsPower, 2);
@@ -246,7 +250,6 @@ namespace RastrPVEq.Infrastructure
                 equivalentTransformerRatio /= totalGeneratorsPower;
 
                 var equivalentBranchName = "Эквивалент";
-
                 equivalentBranchName += branchType.Key is BranchType.Transformer ? " ТР" : " Л";
 
                 var equivalentBranch = new Branch(branchType.Key,
@@ -257,8 +260,8 @@ namespace RastrPVEq.Infrastructure
                                                   equivalentTransformerRatio,
                                                   equivalentDistrictNumber,
                                                   equivalentTerritoryNumber,
-                                                  equivalentAdmissableCurrent,
-                                                  equivalentAdmissableEquipmentCurrent);
+                                                  equivalentAdmissibleCurrent,
+                                                  equivalentAdmissibleEquipmentCurrent);
 
                 equivalenceGroup.EquivalentBranches.Add(equivalentBranch);
             }
@@ -285,7 +288,7 @@ namespace RastrPVEq.Infrastructure
                 var equivalentDistrictNumber = node.DistrictNumber;
                 var equivalentTerritoryNumber = node.TerritoryNumber;
 
-                equivalenceGroup.IntermedieteEquivalentNode = new Node(equivalentNodeNumber,
+                equivalenceGroup.IntermediateEquivalentNode = new Node(equivalentNodeNumber,
                     equivalentNodeName,
                     equivalentNodeVoltage,
                     equivalentDistrictNumber,
@@ -324,10 +327,10 @@ namespace RastrPVEq.Infrastructure
                 {
                     case BranchType.Line:
                         equivalentBranch.BranchStartNode = equivalenceNode.NodeElement;
-                        equivalentBranch.BranchEndNode = equivalenceGroup.IntermedieteEquivalentNode;
+                        equivalentBranch.BranchEndNode = equivalenceGroup.IntermediateEquivalentNode;
                         break;
                     case BranchType.Transformer:
-                        equivalentBranch.BranchStartNode = equivalenceGroup.IntermedieteEquivalentNode;
+                        equivalentBranch.BranchStartNode = equivalenceGroup.IntermediateEquivalentNode;
                         equivalentBranch.BranchEndNode = equivalenceGroup.GeneratorEquivalentNode;
                         break;
                     default:

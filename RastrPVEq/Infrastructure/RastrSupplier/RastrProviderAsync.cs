@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using RastrPVEq.Models.PowerSystem;
 
@@ -13,9 +14,12 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// Get nodes async
         /// </summary>
         /// <returns></returns>
-        public static async Task<List<Node>> GetNodesAsync()
+        public static async Task<List<Node>> GetNodesAsync(CancellationToken token)
         {
-            var nodes = await Task.Run(() => RastrSupplier.GetNodes());
+            var nodes = await Task.Run(() => RastrSupplier.GetNodes(), token);
+
+            if (token.IsCancellationRequested) return nodes;
+
             return nodes;
         }
 
@@ -23,22 +27,14 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// Get generators async
         /// </summary>
         /// <param name="nodes">List of nodes</param>
-        /// <param name="pqDiagrams">List of PQ diagrams</param>
         /// <returns></returns>
-        public static async Task<List<Generator>> GetGeneratorsAsync(List<Node> nodes, List<PQDiagram> pqDiagrams)
+        public static async Task<List<Generator>> GetGeneratorsAsync(List<Node> nodes, CancellationToken token)
         {
-            var generators = await Task.Run(() => RastrSupplier.GetGenerators(nodes, pqDiagrams));
-            return generators;
-        }
+            var generators = await Task.Run(() => RastrSupplier.GetGenerators(nodes), token);
 
-        /// <summary>
-        /// Get PQ diagrams async
-        /// </summary>
-        /// <returns></returns>
-        public static async Task<List<PQDiagram>> GetPQDiagramsAsync()
-        {
-            var pqDiagrams = await Task.Run(() => RastrSupplier.GetPQDiagrams());
-            return pqDiagrams;
+            if (token.IsCancellationRequested) return generators;
+
+            return generators;
         }
 
         /// <summary>
@@ -46,9 +42,12 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// </summary>
         /// <param name="nodes">List of branches</param>
         /// <returns></returns>
-        public static async Task<List<Branch>> GetBranchesAsync(List<Node> nodes)
+        public static async Task<List<Branch>> GetBranchesAsync(List<Node> nodes, CancellationToken token)
         {
-            var branches = await Task.Run(() => RastrSupplier.GetBranches(nodes));
+            var branches = await Task.Run(() => RastrSupplier.GetBranches(nodes), token);
+
+            if (token.IsCancellationRequested) return branches;
+
             return branches;
         }
     }

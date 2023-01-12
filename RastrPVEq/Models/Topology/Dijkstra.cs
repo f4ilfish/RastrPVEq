@@ -16,7 +16,7 @@ namespace RastrPVEq.Models.Topology
         /// <summary>
         /// Gets or sets vertexes info
         /// </summary>
-        private List<GraphVertexInfo<T>> _vertexesInfo = new ();
+        private List<GraphVertexInfo<T>> _vertexesInfo;
 
         /// <summary>
         /// Dijkstra class constructor
@@ -25,6 +25,7 @@ namespace RastrPVEq.Models.Topology
         public Dijkstra(Graph<T> graph)
         {
             _graph = graph;
+            _vertexesInfo = new List<GraphVertexInfo<T>>();
             AddVertexesInfo();
         }
 
