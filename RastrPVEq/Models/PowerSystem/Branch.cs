@@ -168,38 +168,38 @@
         }
 
         /// <summary>
-        /// Admissable  current
+        /// Admissible  current
         /// </summary>
-        private double _admissableCurrent;
+        private double _admissibleCurrent;
 
         /// <summary>
-        /// Gets admissable current
+        /// Gets admissible current
         /// </summary>
-        public double AdmissableCurrent
+        public double AdmissibleCurrent
         {
-            get => _admissableCurrent;
+            get => _admissibleCurrent;
             private set
             {
                 ValueValidation.IsNotNaN(value);
-                _admissableCurrent = value;
+                _admissibleCurrent = value;
             }
         }
 
         /// <summary>
-        /// Equipment admissalbe  current
+        /// Equipment admissilbe  current
         /// </summary>
-        private double _equipmentAdmissableCurrent;
+        private double _equipmentAdmissibleCurrent;
 
         /// <summary>
         /// Gets equipment admissalbe  current
         /// </summary>
-        public double EquipmentAdmissableCurrent
+        public double EquipmentAdmissibleCurrent
         {
-            get => _equipmentAdmissableCurrent;
+            get => _equipmentAdmissibleCurrent;
             private set
             {
                 ValueValidation.IsNotNaN(value);
-                _equipmentAdmissableCurrent = value;
+                _equipmentAdmissibleCurrent = value;
             }
         }
 
@@ -215,8 +215,8 @@
         /// <param name="transformationRatio"></param>
         /// <param name="districtNumber"></param>
         /// <param name="territoryNumber"></param>
-        /// <param name="admissableCurrent"></param>
-        /// <param name="equipmentAdmissalbeCurrent"></param>
+        /// <param name="admissibleCurrent"></param>
+        /// <param name="equipmentAdmissibleCurrent"></param>
         public Branch(int index, 
                       BranchType branchType, 
                       string name, 
@@ -226,8 +226,8 @@
                       double transformationRatio, 
                       int districtNumber, 
                       int territoryNumber, 
-                      double admissableCurrent, 
-                      double equipmentAdmissalbeCurrent)
+                      double admissibleCurrent, 
+                      double equipmentAdmissibleCurrent)
         {
             Index = index;
             BranchType = branchType;
@@ -238,8 +238,8 @@
             TransformationRatio = transformationRatio;
             DistrictNumber = districtNumber;
             TerritoryNumber = territoryNumber;
-            AdmissableCurrent = admissableCurrent;
-            EquipmentAdmissableCurrent = equipmentAdmissalbeCurrent;
+            AdmissibleCurrent = admissibleCurrent;
+            EquipmentAdmissibleCurrent = equipmentAdmissibleCurrent;
         }
 
         /// <summary>
@@ -253,8 +253,8 @@
         /// <param name="transformationRatio"></param>
         /// <param name="districtNumber"></param>
         /// <param name="territoryNumber"></param>
-        /// <param name="admissableCurrent"></param>
-        /// <param name="equipmentAdmissalbeCurrent"></param>
+        /// <param name="admissibleCurrent"></param>
+        /// <param name="equipmentAdmissibleCurrent"></param>
         public Branch(BranchType branchType,
                       string name,
                       double resistance,
@@ -263,8 +263,8 @@
                       double transformationRatio,
                       int districtNumber,
                       int territoryNumber,
-                      double admissableCurrent,
-                      double equipmentAdmissalbeCurrent)
+                      double admissibleCurrent,
+                      double equipmentAdmissibleCurrent)
         {
             BranchType = branchType;
             Name = name;
@@ -274,8 +274,8 @@
             TransformationRatio = transformationRatio;
             DistrictNumber = districtNumber;
             TerritoryNumber = territoryNumber;
-            AdmissableCurrent = admissableCurrent;
-            EquipmentAdmissableCurrent = equipmentAdmissalbeCurrent;
+            AdmissibleCurrent = admissibleCurrent;
+            EquipmentAdmissibleCurrent = equipmentAdmissibleCurrent;
         }
     }
 }

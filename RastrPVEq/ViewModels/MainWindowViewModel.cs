@@ -142,7 +142,7 @@ namespace RastrPVEq.ViewModels
             {
                 var templatePath = $"{AppDomain.CurrentDomain.BaseDirectory}Properties\\режим.rg2";
 
-                RastrSupplier.LoadFileByTemplate(openFileDialog.FileName, templatePath);
+                RastrProvider.LoadFileByTemplate(openFileDialog.FileName, templatePath);
 
                 /// костыль на оповещение об изменениях в модели
                 IsFileDownloaded = false;
@@ -151,9 +151,9 @@ namespace RastrPVEq.ViewModels
                 IsFileDownloading = true;
 
                 /// костыль для статус бара
-                var nodesCount = RastrSupplier.GetNodesCount();
-                var branchesCount = RastrSupplier.GetBranchesCount();
-                var generatorsCount = RastrSupplier.GetGeneratorsCount();
+                var nodesCount = RastrProvider.GetNodesCount();
+                var branchesCount = RastrProvider.GetBranchesCount();
+                var generatorsCount = RastrProvider.GetGeneratorsCount();
 
                 MaxStatusBarValue += nodesCount;
                 MaxStatusBarValue += branchesCount;
@@ -245,12 +245,12 @@ namespace RastrPVEq.ViewModels
                     {
                         var branchesToDelete = new List<Branch>(equivalenceGroup.EquivalenceBranches);
 
-                        RastrSupplier.DeleteBranches(branchesToDelete);
+                        RastrProvider.DeleteBranches(branchesToDelete);
 
                         var nodesToDelete = new List<Node>(equivalenceGroup.EquivalenceNodes);
                         nodesToDelete.Remove(equivalenceNode.NodeElement);
 
-                        RastrSupplier.DeleteNodes(nodesToDelete);
+                        RastrProvider.DeleteNodes(nodesToDelete);
 
                         var nodesToAdd = new List<Node>
                         {
@@ -258,16 +258,16 @@ namespace RastrPVEq.ViewModels
                             equivalenceGroup.GeneratorEquivalentNode
                         };
 
-                        RastrSupplier.DeleteBlankBranches();
+                        RastrProvider.DeleteBlankBranches();
 
-                        RastrSupplier.AddNodes(nodesToAdd);
+                        RastrProvider.AddNodes(nodesToAdd);
 
                         var branchesToAdd = new List<Branch>(equivalenceGroup.EquivalentBranches);
 
-                        RastrSupplier.AddBranches(branchesToAdd);
+                        RastrProvider.AddBranches(branchesToAdd);
 
                         var generatorsToUpdate = new List<Generator>(equivalenceGroup.EquivalenceGenerators);
-                        RastrSupplier.UpdateGeneratorsNodes(equivalenceGroup.GeneratorEquivalentNode, generatorsToUpdate);
+                        RastrProvider.UpdateGeneratorsNodes(equivalenceGroup.GeneratorEquivalentNode, generatorsToUpdate);
 
                         CurrentStatusBarValue += groupValueIncrement;
                     }
@@ -275,7 +275,7 @@ namespace RastrPVEq.ViewModels
 
                 var templatePath = $"{AppDomain.CurrentDomain.BaseDirectory}Properties\\режим.rg2";
 
-                RastrSupplier.SaveFileByTemplate(saveFileDialog.FileName, templatePath);
+                RastrProvider.SaveFileByTemplate(saveFileDialog.FileName, templatePath);
 
                 CurrentStatusBarValue = 100;
             }

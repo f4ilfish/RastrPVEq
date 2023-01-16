@@ -241,8 +241,8 @@ namespace RastrPVEq.Infrastructure
                     equivalentInductance += kvpair.Key.Inductance * Math.Pow(kvpair.Value, 2);
                     equivalentCapacitance += kvpair.Key.Capacitance;
                     equivalentTransformerRatio += kvpair.Key.TransformationRatio * kvpair.Value;
-                    equivalentAdmissibleCurrent += kvpair.Key.AdmissableCurrent;
-                    equivalentAdmissibleEquipmentCurrent += kvpair.Key.EquipmentAdmissableCurrent;
+                    equivalentAdmissibleCurrent += kvpair.Key.AdmissibleCurrent;
+                    equivalentAdmissibleEquipmentCurrent += kvpair.Key.EquipmentAdmissibleCurrent;
                 }
 
                 equivalentResistance /= Math.Pow(totalGeneratorsPower, 2);

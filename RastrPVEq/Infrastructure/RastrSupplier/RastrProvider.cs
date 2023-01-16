@@ -8,9 +8,9 @@ using RastrPVEq.Models.PowerSystem;
 namespace RastrPVEq.Infrastructure.RastrSupplier
 {
     /// <summary>
-    /// Rastr supplier class
+    /// Rastr provider class
     /// </summary>
-    public static class RastrSupplier
+    public static class RastrProvider
     {
         /// <summary>
         /// Rastr com-object field
@@ -360,8 +360,8 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
             SetElementParameterValue(branchTable, RastrConstantNames.BranchTransformationRatioColumn, addedRowIndex, branch.TransformationRatio);
             SetElementParameterValue(branchTable, RastrConstantNames.BranchDistrictNumberColumn, addedRowIndex, branch.DistrictNumber);
             SetElementParameterValue(branchTable, RastrConstantNames.BranchTerritoryNumberColumn, addedRowIndex, branch.TerritoryNumber);
-            SetElementParameterValue(branchTable, RastrConstantNames.BranchAdmissibleCurrentColumn, addedRowIndex, branch.AdmissableCurrent);
-            SetElementParameterValue(branchTable, RastrConstantNames.BranchEquipmentAdmissibleCurrentColumn, addedRowIndex, branch.EquipmentAdmissableCurrent);
+            SetElementParameterValue(branchTable, RastrConstantNames.BranchAdmissibleCurrentColumn, addedRowIndex, branch.AdmissibleCurrent);
+            SetElementParameterValue(branchTable, RastrConstantNames.BranchEquipmentAdmissibleCurrentColumn, addedRowIndex, branch.EquipmentAdmissibleCurrent);
         }
 
         /// <summary>

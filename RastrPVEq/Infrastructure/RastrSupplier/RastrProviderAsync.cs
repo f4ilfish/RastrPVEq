@@ -16,7 +16,7 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// <returns></returns>
         public static async Task<List<Node>> GetNodesAsync(CancellationToken token)
         {
-            var nodes = await Task.Run(() => RastrSupplier.GetNodes(), token);
+            var nodes = await Task.Run(() => RastrProvider.GetNodes(), token);
 
             if (token.IsCancellationRequested) return nodes;
 
@@ -30,7 +30,7 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// <returns></returns>
         public static async Task<List<Generator>> GetGeneratorsAsync(List<Node> nodes, CancellationToken token)
         {
-            var generators = await Task.Run(() => RastrSupplier.GetGenerators(nodes), token);
+            var generators = await Task.Run(() => RastrProvider.GetGenerators(nodes), token);
 
             if (token.IsCancellationRequested) return generators;
 
@@ -44,7 +44,7 @@ namespace RastrPVEq.Infrastructure.RastrSupplier
         /// <returns></returns>
         public static async Task<List<Branch>> GetBranchesAsync(List<Node> nodes, CancellationToken token)
         {
-            var branches = await Task.Run(() => RastrSupplier.GetBranches(nodes), token);
+            var branches = await Task.Run(() => RastrProvider.GetBranches(nodes), token);
 
             if (token.IsCancellationRequested) return branches;
 
