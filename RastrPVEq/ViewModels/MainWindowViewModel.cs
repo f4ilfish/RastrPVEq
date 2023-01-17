@@ -183,13 +183,21 @@ namespace RastrPVEq.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex}");
+                MessageBox.Show("Файл модели или шаблона поврежден", 
+                                "Ошибка", 
+                                MessageBoxButton.OK, 
+                                MessageBoxImage.Error);
             }
 
             MaxStatusBarValue = 0;
             CurrentStatusBarValue = 0;
             IsFileDownloaded = true;
             IsFileDownloading = false;
+
+            MessageBox.Show("Загрузка модели выполнена успешно",
+                            "Уведомление",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -198,10 +206,18 @@ namespace RastrPVEq.ViewModels
         [RelayCommand(CanExecute = nameof(CanCancelDownloadingFile))]
         private void CancelDownloadingFile()
         {
-            var cancelTokenSource = new CancellationTokenSource();
-            Token = cancelTokenSource.Token;
-            cancelTokenSource.Cancel();
-            //Token.ThrowIfCancellationRequested();
+            var messageBoxResult = MessageBox.Show("Вы действительно хотите отменить загрузку модели?",
+                                                   "Подтверждение",
+                                                   MessageBoxButton.YesNo,
+                                                   MessageBoxImage.Question);
+
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                var cancelTokenSource = new CancellationTokenSource();
+                Token = cancelTokenSource.Token;
+                cancelTokenSource.Cancel();
+                //Token.ThrowIfCancellationRequested();
+            }
         }
 
         /// <summary>
@@ -281,8 +297,16 @@ namespace RastrPVEq.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex}");
+                MessageBox.Show("Файл шаблона поврежден или отсутствует доступ к указанной директории",
+                                "Ошибка",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
             }
+
+            MessageBox.Show("Сохранение модели выполнено успешно",
+                            "Уведомление",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -303,7 +327,15 @@ namespace RastrPVEq.ViewModels
         [RelayCommand]
         private static void CloseApplication()
         {
-            Application.Current.Shutdown();
+            var messageBoxResult = MessageBox.Show("Вы действительно хотите закончить работу с приложением?",
+                                                   "Подтверждение",
+                                                   MessageBoxButton.YesNo,
+                                                   MessageBoxImage.Question);
+            
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                Application.Current.Shutdown();
+            }
         }
 
         /// <summary>
@@ -463,7 +495,8 @@ namespace RastrPVEq.ViewModels
                                 /// Проверка наличия дублирующихся ветвей
                                 if (Equivalentator.IsHasEquivalenceBranchesDuplicates(equivalenceGroup))
                                 {
-                                    ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Дубликаты ветвей"));
+                                    ValidateErrors.Add(new Exception($"Узел {nodeName} | {groupName} | Дубликаты ветвей"));
+                                    break;
                                 }
 
                                 var nodesOfEquivalenceGroup = Equivalentator.GetNodesOfEquivalenceGroup(equivalenceGroup);
@@ -471,7 +504,8 @@ namespace RastrPVEq.ViewModels
                                 /// Проверка связи узла с группой
                                 if (!nodesOfEquivalenceGroup.Contains(equivalenceNode.NodeElement))
                                 {
-                                    ValidateErrors.Add(new Exception($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствуют связь узла с группой"));
+                                    ValidateErrors.Add(new Exception($"Узел {nodeName} | {groupName} | Отсутствуют связь узла с группой"));
+                                    break;
                                 }
 
                                 var generatorsOfEquivalenceGroup = Equivalentator.GetGeneratorsOfEquivalenceGroup(nodesOfEquivalenceGroup, Generators);
@@ -504,23 +538,23 @@ namespace RastrPVEq.ViewModels
                                             if (!nodesPath.Contains(equivalenceNode.NodeElement)
                                                 || !nodesPath.Contains(generator.GeneratorNode))
                                             {
-                                                ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствует связь узла с генератором (в узле {generatorNodeNumber} {generatorNodeName})"));
+                                                ValidateErrors.Add(new InvalidOperationException($"Узел {nodeName} | {groupName} | Отсутствует связь узла с генератором {generatorNodeName}"));
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Генераторы имеют разный Uном"));
+                                        ValidateErrors.Add(new InvalidOperationException($"Узел {nodeName} | {groupName} | Генераторы имеют разный Uном"));
                                     }
                                 }
                                 else
                                 {
-                                    ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Группа не содержит генераторов"));
+                                    ValidateErrors.Add(new InvalidOperationException($"Узел {nodeName} | {groupName} | Группа не содержит генераторов"));
                                 }
                             }
                             else
                             {
-                                ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | {groupName} | Отсутствуют ветви"));
+                                ValidateErrors.Add(new InvalidOperationException($"Узел {nodeName} | {groupName} | Отсутствуют ветви"));
                             }
 
                             CurrentStatusBarValue += groupValueIncrement;
@@ -528,16 +562,10 @@ namespace RastrPVEq.ViewModels
                     }
                     else
                     {
-                        ValidateErrors.Add(new InvalidOperationException($"Узел {nodeNumber} {nodeName} | Отсутствуют группы"));
+                        ValidateErrors.Add(new InvalidOperationException($"Узел {nodeName} | Отсутствуют группы"));
                     }
                 }
 
-                /// костыль на оповещение об изменении в моделях
-                if (ValidateErrors.Count == 0)
-                {
-                    IsModelChanged = false;
-                    MessageBox.Show("Модель успешно подготовлена к эквивалентированию");
-                }
             }
             else
             {
@@ -545,6 +573,23 @@ namespace RastrPVEq.ViewModels
             }
 
             CurrentStatusBarValue = 100;
+
+            if (ValidateErrors.Count == 0)
+            {
+                IsModelChanged = false;
+                MessageBox.Show("Проверка модели выполнена. Ошибок не обнаружено",
+                                "Уведомление",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Information);
+            }
+            else
+            {
+                IsModelChanged = true;
+                MessageBox.Show("Проверка модели выполнена. См. протокол ошибок",
+                    "Уведомление",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
+            }
         }
 
         /// <summary>
@@ -605,7 +650,10 @@ namespace RastrPVEq.ViewModels
 
             CurrentStatusBarValue = 100;
             IsCalculatedEquivalent = true;
-            MessageBox.Show("Эквивалентирование выполнено");
+            MessageBox.Show("Расчет эквивалента выполнен",
+                            "Уведомление",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
         }
 
         /// <summary>

@@ -523,7 +523,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Resistance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -535,7 +535,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -614,7 +614,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Resistance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -626,7 +626,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -782,7 +782,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Resistance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -794,7 +794,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -863,7 +863,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Resistance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
@@ -875,7 +875,7 @@
                                 <filterDataGrid:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Inductance, 
-                                                                  StringFormat=N2}" />
+                                                                  StringFormat=N3}" />
                                     </DataTemplate>
                                 </filterDataGrid:DataGridTemplateColumn.CellTemplate>
                             </filterDataGrid:DataGridTemplateColumn>
