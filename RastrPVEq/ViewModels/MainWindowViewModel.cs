@@ -144,13 +144,13 @@ namespace RastrPVEq.ViewModels
 
                 RastrProvider.LoadFileByTemplate(openFileDialog.FileName, templatePath);
 
-                /// костыль на оповещение об изменениях в модели
+                /// оповещение об изменениях в модели
                 IsFileDownloaded = false;
                 IsModelChanged = true;
                 IsCalculatedEquivalent = false;
                 IsFileDownloading = true;
 
-                /// костыль для статус бара
+                /// статус бар
                 var nodesCount = RastrProvider.GetNodesCount();
                 var branchesCount = RastrProvider.GetBranchesCount();
                 var generatorsCount = RastrProvider.GetGeneratorsCount();
@@ -346,7 +346,7 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedNode == null) return;
             
-            /// костыль на оповещение об изменениях в модели
+            /// оповещение об изменениях в модели
             IsModelChanged = true;
             IsCalculatedEquivalent = false;
 
@@ -362,7 +362,7 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedEquivalenceNode == null) return;
             
-            /// костыль на оповещение об изменениях в модели
+            /// оповещение об изменениях в модели
             IsModelChanged = true;
             IsCalculatedEquivalent = false;
 
@@ -378,7 +378,7 @@ namespace RastrPVEq.ViewModels
         {
             if (SelectedEquivalenceNode == null) return;
             
-            /// костыль на оповещение об изменениях в модели
+            /// оповещение об изменениях в модели
             IsModelChanged = true;
             IsCalculatedEquivalent = false;
 
@@ -406,7 +406,7 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup == null 
                 || SelectedEquivalenceNode == null) return;
             
-            /// костыль на оповещение об изменениях в модели
+            /// оповещение об изменениях в модели
             IsModelChanged = true;
             IsCalculatedEquivalent = false;
 
@@ -431,7 +431,7 @@ namespace RastrPVEq.ViewModels
             if (SelectedEquivalenceGroup == null 
                 || SelectedBranch == null) return;
             
-            /// костыль на оповещение об изменениях в модели
+            /// оповещение об изменениях в модели
             IsModelChanged = true;
             IsCalculatedEquivalent = false;
 
